@@ -474,12 +474,21 @@ drag the names
 to swap the
 their order"
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_SortBox", "_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid")]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_SortBox", "_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid")]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 5
-columns = 7
+theme_override_fonts/normal_font = ExtResource("1_r150o")
+theme_override_fonts/mono_font = ExtResource("1_r150o")
+theme_override_fonts/italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_font = ExtResource("1_r150o")
+theme_override_font_sizes/bold_italics_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
 script = ExtResource("7_vy5pj")
 _SortBox = NodePath("../HBoxContainer")
 _ShowFound = NodePath("../HBoxContainer/VBoxContainer/CheckBox")
@@ -488,124 +497,7 @@ _ShowUnspecified = NodePath("../HBoxContainer/VBoxContainer/CheckBox2")
 _ShowNoPriority = NodePath("../HBoxContainer/VBoxContainer/CheckBox3")
 _ShowAvoid = NodePath("../HBoxContainer/VBoxContainer/CheckBox4")
 _DragOptionScene = ExtResource("6_jw32o")
-
-[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "    "
-
-[node name="PanelContainer5" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer5"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer5/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Receiving Player"
-horizontal_alignment = 1
-
-[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer3"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer3/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Item"
-horizontal_alignment = 1
-
-[node name="PanelContainer4" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer4"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer4/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Finding Player"
-horizontal_alignment = 1
-
-[node name="PanelContainer2" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer2"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer2/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Priority"
-horizontal_alignment = 1
-
-[node name="PanelContainer6" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer6"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer6/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Location"
-horizontal_alignment = 1
-
-[node name="PanelContainer7" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer7"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer7/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 18
-text = "Entrance"
-horizontal_alignment = 1
+_Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
 [node name="Players" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -620,78 +512,23 @@ metadata/_tab_index = 4
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GridContainer" type="GridContainer" parent="TabContainer/Players/Players"]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Players/Players"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/h_separation = 15
-theme_override_constants/v_separation = 15
-columns = 4
+theme_override_fonts/normal_font = ExtResource("1_r150o")
+theme_override_fonts/mono_font = ExtResource("1_r150o")
+theme_override_fonts/italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_font = ExtResource("1_r150o")
+theme_override_font_sizes/bold_italics_font_size = 32
+theme_override_font_sizes/italics_font_size = 32
+theme_override_font_sizes/mono_font_size = 32
+theme_override_font_sizes/normal_font_size = 32
+theme_override_font_sizes/bold_font_size = 32
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
 script = ExtResource("7_50glp")
-
-[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Slot"
-
-[node name="PanelContainer5" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer5"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer5/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Player"
-
-[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer3"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer3/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Game"
-
-[node name="PanelContainer4" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
-layout_mode = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer4"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer4/MarginContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Status"
+_Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
 [node name="Settings" type="ScrollContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer")]
 visible = false

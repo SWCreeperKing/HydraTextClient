@@ -61,9 +61,10 @@ public partial class HintManager : MarginContainer
         searchBar.PlaceholderText = "Search Items";
         searchBar.TextChanged += text =>
         {
+            var split = text.Split(" ");
             foreach (var button in buttons)
             {
-                button.Visible = button.Text.Contains(text, StringComparison.CurrentCultureIgnoreCase);
+                button.Visible = split.All(word => button.Text.Contains(word, StringComparison.CurrentCultureIgnoreCase));
             }
         };
 

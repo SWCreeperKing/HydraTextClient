@@ -9,7 +9,7 @@ using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
-public partial class HintTable : RecyclingTable<HintRow, HintData>
+public partial class HintTable : TextTable
 {
     public static bool RefreshUI;
     public static IEnumerable<HintData> Datas = [];
@@ -69,6 +69,8 @@ public partial class HintTable : RecyclingTable<HintRow, HintData>
         _ShowUnspecified.ButtonPressed = MainController.Data.HintOptions[2];
         _ShowNoPriority.ButtonPressed = MainController.Data.HintOptions[3];
         _ShowAvoid.ButtonPressed = MainController.Data.HintOptions[4];
+
+        MetaClicked += s => DisplayServer.ClipboardSet(s.ToString());
     }
 
     public override void _Process(double delta)
@@ -112,7 +114,7 @@ public partial class HintTable : RecyclingTable<HintRow, HintData>
             }
         }
 
-        UpdateData(orderedHints.ToHashSet());
+        UpdateData(orderedHints.Select(hint => hint.GetData()).ToList());
         RefreshUI = false;
     }
 
@@ -123,92 +125,9 @@ public partial class HintTable : RecyclingTable<HintRow, HintData>
     public int GetOrderSlot(int slot) => PlayerSlots.ContainsKey(slot) ? Players.Length + slot : slot;
 
     public int SortNumber(ItemFlags flags) => ItemToSortId.GetValueOrDefault(flags, 2);
-
-    protected override HintRow CreateRow() => new();
 }
 
-public class HintRow : RowItem<HintData>
-{
-    private Button _CopyHint = new();
-    private Label _ReceivingPlayer = new();
-    private Label _Item = new();
-    private Label _FindingPlayer = new();
-    private Label _Priority = new();
-    private Label _Location = new();
-    private Label _Entrance = new();
-    private string? _CopyText;
-
-    public HintRow()
-    {
-        SetTheme(_CopyHint);
-        SetTheme(_ReceivingPlayer);
-        SetTheme(_Item);
-        SetTheme(_FindingPlayer);
-        SetTheme(_Priority);
-        SetTheme(_Location);
-        SetTheme(_Entrance);
-        _CopyHint.Pressed += () =>
-        {
-            if (_CopyText is null) return;
-            DisplayServer.ClipboardSet(_CopyText);
-        };
-        _CopyHint.Text = "Copy";
-    }
-
-    public override void RefreshData(HintData data)
-    {
-        _ReceivingPlayer.Text = data.ReceivingPlayer;
-        _ReceivingPlayer.Modulate = PlayerColor(data.ReceivingPlayer);
-        _Item.Text = data.Item;
-        _Item.Modulate =
-            MainController.Data.ColorSettings[ItemToColorId.GetValueOrDefault(data.ItemFlags, "item_normal")];
-        _FindingPlayer.Text = data.FindingPlayer;
-        _FindingPlayer.Modulate = PlayerColor(data.FindingPlayer);
-        _Priority.Text = HintStatusText[data.HintStatus];
-        _Priority.Modulate = MainController.Data.ColorSettings[HintStatusColor[data.HintStatus]];
-        _Location.Text = data.Location;
-        _Location.Modulate = MainController.Data.ColorSettings["location"];
-        _Entrance.Text = data.Entrance;
-        _Entrance.Modulate =
-            MainController.Data.ColorSettings[data.Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"];
-        _CopyText = data.GetCopyText();
-    }
-
-    public override void SetVisibility(bool isVisible)
-    {
-        _CopyText = null;
-        _CopyHint.Visible = isVisible;
-        _ReceivingPlayer.Visible = isVisible;
-        _ReceivingPlayer.HorizontalAlignment = HorizontalAlignment.Center;
-        _Item.Visible = isVisible;
-        _Item.HorizontalAlignment = HorizontalAlignment.Center;
-        _FindingPlayer.Visible = isVisible;
-        _FindingPlayer.HorizontalAlignment = HorizontalAlignment.Center;
-        _Priority.Visible = isVisible;
-        _Priority.HorizontalAlignment = HorizontalAlignment.Center;
-        _Location.Visible = isVisible;
-        _Entrance.Visible = isVisible;
-    }
-
-    public override void SetParent(GridContainer toParent)
-    {
-        toParent.AddChild(_CopyHint);
-        toParent.AddChild(_ReceivingPlayer);
-        toParent.AddChild(_Item);
-        toParent.AddChild(_FindingPlayer);
-        toParent.AddChild(_Priority);
-        toParent.AddChild(_Location);
-        toParent.AddChild(_Entrance);
-    }
-
-    public void SetTheme(Control control)
-    {
-        control.AddThemeFontSizeOverride("font_size", 18);
-        control.AddThemeFontOverride("font", MainController.Font);
-    }
-}
-
-public struct HintData(Hint hint)
+public readonly struct HintData(Hint hint)
 {
     public readonly string ReceivingPlayer = Players[hint.ReceivingPlayer];
     public readonly int ReceivingPlayerSlot = hint.ReceivingPlayer;
@@ -220,12 +139,29 @@ public struct HintData(Hint hint)
     public readonly string Location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
     public readonly long LocationId = hint.LocationId;
     public readonly string Entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
-    private string? _CopyText = null;
 
     public string GetCopyText()
+        => $"`{ReceivingPlayer}`'s __{Item}__ is in `{FindingPlayer}`'s world at **{Location}**\n-# {Entrance}";
+
+    public string[] GetData()
     {
-        if (_CopyText is not null) return _CopyText;
-        return _CopyText =
-            $"`{ReceivingPlayer}`'s __{Item}__ is in `{FindingPlayer}`'s world at **{Location}**\n-# {Entrance}";
+        var receivingPlayerColor = PlayerColor(ReceivingPlayer).Hex;
+        var itemColor = MainController.Data.ColorSettings[ItemToColorId.GetValueOrDefault(ItemFlags, "item_normal")]
+                                      .Hex;
+        var findingPlayerColor = PlayerColor(FindingPlayer).Hex;
+        var hintColor = MainController.Data.ColorSettings[HintStatusColor[HintStatus]].Hex;
+        var locationColor = MainController.Data.ColorSettings["location"].Hex;
+        var entranceColor = MainController.Data.ColorSettings[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"]
+                                          .Hex;
+        return
+        [
+            $"[url=\"{GetCopyText()}\"]Copy[/url]",
+            $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
+            $"[color={itemColor}]{Item.Clean()}[/color]",
+            $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
+            $"[color={hintColor}]{HintStatusText[HintStatus]}[/color]",
+            $"[color={locationColor}]{Location.Clean()}[/color]",
+            $"[color={entranceColor}]{Entrance.Clean()}[/color]"
+        ];
     }
 }

@@ -183,7 +183,7 @@ public readonly struct ClientMessage(
         if (ChatPacket is not null)
         {
             color =  PlayerColor(ChatPacket.Slot);
-            return $"[color={color}]{Players[ChatPacket.Slot]}[/color]: {ChatPacket.Message}";
+            return $"[color={color}]{Players[ChatPacket.Slot].Clean()}[/color]: {ChatPacket.Message.Clean()}";
         }
 
         StringBuilder messageBuilder = new();
@@ -200,30 +200,30 @@ public readonly struct ClientMessage(
                 case JsonMessagePartType.PlayerId:
                     var slot = int.Parse(part.Text);
                     color = PlayerColor(slot);
-                    messageBuilder.Append($"[color={color}]{Players[slot]}[/color]");
+                    messageBuilder.Append($"[color={color}]{Players[slot].Clean()}[/color]");
                     break;
                 case JsonMessagePartType.ItemId:
                     var item = ItemIdToItemName(long.Parse(part.Text), part.Player!.Value);
                     color = GetItemHexColor(part.Flags!.Value);
-                    messageBuilder.Append($"[color={color}]{item}[/color]");
+                    messageBuilder.Append($"[color={color}]{item.Clean()}[/color]");
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);
                     color = MainController.Data.ColorSettings["location"];
-                    messageBuilder.Append($"[color={color}]{location}[/color]");
+                    messageBuilder.Append($"[color={color}]{location.Clean()}[/color]");
                     break;
                 case JsonMessagePartType.EntranceName:
                     var entranceName = part.Text.Trim();
                     color = MainController.Data.ColorSettings[entranceName == "" ? "entrance_vanilla" : "entrance"];
-                    messageBuilder.Append($"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName)}[/color]");
+                    messageBuilder.Append($"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]");
                     break;
                 case JsonMessagePartType.HintStatus:
                     var name = HintStatusText[(HintStatus)part.HintStatus!];
                     color = MainController.Data.ColorSettings[HintStatusColor[(HintStatus)part.HintStatus!]];
-                    messageBuilder.Append($"[color={color}]{name}[/color]");
+                    messageBuilder.Append($"[color={color}]{name.Clean()}[/color]");
                     break;
                 default:
-                    messageBuilder.Append(part.Text ?? "");
+                    messageBuilder.Append((part.Text ?? "").Clean());
                     break;
             }
         }
@@ -259,4 +259,11 @@ public readonly struct DataTimestamp(long timestamp, int hashCode)
 {
     public readonly long Timestamp = timestamp;
     public readonly int HashCode = hashCode;
+}
+
+public static class TextHelper
+{
+    public static string Clean(this string text) => text.Replace("[", "[lb]");
+    public static string CleanRb(this string text) => text.Replace("]", "[rb]");
+    public static string ReplaceB(this string text) => text.Replace("[", "<").Replace("]", ">");
 }

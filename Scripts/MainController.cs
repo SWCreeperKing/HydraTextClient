@@ -79,6 +79,7 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
+        Font = _UIFont;
         Data = new Data();
         if (!Directory.Exists(SaveDir))
         {
@@ -94,7 +95,6 @@ public partial class MainController : Control
 
     public override void _Ready()
     {
-        Font = _UIFont;
         _SlotField.TextSubmitted += TryAddSlot;
         _SlotAddButton.Pressed += () => TryAddSlot(Slot);
         _AddressField.TextChanged += s => Data.Address = s;
