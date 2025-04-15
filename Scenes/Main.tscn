@@ -1,0 +1,792 @@
+[gd_scene load_steps=17 format=3 uid="uid://b3165pga1elda"]
+
+[ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_r150o"]
+[ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
+[ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LineEditHide.cs" id="2_idj7w"]
+[ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
+[ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClient.cs" id="5_pbw6q"]
+[ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/HintManager.cs" id="6_4kpch"]
+[ext_resource type="PackedScene" uid="uid://2nsibv8xkfq7" path="res://Scenes/Prefabs/DragingText.tscn" id="6_jw32o"]
+[ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/Settings.cs" id="6_v1gob"]
+[ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/PlayerTable.cs" id="7_50glp"]
+[ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
+[ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTable.cs" id="7_vy5pj"]
+[ext_resource type="PackedScene" uid="uid://8mafjhmihowg" path="res://Scenes/Prefabs/HintChanger.tscn" id="8_1p5hy"]
+[ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/HintDialog.cs" id="12_grg3l"]
+[ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
+[ext_resource type="Script" uid="uid://bapekk0wusqa1" path="res://Scripts/HintChangerDialog.cs" id="14_h1m7h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
+bg_color = Color(0.230315, 0.230315, 0.230315, 1)
+
+[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotContainer", "_SlotAddButton", "_HintManager", "_TabContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rgh2o")
+_UIFont = ExtResource("1_r150o")
+_AddressField = NodePath("TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer/LineEdit")
+_PasswordField = NodePath("TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit")
+_PortField = NodePath("TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit")
+_SlotField = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/HBoxContainer/LineEdit")
+_SlotContainer = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/ScrollContainer/VBoxContainer")
+_SlotAddButton = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/HBoxContainer/Button")
+_SlotPackedScene = ExtResource("3_kln2b")
+_HintManager = NodePath("TabContainer/Hint Manager")
+_TabContainer = NodePath("TabContainer")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+current_tab = 0
+
+[node name="Login" type="HSplitContainer" parent="TabContainer"]
+layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
+split_offset = 450
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Login"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "archipelago.gg"
+placeholder_text = "Address"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Password"
+secret = true
+script = ExtResource("2_idj7w")
+
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+button_pressed = true
+text = "Hide"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Port"
+virtual_keyboard_type = 2
+script = ExtResource("2_idj7w")
+NumberOnly = true
+IsPort = true
+
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3"]
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Hide"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Safty Save"
+
+[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Button" type="Button" parent="TabContainer/Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Add"
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Slot Name"
+max_length = 16
+keep_editing_on_text_submit = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Login/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/MarginContainer2/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="Text Client" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+metadata/_tab_index = 1
+
+[node name="Text Client" type="VBoxContainer" parent="TabContainer/Text Client" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_Messages", "_SendMessage", "_SendMessageButton", "_Latency", "_ScrollToBottom", "_ScrollContainer")]
+layout_mode = 2
+theme_override_constants/separation = 15
+script = ExtResource("5_pbw6q")
+_Main = NodePath("../../..")
+_SelectedClient = NodePath("VBoxContainer/HBoxContainer2/HBoxContainer/OptionButton")
+_WordWrap = NodePath("VBoxContainer/HBoxContainer/HBoxContainer2/OptionButton2")
+_Content = NodePath("VBoxContainer/HBoxContainer/HBoxContainer3/OptionButton2")
+_Messages = NodePath("ScrollContainer/PanelContainer/MarginContainer/Messages")
+_SendMessage = NodePath("HBoxContainer/LineEdit")
+_SendMessageButton = NodePath("HBoxContainer/Button")
+_Latency = NodePath("VBoxContainer/HBoxContainer2/HBoxContainer3/SpinBox")
+_ScrollToBottom = NodePath("HBoxContainer/Button2")
+_ScrollContainer = NodePath("ScrollContainer")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Text Client/Text Client"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Client"
+
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label2" type="Label" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Sync Latency"
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer3"]
+layout_mode = 2
+min_value = 1.0
+max_value = 500.0
+value = 50.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label2" type="Label" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Word Wrap"
+
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+selected = 0
+item_count = 4
+popup/item_0/text = "Off"
+popup/item_0/id = 0
+popup/item_1/text = "Arbitrary"
+popup/item_1/id = 1
+popup/item_2/text = "Word"
+popup/item_2/id = 2
+popup/item_3/text = "Word (Smart)"
+popup/item_3/id = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label2" type="Label" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Content"
+
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/Text Client/VBoxContainer/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+selected = 2
+item_count = 3
+popup/item_0/text = "Text Only"
+popup/item_0/id = 0
+popup/item_1/text = "Items Only"
+popup/item_1/id = 1
+popup/item_2/text = "Both"
+popup/item_2/id = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client/Text Client"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Text Client/Text Client/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Text Client/Text Client/ScrollContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 3
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="Messages" type="RichTextLabel" parent="TabContainer/Text Client/Text Client/ScrollContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_r150o")
+theme_override_fonts/mono_font = ExtResource("1_r150o")
+theme_override_fonts/italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_font = ExtResource("1_r150o")
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/Text Client"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Button" type="Button" parent="TabContainer/Text Client/Text Client/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Send"
+
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Text Client/Text Client/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Send Message"
+keep_editing_on_text_submit = true
+
+[node name="Button2" type="Button" parent="TabContainer/Text Client/Text Client/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Scroll To Bottom"
+
+[node name="Hint Manager" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_HintSender", "_HintManager", "_SendHintConfirmation", "_HintChangeConfirmation")]
+visible = false
+layout_mode = 2
+script = ExtResource("6_4kpch")
+_HintSender = NodePath("Login/MarginContainer/ScrollContainer/VBoxContainer")
+_HintManager = NodePath("Login/MarginContainer2/ScrollContainer/VBoxContainer")
+_PlayerBox = ExtResource("7_grg3l")
+_HintChangerBox = ExtResource("8_1p5hy")
+_SendHintConfirmation = NodePath("../../Hint")
+_HintChangeConfirmation = NodePath("../../HintChange")
+metadata/_tab_index = 2
+
+[node name="Login" type="HSplitContainer" parent="TabContainer/Hint Manager"]
+layout_mode = 2
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hint Manager/Login"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hint Manager/Login/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hint Manager/Login/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="TabContainer/Hint Manager/Login/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Click an item to hint it"
+
+[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Hint Manager/Login"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hint Manager/Login/MarginContainer2"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hint Manager/Login/MarginContainer2/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Hints" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+metadata/_tab_index = 3
+
+[node name="Hints" type="ScrollContainer" parent="TabContainer/Hints"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Hints/Hints/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 16
+text = "Show Found"
+
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 16
+button_pressed = true
+text = "Show Priority"
+
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 16
+button_pressed = true
+text = "Show Unspecified"
+
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 16
+button_pressed = true
+text = "Show No Priority"
+
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 16
+button_pressed = true
+text = "Show Avoid"
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Sort Order:"
+
+[node name="GridContainer" type="GridContainer" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_SortBox", "_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid")]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 5
+columns = 7
+script = ExtResource("7_vy5pj")
+_SortBox = NodePath("../HBoxContainer")
+_ShowFound = NodePath("../HBoxContainer/VBoxContainer/CheckBox")
+_ShowPriority = NodePath("../HBoxContainer/VBoxContainer/CheckBox5")
+_ShowUnspecified = NodePath("../HBoxContainer/VBoxContainer/CheckBox2")
+_ShowNoPriority = NodePath("../HBoxContainer/VBoxContainer/CheckBox3")
+_ShowAvoid = NodePath("../HBoxContainer/VBoxContainer/CheckBox4")
+_DragOptionScene = ExtResource("6_jw32o")
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "    "
+
+[node name="PanelContainer5" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer5"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer5/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Receiving Player"
+horizontal_alignment = 1
+
+[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer3/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Item"
+horizontal_alignment = 1
+
+[node name="PanelContainer4" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer4"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer4/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Finding Player"
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer2/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Priority"
+horizontal_alignment = 1
+
+[node name="PanelContainer6" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer6"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer6/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Location"
+horizontal_alignment = 1
+
+[node name="PanelContainer7" type="PanelContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer7"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/GridContainer/PanelContainer7/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+text = "Entrance"
+horizontal_alignment = 1
+
+[node name="Players" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+metadata/_tab_index = 4
+
+[node name="Players" type="ScrollContainer" parent="TabContainer/Players"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="TabContainer/Players/Players"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 4
+script = ExtResource("7_50glp")
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Slot"
+
+[node name="PanelContainer5" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer5"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer5/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Player"
+
+[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer3/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Game"
+
+[node name="PanelContainer4" type="PanelContainer" parent="TabContainer/Players/Players/GridContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Players/Players/GridContainer/PanelContainer4"]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="TabContainer/Players/Players/GridContainer/PanelContainer4/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Status"
+
+[node name="Settings" type="ScrollContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer")]
+visible = false
+layout_mode = 2
+script = ExtResource("6_v1gob")
+_Font = ExtResource("1_r150o")
+_ColorContainer = NodePath("Settings/ColorContainer")
+metadata/_tab_index = 5
+
+[node name="Settings" type="MarginContainer" parent="TabContainer/Settings"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Settings"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Credits" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+metadata/_tab_index = 6
+
+[node name="Credits" type="VBoxContainer" parent="TabContainer/Credits"]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="TabContainer/Credits/Credits"]
+layout_mode = 2
+
+[node name="Button" parent="TabContainer/Credits/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "Archipelago"
+_Link = "https://archipelago.gg/"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Credits/Credits"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Credits/Credits"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Tools"
+horizontal_alignment = 1
+
+[node name="Button2" parent="TabContainer/Credits/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "Godot 4.5 (dev 2)"
+_Link = "https://godotengine.org/"
+
+[node name="Button3" parent="TabContainer/Credits/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "C# MultiClient"
+_Link = "https://github.com/ArchipelagoMW/Archipelago.MultiClient.Net"
+
+[node name="Button4" parent="TabContainer/Credits/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "Rider IDE"
+_Link = "https://www.jetbrains.com/rider/"
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/Credits/Credits"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="TabContainer/Credits/Credits"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Developer"
+horizontal_alignment = 1
+
+[node name="Button5" parent="TabContainer/Credits/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "SW_CreeperKing"
+_Link = "https://linktr.ee/swcreeperking"
+
+[node name="Hint" type="ConfirmationDialog" parent="."]
+mode = 2
+title = "Hint Item?"
+initial_position = 2
+always_on_top = true
+ok_button_text = "Yes"
+cancel_button_text = "No"
+script = ExtResource("12_grg3l")
+
+[node name="HintChange" type="ConfirmationDialog" parent="."]
+mode = 2
+title = "Change Hint Status?"
+initial_position = 2
+ok_button_text = "Yes"
+cancel_button_text = "No"
+script = ExtResource("14_h1m7h")
+
+[connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
+[connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
+[connection signal="pressed" from="TabContainer/Login/MarginContainer/MultiTextClient/Button" to="." method="Save"]
