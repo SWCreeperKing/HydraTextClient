@@ -14,10 +14,17 @@ public partial class PlayerTable : RecyclingTable<PlayerItem, PlayerData>
     public override void _Process(double delta)
     {
         if (!RefreshUI) return;
-        if (ActiveClients.Count == 0) return;
+        RefreshUI = false;
+        if (ActiveClients.Count == 0)
+        {
+            UpdateData([]);
+            return;
+        }
+
         var client = ActiveClients[0];
         UpdateData(client.PlayerStates.Select((state, i)
-            => new PlayerData(i, client.PlayerNames[i], client.PlayerGames[i], state)));
+                              => new PlayerData(i, client.PlayerNames[i], client.PlayerGames[i], state))
+                         .ToHashSet());
     }
 
     protected override PlayerItem CreateRow() => new();
@@ -82,7 +89,7 @@ public partial class PlayerItem : RowItem<PlayerData>
     }
 }
 
-public struct PlayerData(int slot, string name, string game, ArchipelagoClientState state)
+public struct PlayerData(int slot, string name, string game, ArchipelagoClientState state) : IEquatable<PlayerData>
 {
     public readonly string PlayerSlot = $"{slot}";
     public readonly string PlayerName = name;
@@ -93,4 +100,19 @@ public struct PlayerData(int slot, string name, string game, ArchipelagoClientSt
 
     public static string ConvertStatus(ArchipelagoClientState state)
         => Enum.GetName(state)!.Replace("Client", "").Replace("Unknown", "Disconnected");
+
+    public bool Equals(PlayerData other)
+    {
+        return PlayerSlot == other.PlayerSlot && PlayerName == other.PlayerName && PlayerGame == other.PlayerGame && PlayerStatus == other.PlayerStatus;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is PlayerData other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(PlayerSlot, PlayerName, PlayerGame, PlayerStatus);
+    }
 }

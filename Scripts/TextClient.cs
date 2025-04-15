@@ -27,10 +27,10 @@ public partial class TextClient : VBoxContainer
     [Export] private SpinBox _Latency;
     [Export] private Button _ScrollToBottom;
     [Export] private ScrollContainer _ScrollContainer;
-    private Queue<ClientMessage> _ChatMessages = new(500);
-    private Queue<ClientMessage> _ItemLog = new(500);
-    private Queue<ClientMessage> _Both = new(1000);
-    private List<string> _SentMessages = new(150);
+    private Queue<ClientMessage> _ChatMessages = new(250);
+    private Queue<ClientMessage> _ItemLog = new(250);
+    private Queue<ClientMessage> _Both = new(500);
+    private List<string> _SentMessages = new(50);
     private MessageGateKeeper _Keeper = new();
     private ScrollBar _VScrollBar;
     private string[] _CurrentPlayers = [];

@@ -47,9 +47,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 24
-current_tab = 0
+current_tab = 3
 
 [node name="Login" type="HSplitContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
 split_offset = 450
@@ -403,7 +404,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Hints" type="MarginContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
@@ -468,7 +468,11 @@ theme_override_constants/separation = 0
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 24
-text = "Sort Order:"
+text = "Sort Order |
+-----------+
+drag the names
+to swap the
+their order"
 
 [node name="GridContainer" type="GridContainer" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_SortBox", "_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid")]
 layout_mode = 2

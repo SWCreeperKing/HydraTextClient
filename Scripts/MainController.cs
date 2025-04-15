@@ -28,6 +28,7 @@ public partial class MainController : Control
     private static readonly Dictionary<long, string> ItemIdToName = [];
     private static readonly Dictionary<long, string> LocationIdToName = [];
     private static bool _UpdateHints;
+    private static Comparer _HintComparer = new();
 
     public static Dictionary<ItemFlags, string> ItemToColorId = new()
     {
@@ -85,7 +86,9 @@ public partial class MainController : Control
         }
         else if (File.Exists($"{SaveDir}/data.json"))
         {
-            Data = JsonConvert.DeserializeObject<Data>(File.ReadAllText($"{SaveDir}/data.json").Replace("\r", "").Replace("\n", ""));
+            Data = JsonConvert.DeserializeObject<Data>(File.ReadAllText($"{SaveDir}/data.json")
+                                                           .Replace("\r", "")
+                                                           .Replace("\n", ""));
         }
     }
 
@@ -124,7 +127,7 @@ public partial class MainController : Control
                 hints.AddRange(newHints);
             }
 
-            HintTable.Datas = hints.Select(hint => new HintData(hint));
+            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintComparer);
             HintTable.RefreshUI = true;
             HintManager.RefreshUI = true;
             _UpdateHints = false;
@@ -289,5 +292,32 @@ public partial class MainController : Control
         if (what != NotificationWMCloseRequest) return;
         Save();
         GetTree().Quit();
+    }
+}
+
+public class Comparer : IEqualityComparer<HintData>
+{
+    public bool Equals(HintData x, HintData y)
+    {
+        return x.ReceivingPlayer == y.ReceivingPlayer && x.ReceivingPlayerSlot == y.ReceivingPlayerSlot &&
+               x.Item == y.Item && x.ItemFlags == y.ItemFlags && x.FindingPlayer == y.FindingPlayer &&
+               x.FindingPlayerSlot == y.FindingPlayerSlot && x.HintStatus == y.HintStatus && x.Location == y.Location &&
+               x.LocationId == y.LocationId && x.Entrance == y.Entrance;
+    }
+
+    public int GetHashCode(HintData obj)
+    {
+        var hashCode = new HashCode();
+        hashCode.Add(obj.ReceivingPlayer);
+        hashCode.Add(obj.ReceivingPlayerSlot);
+        hashCode.Add(obj.Item);
+        hashCode.Add((int)obj.ItemFlags);
+        hashCode.Add(obj.FindingPlayer);
+        hashCode.Add(obj.FindingPlayerSlot);
+        hashCode.Add((int)obj.HintStatus);
+        hashCode.Add(obj.Location);
+        hashCode.Add(obj.LocationId);
+        hashCode.Add(obj.Entrance);
+        return hashCode.ToHashCode();
     }
 }

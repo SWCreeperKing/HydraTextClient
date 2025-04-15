@@ -7,9 +7,9 @@ public abstract partial class RecyclingTable<TRowItem, TGroupData> : GridContain
 {
     private List<TRowItem> Rows = [];
 
-    public void UpdateData(IEnumerable<TGroupData> tableData)
+    public void UpdateData(HashSet<TGroupData> tableData)
     {
-        var tableLimit = tableData.Count();
+        var tableLimit = tableData.Count;
         for (var i = 0; i < Math.Max(Rows.Count, tableLimit); i++)
         {
             if (i >= tableLimit)

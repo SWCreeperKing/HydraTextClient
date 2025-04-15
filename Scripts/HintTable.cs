@@ -112,7 +112,7 @@ public partial class HintTable : RecyclingTable<HintRow, HintData>
             }
         }
 
-        UpdateData(orderedHints);
+        UpdateData(orderedHints.ToHashSet());
         RefreshUI = false;
     }
 

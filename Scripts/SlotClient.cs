@@ -45,6 +45,7 @@ public partial class SlotClient : PanelContainer
         _DeleteButton.Visible = false;
         _ConnectingLabel.Visible = true;
         LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
+        GD.Print($"{_Main.Port} | {PlayerName} | {_Main.Address} | {_Main.Password}");
 
         Task.Run(() =>
         {
@@ -137,6 +138,7 @@ public partial class SlotClient : PanelContainer
         _DeleteButton.Visible = true;
         _DisconnectButton.Visible = false;
         _Main.DisconnectClient(_Client);
+        _Client = new ApClient();
     }
 
 
