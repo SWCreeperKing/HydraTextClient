@@ -9,29 +9,11 @@ using Godot;
 
 public partial class HintManager : MarginContainer
 {
-    public static bool RefreshUI;
-    
     [Export] private VBoxContainer _HintSender;
-    [Export] private VBoxContainer _HintManager;
     [Export] private PackedScene _PlayerBox;
-    [Export] private PackedScene _HintChangerBox;
     [Export] private HintDialog _SendHintConfirmation;
-    [Export] private HintChangerDialog _HintChangeConfirmation;
     private Dictionary<ApClient, PlayerBox> _HintSenderBoxes = [];
-    private Dictionary<ApClient, HintStatusChanger> _HintChangerBoxes = [];
     
-    public override void _Process(double delta)
-    {
-        if (!RefreshUI) return;
-
-        foreach (var changer in _HintChangerBoxes.Values)
-        {
-            changer.RefreshUI = true;
-        }
-        
-        RefreshUI = false;
-    }
-
     public void RegisterPlayer(ApClient client)
     {
         var itemReceivedResolver = (ReceivedItemsHelper)client.Session.Items;
@@ -72,11 +54,6 @@ public partial class HintManager : MarginContainer
 
         _HintSender.AddChild(playerBox);
         _HintSenderBoxes.Add(client, playerBox);
-
-        var hintChangerBox = (HintStatusChanger)_HintChangerBox.Instantiate();
-        hintChangerBox.Init(client, _HintChangeConfirmation);
-        _HintManager.AddChild(hintChangerBox);
-        _HintChangerBoxes.Add(client, hintChangerBox);
     }
 
     public void UnregisterPlayer(ApClient client)
@@ -85,11 +62,6 @@ public partial class HintManager : MarginContainer
         _HintSender.RemoveChild(playerBox);
         playerBox.QueueFree();
         _HintSenderBoxes.Remove(client);
-
-        var hintChanger = _HintChangerBoxes[client];
-        _HintManager.RemoveChild(hintChanger);
-        hintChanger.QueueFree();
-        _HintChangerBoxes.Remove(client);
     }
 
     public void HintItem(string item, ApClient client)

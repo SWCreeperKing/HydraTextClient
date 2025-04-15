@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Archipelago.MultiClient.Net.Converters;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
@@ -36,16 +37,17 @@ public partial class TextClient : VBoxContainer
     private string[] _CurrentPlayers = [];
     private int _ScrollBackNum;
     private bool _ToScroll;
+    private double _MessageCooldown;
 
     public override void _Ready()
     {
-        MessageGateKeeper.Stopwatch.Start();
         _VScrollBar = _ScrollContainer.GetVScrollBar();
-        
+
         _Latency.ValueChanged += val => MainController.Data.Latency = MessageGateKeeper.Latency = (long)val;
         _Latency.Value = MessageGateKeeper.Latency = MainController.Data.Latency;
-        
-        _WordWrap.ItemSelected += i => _Messages.AutowrapMode = (TextServer.AutowrapMode)(MainController.Data.WordWrap = i);
+
+        _WordWrap.ItemSelected += i
+            => _Messages.AutowrapMode = (TextServer.AutowrapMode)(MainController.Data.WordWrap = i);
         _Content.ItemSelected += i =>
         {
             MainController.Data.Content = i;
@@ -53,7 +55,7 @@ public partial class TextClient : VBoxContainer
         };
         _WordWrap.Selected = (int)MainController.Data.WordWrap;
         _Content.Selected = (int)MainController.Data.Content;
-        
+
         _SendMessage.TextSubmitted += SendMessage;
         _SendMessage.GuiInput += input =>
         {
@@ -72,13 +74,15 @@ public partial class TextClient : VBoxContainer
                 default:
                     return;
             }
+
             _ScrollBackNum = Math.Clamp(_ScrollBackNum, 0, _SentMessages.Count - 1);
             _SendMessage.Text = _SentMessages[_ScrollBackNum];
         };
         _SendMessage.FocusEntered += () => _ScrollBackNum = 0;
-        
+
         _SendMessageButton.Pressed += () => SendMessage(_SendMessage.Text);
-        _ScrollToBottom.Pressed += () => _ScrollContainer.ScrollVertical = (int)_ScrollContainer.GetVScrollBar().MaxValue;
+        _ScrollToBottom.Pressed +=
+            () => _ScrollContainer.ScrollVertical = (int)_ScrollContainer.GetVScrollBar().MaxValue;
         _VScrollBar.Changed += () =>
         {
             if (!_ToScroll) return;
@@ -89,6 +93,13 @@ public partial class TextClient : VBoxContainer
 
     public override void _Process(double delta)
     {
+        _SendMessageButton.Disabled = _MessageCooldown > 0;
+        
+        if (_MessageCooldown > 0)
+        {
+            _MessageCooldown -= delta;
+        }
+        
         if (ClearClient)
         {
             Clear();
@@ -109,7 +120,7 @@ public partial class TextClient : VBoxContainer
         {
             _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
             AwaitingMessages.TryDequeue(out var message);
-            if (!_Keeper.CanAdd(message.HashCode)) continue;
+            if (!_Keeper.CanAdd(message.Message)) continue;
             _Both.Enqueue(message);
 
             if (message.IsItemLog)
@@ -144,9 +155,11 @@ public partial class TextClient : VBoxContainer
 
     public void SendMessage(string message)
     {
+        if (_MessageCooldown > 0) return;
         var trim = message.Trim();
         if (trim == "") return;
         if (_CurrentPlayers.Length == 0) return;
+        _MessageCooldown = .3f;
         _ScrollBackNum = 0;
         _SentMessages.Add(trim);
         ActiveClients[_SelectedClient.Selected].Say(message);
@@ -174,7 +187,7 @@ public readonly struct ClientMessage(
     public readonly bool IsItemLog = isItemLog;
     public readonly bool IsServer = isServer;
     public readonly JsonMessagePart[] MessageParts = messageParts;
-    public readonly int HashCode = string.Join("", messageParts.Select(msg => msg.Text)).GetHashCode();
+    public readonly string Message = string.Join("", messageParts.Select(msg => msg.Text));
     public readonly ChatPrintJsonPacket? ChatPacket = chatPrintJsonPacket;
 
     public string GenString()
@@ -182,8 +195,8 @@ public readonly struct ClientMessage(
         string color;
         if (ChatPacket is not null)
         {
-            color =  PlayerColor(ChatPacket.Slot);
-            return $"[color={color}]{Players[ChatPacket.Slot].Clean()}[/color]: {ChatPacket.Message.Clean()}";
+            color = PlayerColor(ChatPacket.Slot);
+            return $"[color={color}]{GetAlias(ChatPacket.Slot, true)}[/color]: {ChatPacket.Message.Clean()}";
         }
 
         StringBuilder messageBuilder = new();
@@ -200,7 +213,7 @@ public readonly struct ClientMessage(
                 case JsonMessagePartType.PlayerId:
                     var slot = int.Parse(part.Text);
                     color = PlayerColor(slot);
-                    messageBuilder.Append($"[color={color}]{Players[slot].Clean()}[/color]");
+                    messageBuilder.Append($"[color={color}]{GetAlias(slot, true)}[/color]");
                     break;
                 case JsonMessagePartType.ItemId:
                     var item = ItemIdToItemName(long.Parse(part.Text), part.Player!.Value);
@@ -215,7 +228,8 @@ public readonly struct ClientMessage(
                 case JsonMessagePartType.EntranceName:
                     var entranceName = part.Text.Trim();
                     color = MainController.Data.ColorSettings[entranceName == "" ? "entrance_vanilla" : "entrance"];
-                    messageBuilder.Append($"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]");
+                    messageBuilder.Append(
+                        $"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]");
                     break;
                 case JsonMessagePartType.HintStatus:
                     var name = HintStatusText[(HintStatus)part.HintStatus!];
@@ -235,30 +249,28 @@ public readonly struct ClientMessage(
 public class MessageGateKeeper
 {
     public static long Latency = 50;
-    public static Stopwatch Stopwatch = new();
     public PriorityQueue<DataTimestamp, long> PacketMessageQueue = new();
-    public HashSet<int> MessageSet = [];
+    public HashSet<string> MessageSet = [];
 
-    public bool CanAdd(int hashData)
+    public bool CanAdd(string message)
     {
-        var currentTimestamp = Stopwatch.ElapsedMilliseconds;
+        var currentTimestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         while (PacketMessageQueue.Count != 0 && currentTimestamp - PacketMessageQueue.Peek().Timestamp > Latency)
         {
             var dequeued = PacketMessageQueue.Dequeue();
-            MessageSet.Remove(dequeued.HashCode);
+            MessageSet.Remove(dequeued.Message);
         }
 
-        if (!MessageSet.Add(hashData)) return false;
-
-        PacketMessageQueue.Enqueue(new DataTimestamp(currentTimestamp, hashData), currentTimestamp);
+        if (!MessageSet.Add(message)) return false;
+        PacketMessageQueue.Enqueue(new DataTimestamp(currentTimestamp, message), currentTimestamp);
         return true;
     }
 }
 
-public readonly struct DataTimestamp(long timestamp, int hashCode)
+public readonly struct DataTimestamp(long timestamp, string message)
 {
     public readonly long Timestamp = timestamp;
-    public readonly int HashCode = hashCode;
+    public readonly string Message = message;
 }
 
 public static class TextHelper

@@ -13,32 +13,19 @@ public partial class HintTable : TextTable
 {
     public static bool RefreshUI;
     public static IEnumerable<HintData> Datas = [];
+    public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
 
-    [Export] private HBoxContainer _SortBox;
     [Export] private CheckBox _ShowFound;
     [Export] private CheckBox _ShowPriority;
     [Export] private CheckBox _ShowUnspecified;
     [Export] private CheckBox _ShowNoPriority;
     [Export] private CheckBox _ShowAvoid;
-    [Export] private PackedScene _DragOptionScene;
-    private DraggingOptions[] _SortOptions = [];
+    [Export] private HintChangerWindow _HintChangerWindow;
 
-    public static Dictionary<ItemFlags, int> ItemToSortId = new()
-    {
-        [ItemFlags.Advancement] = 0,
-        [ItemFlags.NeverExclude] = 1,
-        [ItemFlags.Trap] = 10,
-    };
+    public List<SortObject> SortOrder => MainController.Data.HintSortOrder;
 
     public override void _Ready()
     {
-        foreach (var (_, index) in MainController.Data.SortOrder.Select((s, i) => (s, i)).OrderBy(t => t.s.Index))
-        {
-            var drag = (DraggingOptions)_DragOptionScene.Instantiate();
-            drag.DataIndex = index;
-            _SortBox.AddChild(drag);
-        }
-
         _ShowFound.Pressed += () =>
         {
             MainController.Data.HintOptions[0] = _ShowFound.ButtonPressed;
@@ -70,7 +57,46 @@ public partial class HintTable : TextTable
         _ShowNoPriority.ButtonPressed = MainController.Data.HintOptions[3];
         _ShowAvoid.ButtonPressed = MainController.Data.HintOptions[4];
 
-        MetaClicked += s => DisplayServer.ClipboardSet(s.ToString());
+        MetaClicked += raw =>
+        {
+            var s = (string)raw;
+            GD.Print($"{s}");
+            if (s.StartsWith("SortOrder&"))
+            {
+                s = s[10..];
+                GD.Print($"{s}");
+                if (SortOrder.Any(so => so.Name == s))
+                {
+                    var so = SortOrder.First(so => so.Name == s);
+                    if (so.IsDescending)
+                    {
+                        SortOrder.Remove(so);
+                        GD.Print("removed");
+                    }
+                    else
+                    {
+                        so.IsDescending = true;
+                        GD.Print("changed");
+                    }
+                }
+                else
+                {
+                    SortOrder.Add(new SortObject(s));
+                    GD.Print("added");
+                }
+
+                RefreshUI = true;
+            }
+            else if (s.StartsWith("change&"))
+            {
+                var split = s[7..].Split("&_&");
+                _HintChangerWindow.ShowWindow(int.Parse(split[1]), split[0], split[2], split[3], long.Parse(split[4]));
+            }
+            else
+            {
+                DisplayServer.ClipboardSet(s);
+            }
+        };
     }
 
     public override void _Process(double delta)
@@ -78,44 +104,44 @@ public partial class HintTable : TextTable
         if (!RefreshUI) return;
 
         var orderedHints =
-            Datas.Where(hint =>
+            Datas.Where(hint => hint.HintStatus switch
                   {
-                      return hint.HintStatus switch
-                      {
-                          Found => _ShowFound.ButtonPressed,
-                          Unspecified => _ShowUnspecified.ButtonPressed,
-                          NoPriority => _ShowNoPriority.ButtonPressed,
-                          Avoid => _ShowAvoid.ButtonPressed,
-                          Priority => _ShowPriority.ButtonPressed,
-                          _ => false
-                      };
+                      Found => _ShowFound.ButtonPressed,
+                      Unspecified => _ShowUnspecified.ButtonPressed,
+                      NoPriority => _ShowNoPriority.ButtonPressed,
+                      Avoid => _ShowAvoid.ButtonPressed,
+                      Priority => _ShowPriority.ButtonPressed,
+                      _ => false
                   })
                  .OrderBy(hint => hint.LocationId);
 
-        foreach (var option in MainController.Data.SortOrder.OrderBy(s => s.Index))
+        orderedHints = SortOrder.Aggregate(orderedHints, (current, option) => option.Name switch
         {
-            if (!option.IsActive) continue;
-            switch (option.Name)
-            {
-                case "Receiving Player":
-                    orderedHints = Order(orderedHints, hint => GetOrderSlot(hint.ReceivingPlayerSlot),
-                        option.IsDescending);
-                    break;
-                case "Item":
-                    orderedHints = Order(orderedHints, hint => SortNumber(hint.ItemFlags), option.IsDescending);
-                    break;
-                case "Finding Player":
-                    orderedHints = Order(orderedHints, hint => GetOrderSlot(hint.FindingPlayerSlot),
-                        option.IsDescending);
-                    break;
-                case "Priority":
-                    orderedHints = Order(orderedHints, hint => HintStatusNumber[hint.HintStatus], option.IsDescending);
-                    break;
-            }
-        }
+            "Receiving Player" => Order(current, hint => GetOrderSlot(hint.ReceivingPlayerSlot), option.IsDescending),
+            "Item" => Order(current, hint => SortNumber(hint.ItemFlags), option.IsDescending),
+            "Finding Player" => Order(current, hint => GetOrderSlot(hint.FindingPlayerSlot), option.IsDescending),
+            "Priority" => Order(current, hint => HintStatusNumber[hint.HintStatus], option.IsDescending),
+            _ => current
+        });
 
         UpdateData(orderedHints.Select(hint => hint.GetData()).ToList());
         RefreshUI = false;
+    }
+
+    public override string GetColumnText(string columnText, int columnNum)
+    {
+        if (columnNum is 0 or > 4) return columnText;
+
+        if (SortOrder.Any(so => so.Name == columnText))
+        {
+            var so = SortOrder.First(so => so.Name == columnText);
+            var place = SortOrder.IndexOf(so) + 1;
+            return so.IsDescending
+                ? $"[url=SortOrder&{columnText}]{columnText} {place}▼[/url]" // ↓▼▽v
+                : $"[url=SortOrder&{columnText}]{columnText} {place}▲[/url]"; // ↑▲△^
+        }
+
+        return $"[url=SortOrder&{columnText}]{columnText} -[/url]";
     }
 
     public IOrderedEnumerable<HintData> Order(IOrderedEnumerable<HintData> arr, Func<HintData, int> compare,
@@ -124,7 +150,28 @@ public partial class HintTable : TextTable
 
     public int GetOrderSlot(int slot) => PlayerSlots.ContainsKey(slot) ? Players.Length + slot : slot;
 
-    public int SortNumber(ItemFlags flags) => ItemToSortId.GetValueOrDefault(flags, 2);
+    public int SortNumber(ItemFlags flags)
+    {
+        if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
+        if (flags.HasFlag(ItemFlags.Advancement))
+        {
+            id = 0;
+        }
+        else if (flags.HasFlag(ItemFlags.NeverExclude))
+        {
+            id = 1;
+        }
+        else if (flags.HasFlag(ItemFlags.Trap))
+        {
+            id = 10;
+        }
+        else
+        {
+            id = 2;
+        }
+
+        return id;
+    }
 }
 
 public readonly struct HintData(Hint hint)
@@ -146,22 +193,35 @@ public readonly struct HintData(Hint hint)
     public string[] GetData()
     {
         var receivingPlayerColor = PlayerColor(ReceivingPlayer).Hex;
-        var itemColor = MainController.Data.ColorSettings[ItemToColorId.GetValueOrDefault(ItemFlags, "item_normal")]
-                                      .Hex;
+        var itemColor = GetItemHexColor(ItemFlags);
         var findingPlayerColor = PlayerColor(FindingPlayer).Hex;
         var hintColor = MainController.Data.ColorSettings[HintStatusColor[HintStatus]].Hex;
         var locationColor = MainController.Data.ColorSettings["location"].Hex;
         var entranceColor = MainController.Data.ColorSettings[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"]
                                           .Hex;
+
+        var hintStatus = HintStatusText[HintStatus];
+        if (PlayerSlots.ContainsKey(ReceivingPlayerSlot) && HintStatus is not Found)
+        {
+            hintStatus =
+                $"[url=\"change&{ReceivingPlayer}&_&{FindingPlayerSlot}&_&{Item}&_&{itemColor}&_&{LocationId}\"]{hintStatus}[/url]";
+        }
+
         return
         [
             $"[url=\"{GetCopyText()}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
             $"[color={itemColor}]{Item.Clean()}[/color]",
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
-            $"[color={hintColor}]{HintStatusText[HintStatus]}[/color]",
+            $"[color={hintColor}]{hintStatus}[/color]",
             $"[color={locationColor}]{Location.Clean()}[/color]",
             $"[color={entranceColor}]{Entrance.Clean()}[/color]"
         ];
     }
+}
+
+public class SortObject(string name)
+{
+    public readonly string Name = name;
+    public bool IsDescending;
 }

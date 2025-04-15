@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=16 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_r150o"]
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
@@ -6,15 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClient.cs" id="5_pbw6q"]
 [ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/HintManager.cs" id="6_4kpch"]
-[ext_resource type="PackedScene" uid="uid://2nsibv8xkfq7" path="res://Scenes/Prefabs/DragingText.tscn" id="6_jw32o"]
+[ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/RichToolTip.cs" id="6_h1m7h"]
 [ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/Settings.cs" id="6_v1gob"]
 [ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/PlayerTable.cs" id="7_50glp"]
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
 [ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTable.cs" id="7_vy5pj"]
-[ext_resource type="PackedScene" uid="uid://8mafjhmihowg" path="res://Scenes/Prefabs/HintChanger.tscn" id="8_1p5hy"]
 [ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/HintDialog.cs" id="12_grg3l"]
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
-[ext_resource type="Script" uid="uid://bapekk0wusqa1" path="res://Scripts/HintChangerDialog.cs" id="14_h1m7h"]
+[ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintChangerWindow.cs" id="16_erwvk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.230315, 0.230315, 0.230315, 1)
@@ -35,7 +34,7 @@ _SlotField = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/HBoxCon
 _SlotContainer = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/ScrollContainer/VBoxContainer")
 _SlotAddButton = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/HBoxContainer/Button")
 _SlotPackedScene = ExtResource("3_kln2b")
-_HintManager = NodePath("TabContainer/Hint Manager")
+_HintManager = NodePath("TabContainer/Items")
 _TabContainer = NodePath("TabContainer")
 
 [node name="TabContainer" type="TabContainer" parent="."]
@@ -323,6 +322,7 @@ theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
+script = ExtResource("6_h1m7h")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/Text Client"]
 layout_mode = 2
@@ -348,68 +348,14 @@ theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 24
 text = "Scroll To Bottom"
 
-[node name="Hint Manager" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_HintSender", "_HintManager", "_SendHintConfirmation", "_HintChangeConfirmation")]
+[node name="Hints" type="MarginContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
-script = ExtResource("6_4kpch")
-_HintSender = NodePath("Login/MarginContainer/ScrollContainer/VBoxContainer")
-_HintManager = NodePath("Login/MarginContainer2/ScrollContainer/VBoxContainer")
-_PlayerBox = ExtResource("7_grg3l")
-_HintChangerBox = ExtResource("8_1p5hy")
-_SendHintConfirmation = NodePath("../../Hint")
-_HintChangeConfirmation = NodePath("../../HintChange")
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
 metadata/_tab_index = 2
-
-[node name="Login" type="HSplitContainer" parent="TabContainer/Hint Manager"]
-layout_mode = 2
-theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
-metadata/_tab_index = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hint Manager/Login"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hint Manager/Login/MarginContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hint Manager/Login/MarginContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="TabContainer/Hint Manager/Login/MarginContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Click an item to hint it"
-
-[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Hint Manager/Login"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hint Manager/Login/MarginContainer2"]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hint Manager/Login/MarginContainer2/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Hints" type="MarginContainer" parent="TabContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-metadata/_tab_index = 3
 
 [node name="Hints" type="ScrollContainer" parent="TabContainer/Hints"]
 layout_mode = 2
@@ -417,64 +363,48 @@ size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 15
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Hints/Hints/VBoxContainer"]
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Hints/Hints/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 15
+size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 16
 text = "Show Found"
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Priority"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Unspecified"
 
-[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show No Priority"
 
-[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Avoid"
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Label" type="Label" parent="TabContainer/Hints/Hints/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("1_r150o")
-theme_override_font_sizes/font_size = 24
-text = "Sort Order |
------------+
-drag the names
-to swap the
-their order"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_SortBox", "_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid")]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangerWindow")]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_r150o")
 theme_override_fonts/mono_font = ExtResource("1_r150o")
@@ -490,14 +420,43 @@ bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("7_vy5pj")
-_SortBox = NodePath("../HBoxContainer")
-_ShowFound = NodePath("../HBoxContainer/VBoxContainer/CheckBox")
-_ShowPriority = NodePath("../HBoxContainer/VBoxContainer/CheckBox5")
-_ShowUnspecified = NodePath("../HBoxContainer/VBoxContainer/CheckBox2")
-_ShowNoPriority = NodePath("../HBoxContainer/VBoxContainer/CheckBox3")
-_ShowAvoid = NodePath("../HBoxContainer/VBoxContainer/CheckBox4")
-_DragOptionScene = ExtResource("6_jw32o")
+_ShowFound = NodePath("../FlowContainer/CheckBox")
+_ShowPriority = NodePath("../FlowContainer/CheckBox5")
+_ShowUnspecified = NodePath("../FlowContainer/CheckBox2")
+_ShowNoPriority = NodePath("../FlowContainer/CheckBox3")
+_ShowAvoid = NodePath("../FlowContainer/CheckBox4")
+_HintChangerWindow = NodePath("../../../../../Window")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
+
+[node name="Items" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_HintSender", "_SendHintConfirmation")]
+layout_mode = 2
+script = ExtResource("6_4kpch")
+_HintSender = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
+_PlayerBox = ExtResource("7_grg3l")
+_SendHintConfirmation = NodePath("../../Hint")
+metadata/_tab_index = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Items"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Items/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Items/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="TabContainer/Items/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Click an item to hint it"
 
 [node name="Players" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -519,11 +478,11 @@ theme_override_fonts/mono_font = ExtResource("1_r150o")
 theme_override_fonts/italics_font = ExtResource("1_r150o")
 theme_override_fonts/bold_italics_font = ExtResource("1_r150o")
 theme_override_fonts/bold_font = ExtResource("1_r150o")
-theme_override_font_sizes/bold_italics_font_size = 32
-theme_override_font_sizes/italics_font_size = 32
-theme_override_font_sizes/mono_font_size = 32
-theme_override_font_sizes/normal_font_size = 32
-theme_override_font_sizes/bold_font_size = 32
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/mono_font_size = 24
+theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
@@ -620,13 +579,110 @@ ok_button_text = "Yes"
 cancel_button_text = "No"
 script = ExtResource("12_grg3l")
 
-[node name="HintChange" type="ConfirmationDialog" parent="."]
+[node name="Window" type="Window" parent="." node_paths=PackedStringArray("_Label", "_Options", "_Apply", "_Cancel")]
 mode = 2
-title = "Change Hint Status?"
+title = "Change Hint Status"
 initial_position = 2
-ok_button_text = "Yes"
-cancel_button_text = "No"
-script = ExtResource("14_h1m7h")
+size = Vector2i(400, 200)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+borderless = true
+theme_override_fonts/title_font = ExtResource("1_r150o")
+script = ExtResource("16_erwvk")
+_Label = NodePath("ScrollContainer/MarginContainer/VBoxContainer/RichTextLabel")
+_Options = NodePath("ScrollContainer/MarginContainer/VBoxContainer/OptionButton")
+_Apply = NodePath("ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/Button")
+_Cancel = NodePath("ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer/Button2")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Window/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_r150o")
+theme_override_fonts/mono_font = ExtResource("1_r150o")
+theme_override_fonts/italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_italics_font = ExtResource("1_r150o")
+theme_override_fonts/bold_font = ExtResource("1_r150o")
+theme_override_font_sizes/bold_italics_font_size = 18
+theme_override_font_sizes/italics_font_size = 18
+theme_override_font_sizes/mono_font_size = 18
+theme_override_font_sizes/normal_font_size = 18
+theme_override_font_sizes/bold_font_size = 18
+bbcode_enabled = true
+text = "Change hint status for [bgcolor=00000066][color=green]Item[/color][/bgcolor]?"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="OptionButton" type="OptionButton" parent="Window/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 18
+selected = 0
+item_count = 3
+popup/item_0/text = "Priority"
+popup/item_0/id = 30
+popup/item_1/text = "No Priority"
+popup/item_1/id = 10
+popup/item_2/text = "Avoid"
+popup/item_2/id = 20
+
+[node name="HSeparator" type="HSeparator" parent="Window/ScrollContainer/MarginContainer/VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="Window/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="Window/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(0.815686, 1, 0.768627, 1)
+layout_mode = 2
+text = "Change"
+
+[node name="VSeparator" type="VSeparator" parent="Window/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button2" type="Button" parent="Window/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 0.784314, 0.847059, 1)
+layout_mode = 2
+text = "Cancel"
+
+[node name="VSeparator3" type="VSeparator" parent="Window/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
 [connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]

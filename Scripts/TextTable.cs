@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Godot;
 using Godot.Collections;
@@ -10,21 +9,18 @@ public abstract partial class TextTable : RichTextLabel
 {
     [Export] private Array<string> _Columns = [];
 
-    // public void UpdateData(IEnumerable<string[]> data)
     public void UpdateData(List<string[]> data)
     {
         StringBuilder sb = new();
         sb.Append("[table=").Append(_Columns.Count).Append(']');
 
-        foreach (var column in _Columns)
+        for (var i = 0; i < _Columns.Count; i++)
         {
-            sb.Append("[cell bg=00000069] ").Append(column).Append(" [/cell]");
+            sb.Append("[cell bg=00000069] ").Append(GetColumnText(_Columns[i], i)).Append(" [/cell]");
         }
 
-        // for (var i = 0; i < data.Count(); i++)
         for (var i = 0; i < data.Count; i++)
         {
-            // foreach (var item in data.ElementAt(i))
             foreach (var item in data[i])
             {
                 if (i % 2 == 0)
@@ -42,4 +38,6 @@ public abstract partial class TextTable : RichTextLabel
 
         Text = sb.ToString();
     }
+
+    public virtual string GetColumnText(string columnText, int columnNum) => columnText;
 }

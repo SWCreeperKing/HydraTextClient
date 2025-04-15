@@ -18,8 +18,8 @@ public partial class SlotClient : PanelContainer
     [Export] private Label _PlayerNameLabel;
     [Export] private Button _DeleteButton;
     [Export] private RichTextLabel _ErrorLabel;
+    public ApClient Client = new();
     private MainController _Main;
-    private ApClient _Client = new();
     
     public string PlayerName { get; private set; }
 
@@ -45,17 +45,16 @@ public partial class SlotClient : PanelContainer
         _DeleteButton.Visible = false;
         _ConnectingLabel.Visible = true;
         LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
-        GD.Print($"{_Main.Port} | {PlayerName} | {_Main.Address} | {_Main.Password}");
 
         Task.Run(() =>
         {
             try
             {
                 string[]? error = null;
-                lock (_Client)
+                lock (Client)
                 {
-                    error = _Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: ["TextOnly"]);
-                    _Client.Session.Socket.PacketReceived += packet =>
+                    error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: ["TextOnly"]);
+                    Client.Session.Socket.PacketReceived += packet =>
                     {
                         switch (packet)
                         {
@@ -105,9 +104,9 @@ public partial class SlotClient : PanelContainer
     {
         Task.Run(() =>
         {
-            lock (_Client)
+            lock (Client)
             {
-                _Client.TryDisconnect();
+                Client.TryDisconnect();
             }
 
             CallDeferred("HasDisconnected");
@@ -127,7 +126,7 @@ public partial class SlotClient : PanelContainer
         _ConnectingLabel.Visible = false;
         _ConnectButton.Visible = false;
         _DisconnectButton.Visible = true;
-        _Main.ConnectClient(_Client);
+        _Main.ConnectClient(Client);
     }
 
     public void HasDisconnected()
@@ -137,10 +136,10 @@ public partial class SlotClient : PanelContainer
         _ConnectButton.Visible = true;
         _DeleteButton.Visible = true;
         _DisconnectButton.Visible = false;
-        _Main.DisconnectClient(_Client);
-        _Client = new ApClient();
+        _Main.DisconnectClient(Client);
+        Client = new ApClient();
     }
 
 
-    public void Say(string message) { _Client.Say(message); }
+    public void Say(string message) { Client.Say(message); }
 }

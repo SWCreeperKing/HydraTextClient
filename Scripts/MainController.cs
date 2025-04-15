@@ -25,17 +25,11 @@ public partial class MainController : Control
     public static string[] Players = [];
     public static string[] PlayerGames = [];
     public static int MoveToTab;
-    private static readonly Dictionary<long, string> ItemIdToName = [];
+    private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
     private static readonly Dictionary<long, string> LocationIdToName = [];
     private static bool _UpdateHints;
     private static Comparer _HintComparer = new();
-
-    public static Dictionary<ItemFlags, string> ItemToColorId = new()
-    {
-        [ItemFlags.Advancement] = "item_progressive",
-        [ItemFlags.NeverExclude] = "item_useful",
-        [ItemFlags.Trap] = "item_trap",
-    };
+    private static Dictionary<ItemFlags, string> _ItemColorNameCache = [];
 
     public static Dictionary<HintStatus, string> HintStatusColor = new()
     {
@@ -129,7 +123,6 @@ public partial class MainController : Control
 
             HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintComparer);
             HintTable.RefreshUI = true;
-            HintManager.RefreshUI = true;
             _UpdateHints = false;
         }
 
@@ -164,9 +157,15 @@ public partial class MainController : Control
 
     public static string ItemIdToItemName(long id, int playerSlot)
     {
-        if (!ItemIdToName.TryGetValue(id, out var itemName))
+        var game = PlayerGames[playerSlot];
+        if (!ItemIdToName.TryGetValue(game, out var itemNameDict))
         {
-            itemName = ItemIdToName[id] = ActiveClients[0].Session.Items.GetItemName(id, PlayerGames[playerSlot]);
+            ItemIdToName[game] = itemNameDict = new Dictionary<long, string>();
+        }
+
+        if (!itemNameDict.TryGetValue(id, out var itemName))
+        {
+            itemName = ItemIdToName[game][id] = ActiveClients[0].Session.Items.GetItemName(id, game);
         }
 
         return itemName;
@@ -276,7 +275,27 @@ public partial class MainController : Control
                         : "player_generic"];
 
     public static string GetItemHexColor(ItemFlags flags)
-        => Data.ColorSettings[ItemToColorId.GetValueOrDefault(flags, "item_normal")];
+    {
+        if (_ItemColorNameCache.TryGetValue(flags, out var color)) return Data.ColorSettings[color];
+        if (flags.HasFlag(ItemFlags.Advancement))
+        {
+            color = "item_progressive";
+        }
+        else if (flags.HasFlag(ItemFlags.NeverExclude))
+        {
+            color = "item_useful";
+        }
+        else if (flags.HasFlag(ItemFlags.Trap))
+        {
+            color = "item_trap";
+        }
+        else
+        {
+            color = "item_normal";
+        }
+
+        return Data.ColorSettings[_ItemColorNameCache[flags] = color];
+    }
 
     public static void RefreshUIColors()
     {
@@ -286,6 +305,13 @@ public partial class MainController : Control
     }
 
     public static void Save() => File.WriteAllText($"{SaveDir}/data.json", JsonConvert.SerializeObject(Data));
+
+    public static string GetAlias(int slot, bool additionalInfo)
+    {
+        var alias = ActiveClients[0].Session.Players.AllPlayers.ElementAt(slot).Alias.Clean();
+        if (!additionalInfo) return alias;
+        return $"[hint=\"Name: {Players[slot]}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
+    }
 
     public override void _Notification(int what)
     {

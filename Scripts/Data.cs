@@ -32,13 +32,10 @@ public class Data
         ["connection_ready"] = new("Connection (Ready)", Colors.Azure),
         ["connection_connected"] = new("Connection (Connected)", Colors.Teal),
         ["connection_disconnected"] = new("Connection (Disconnected)", Colors.OrangeRed),
+        ["tooltip_bgcolor"] = new ColorSetting("Tooltip Background Color", new Color(0.055f, 0.063f, 0.071f, 0.749f))
     };
-
-    public OptionData[] SortOrder =
-    [
-        new("Receiving Player"), new("Item", false, true), new("Finding Player"), new("Priority")
-    ];
-
+    
+    public List<SortObject> HintSortOrder = [];
     public bool[] HintOptions = [false, true, true, true, true];
     public long WordWrap = 0;
     public long Content = 0;
