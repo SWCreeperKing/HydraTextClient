@@ -5,7 +5,7 @@ public partial class PlayerBox : Control
     [Export] private Label _PlayerName;
     [Export] private VBoxContainer _BoxContainer;
     [Export] private HFlowContainer _FlowContainer;
-    [Export] private CheckButton _ShowContainers;
+    [Export] private Button _ShowContainers;
 
     public string PlayerName
     {
@@ -17,7 +17,11 @@ public partial class PlayerBox : Control
     {
         _BoxContainer.Visible = false;
         _FlowContainer.Visible = false;
-        _ShowContainers.Pressed += () => _BoxContainer.Visible = _FlowContainer.Visible = _ShowContainers.ButtonPressed;
+        _ShowContainers.Pressed += () =>
+        {
+            _BoxContainer.Visible = _FlowContainer.Visible = !_BoxContainer.Visible;
+            _ShowContainers.Text = _BoxContainer.Visible ? "Hide" : "Show";
+        };
     }
 
     public void AddNode(Control node, bool appendToFlow)

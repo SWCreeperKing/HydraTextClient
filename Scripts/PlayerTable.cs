@@ -51,14 +51,15 @@ public struct PlayerData(int slot, string name, string game, ArchipelagoClientSt
     public string[] GetData()
     {
         var statusColor =
-            MainController.Data.ColorSettings[
+            MainController.Data[
                 PlayerStatus switch
                 {
                     "Disconnected" => "connection_disconnected",
                     "Connected" => "connection_connected",
                     "Ready" => "connection_ready",
                     "Playing" => "connection_playing",
-                    "Goal" => "connection_goal"
+                    "Goal" => "connection_goal",
+                    _ => throw new ArgumentOutOfRangeException()
                 }
             ];
         return

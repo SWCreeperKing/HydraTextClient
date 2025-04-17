@@ -16,7 +16,7 @@ public partial class RichToolTip : RichTextLabel
         margin.AddThemeConstantOverride("margin_bottom", 3);
 
         ColorRect panel = new(); 
-        panel.Color = MainController.Data.ColorSettings["tooltip_bgcolor"];
+        panel.Color = MainController.Data["tooltip_bgcolor"];
         
         Label tooltip = new();
         tooltip.AddThemeFontOverride("font", MainController.Font);

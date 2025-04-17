@@ -1,3 +1,18 @@
+# v.0.3
+
+---
+- Up arrow now correctly goes to the last msg you sent instead of the first one
+- `Items` renamed to `Items & Locations`, the hints now have a friend again :D its hint_locations
+- Made the headers in `Items & Locations` buttons so it's far easier to show/hide their contents
+- As per qwint's suggestion I limited non inuse clients
+- Added a 7 slot connection limit (as to not overload the server with too many connections at once)
+- Added a universal 15s cooldown to connecting/changing slots as to not spam the chat
+- Removed the need to sync text clients :seekerHappy:
+- Decreased font size of chat messages from 24 to 20
+- Redid how hints are handled from other active slots when someone does !hint 
+- You can click on messages in the text client to copy them (not including hints, go to the hints tab to copy a hint)
+- Import/Export colors in settings
+
 # v.0.2
 
 ---

@@ -60,29 +60,24 @@ public partial class HintTable : TextTable
         MetaClicked += raw =>
         {
             var s = (string)raw;
-            GD.Print($"{s}");
             if (s.StartsWith("SortOrder&"))
             {
                 s = s[10..];
-                GD.Print($"{s}");
                 if (SortOrder.Any(so => so.Name == s))
                 {
                     var so = SortOrder.First(so => so.Name == s);
                     if (so.IsDescending)
                     {
                         SortOrder.Remove(so);
-                        GD.Print("removed");
                     }
                     else
                     {
                         so.IsDescending = true;
-                        GD.Print("changed");
                     }
                 }
                 else
                 {
                     SortOrder.Add(new SortObject(s));
-                    GD.Print("added");
                 }
 
                 RefreshUI = true;
@@ -195,9 +190,9 @@ public readonly struct HintData(Hint hint)
         var receivingPlayerColor = PlayerColor(ReceivingPlayer).Hex;
         var itemColor = GetItemHexColor(ItemFlags);
         var findingPlayerColor = PlayerColor(FindingPlayer).Hex;
-        var hintColor = MainController.Data.ColorSettings[HintStatusColor[HintStatus]].Hex;
-        var locationColor = MainController.Data.ColorSettings["location"].Hex;
-        var entranceColor = MainController.Data.ColorSettings[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"]
+        var hintColor = MainController.Data[HintStatusColor[HintStatus]].Hex;
+        var locationColor = MainController.Data["location"].Hex;
+        var entranceColor = MainController.Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"]
                                           .Hex;
 
         var hintStatus = HintStatusText[HintStatus];

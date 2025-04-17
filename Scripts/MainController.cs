@@ -25,10 +25,14 @@ public partial class MainController : Control
     public static string[] Players = [];
     public static string[] PlayerGames = [];
     public static int MoveToTab;
+    public static ApClient ChosenTextClient = null;
+    public static double ConnectionCooldown;
+    public static Dictionary<ApClient, HashSet<Hint>> HintsMap = [];
     private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
     private static readonly Dictionary<long, string> LocationIdToName = [];
     private static bool _UpdateHints;
-    private static Comparer _HintComparer = new();
+    private static HintDataComparer _HintDataComparer = new();
+    private static HintComparer _HintComparer = new();
     private static Dictionary<ItemFlags, string> _ItemColorNameCache = [];
 
     public static Dictionary<HintStatus, string> HintStatusColor = new()
@@ -65,6 +69,8 @@ public partial class MainController : Control
     [Export] private PackedScene _SlotPackedScene;
     [Export] private HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
+    [Export] private Label _ConnectionTimer;
+    [Export] public TextClient TextClient;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -105,13 +111,21 @@ public partial class MainController : Control
 
     public override void _Process(double delta)
     {
+        // ReSharper disable once AssignmentInConditionalExpression
+        if (_ConnectionTimer.Visible = ConnectionCooldown > 0) // intentional (because funny)
+        {
+            _ConnectionTimer.Text = $"Connection Cooldown: {ConnectionCooldown:0.00}s (as to not spam the server)";
+            ConnectionCooldown -= delta;
+        }
+
         if (MoveToTab != -1)
         {
             _TabContainer.CurrentTab = MoveToTab;
             MoveToTab = -1;
         }
 
-        if (ActiveClients.Any(client => client.HintsAwaitingUpdate) || _UpdateHints)
+        var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
+        if (updateRequest || _UpdateHints)
         {
             List<Hint> hints = [];
             foreach (var client in ActiveClients)
@@ -119,11 +133,41 @@ public partial class MainController : Control
                 client.PushUpdatedVariables(false, out var newHints);
                 client.Hints = newHints.ToHashSet();
                 hints.AddRange(newHints);
+
+                if (HintsMap[client] is not null && HintsMap[client].Count != client.Hints.Count)
+                {
+                    foreach (var difference in client.Hints.Except(HintsMap[client], _HintComparer))
+                    {
+                        if (ChosenTextClient.PlayerSlot == difference.ReceivingPlayer ||
+                            ChosenTextClient.PlayerSlot == difference.FindingPlayer || (
+                                PlayerSlots.ContainsKey(difference.FindingPlayer) &&
+                                PlayerSlots.ContainsKey(difference.ReceivingPlayer) &&
+                                client.PlayerSlot == difference.ReceivingPlayer
+                            )) continue; // display hint rules
+
+                        TextClient.Messages.Enqueue(difference);
+                    }
+                }
+
+                HintsMap[client] = client.Hints;
             }
 
-            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintComparer);
+            if (updateRequest)
+            {
+                TextClient.HintRequest = false;
+                TextClient.HintRequestTimer = 0;
+            }
+
+            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
             HintTable.RefreshUI = true;
+
             _UpdateHints = false;
+        }
+
+        if (TextClient.HintRequestTimer >= 3)
+        {
+            TextClient.HintRequest = false;
+            TextClient.HintRequestTimer = 0;
         }
 
         var anyRunning = ClientList.Values.Any(client => client.IsRunning);
@@ -185,6 +229,14 @@ public partial class MainController : Control
     public void ConnectClient(ApClient client)
     {
         if (ActiveClients.Contains(client)) return;
+
+        if (ChosenTextClient is not null && !client.Session.ConnectionInfo.Tags.Contains("NoText"))
+        {
+            client.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly", "NoText"]);
+        }
+
+        ChosenTextClient ??= client;
+
         if (ActiveClients.Count == 0)
         {
             Clear();
@@ -203,6 +255,7 @@ public partial class MainController : Control
 
         PlayerSlots.Add(client.PlayerSlot, client.PlayerName);
         ActiveClients.Add(client);
+        HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
         RefreshUIColors();
     }
@@ -212,6 +265,12 @@ public partial class MainController : Control
         if (!ActiveClients.Contains(client)) return;
         ActiveClients.Remove(client);
         PlayerSlots.Remove(client.PlayerSlot);
+
+        if (ChosenTextClient == client)
+        {
+            ChosenTextClient = null;
+        }
+
         if (client.HasPlayerListSetup && ActiveClients.Count != 0)
         {
             SetupPlayerList(ActiveClients[0]);
@@ -221,8 +280,14 @@ public partial class MainController : Control
         {
             Clear();
         }
+        else if (ChosenTextClient is null)
+        {
+            ChosenTextClient = ActiveClients[0];
+            ChosenTextClient!.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
+        }
 
         _HintManager.UnregisterPlayer(client);
+        HintsMap.Remove(client);
         RefreshUIColors();
     }
 
@@ -258,7 +323,7 @@ public partial class MainController : Control
 
     public static ColorSetting PlayerColor(string playerName)
         => Data
-           .ColorSettings[
+           [
                 playerName == "Server"
                     ? "player_server"
                     : PlayerSlots.ContainsValue(playerName)
@@ -267,7 +332,7 @@ public partial class MainController : Control
 
     public static ColorSetting PlayerColor(int playerSlot)
         => Data
-           .ColorSettings[
+           [
                 playerSlot == 0
                     ? "player_server"
                     : PlayerSlots.ContainsKey(playerSlot)
@@ -276,7 +341,7 @@ public partial class MainController : Control
 
     public static string GetItemHexColor(ItemFlags flags)
     {
-        if (_ItemColorNameCache.TryGetValue(flags, out var color)) return Data.ColorSettings[color];
+        if (_ItemColorNameCache.TryGetValue(flags, out var color)) return Data[color];
         if (flags.HasFlag(ItemFlags.Advancement))
         {
             color = "item_progressive";
@@ -294,7 +359,7 @@ public partial class MainController : Control
             color = "item_normal";
         }
 
-        return Data.ColorSettings[_ItemColorNameCache[flags] = color];
+        return Data[_ItemColorNameCache[flags] = color];
     }
 
     public static void RefreshUIColors()
@@ -321,7 +386,27 @@ public partial class MainController : Control
     }
 }
 
-public class Comparer : IEqualityComparer<HintData>
+public class HintComparer : IEqualityComparer<Hint>
+{
+    public bool Equals(Hint x, Hint y)
+    {
+        if (ReferenceEquals(x, y)) return true;
+        if (x is null) return false;
+        if (y is null) return false;
+        if (x.GetType() != y.GetType()) return false;
+        return x.ReceivingPlayer == y.ReceivingPlayer && x.FindingPlayer == y.FindingPlayer && x.ItemId == y.ItemId &&
+               x.LocationId == y.LocationId && x.ItemFlags == y.ItemFlags && x.Found == y.Found &&
+               x.Entrance == y.Entrance && x.Status == y.Status;
+    }
+
+    public int GetHashCode(Hint obj)
+    {
+        return HashCode.Combine(obj.ReceivingPlayer, obj.FindingPlayer, obj.ItemId, obj.LocationId, (int)obj.ItemFlags,
+            obj.Found, obj.Entrance, (int)obj.Status);
+    }
+}
+
+public class HintDataComparer : IEqualityComparer<HintData>
 {
     public bool Equals(HintData x, HintData y)
     {
