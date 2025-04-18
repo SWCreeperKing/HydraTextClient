@@ -101,7 +101,7 @@ public partial class TextClient : VBoxContainer
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
-            ConnectionCooldown = 15;
+            ConnectionCooldown = 7 + 3 * ActiveClients.Count;
             _LastSelected = l;
         };
 

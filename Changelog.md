@@ -1,3 +1,10 @@
+# v.0.3.1
+
+---
+- Decreased connection cooldown from 15 to 7, cooldown increases the more slots you have connected: + (3 * connected)
+- Font changer for text client, hints table, and players table
+- Fixed a (probably) non-noticeable bug with disconnecting and `Items & Locations`
+
 # v.0.3
 
 ---

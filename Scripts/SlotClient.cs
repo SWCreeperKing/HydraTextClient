@@ -49,7 +49,7 @@ public partial class SlotClient : PanelContainer
         
         if (ConnectionCooldown > 0)
         {
-            ConnectionFailed(["Please wait 15s after connecting/changing slots to do so again"]);
+            ConnectionFailed(["Please wait after connecting/changing slots to do so again"]);
             return;
         }
         
@@ -61,7 +61,7 @@ public partial class SlotClient : PanelContainer
         LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
         
         ClientCount++;
-        ConnectionCooldown = 15;
+        ConnectionCooldown = 7 + 3 * ActiveClients.Count;
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
         

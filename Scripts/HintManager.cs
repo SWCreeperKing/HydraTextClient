@@ -81,7 +81,7 @@ public partial class HintManager : MarginContainer
         var playerBox = _HintSenderBoxes[client];
         var playerBox2 = _HintLocationSenderBoxes[client];
         _HintSender.RemoveChild(playerBox);
-        _HintLocationSender.RemoveChild(playerBox);
+        _HintLocationSender.RemoveChild(playerBox2);
         playerBox.QueueFree();
         playerBox2.QueueFree();
         _HintSenderBoxes.Remove(client);

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=17 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_r150o"]
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
 [ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTable.cs" id="7_vy5pj"]
 [ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/HintDialog.cs" id="12_grg3l"]
+[ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/SizeManager.cs" id="12_h1m7h"]
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
 [ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintChangerWindow.cs" id="16_erwvk"]
 
@@ -528,9 +529,9 @@ _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 layout_mode = 2
 script = ExtResource("6_v1gob")
 _Font = ExtResource("1_r150o")
-_ColorContainer = NodePath("Settings/ColorContainer")
-_ExportColors = NodePath("Settings/ColorContainer/HBoxContainer4/Button2")
-_ImportColors = NodePath("Settings/ColorContainer/HBoxContainer4/Button")
+_ColorContainer = NodePath("Settings/VBoxContainer/SettingSplit/ColorContainer")
+_ExportColors = NodePath("Settings/VBoxContainer/HBoxContainer4/Button2")
+_ImportColors = NodePath("Settings/VBoxContainer/HBoxContainer4/Button")
 metadata/_tab_index = 5
 
 [node name="Settings" type="MarginContainer" parent="TabContainer/Settings"]
@@ -542,27 +543,126 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Settings"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/Settings"]
 layout_mode = 2
-theme_override_constants/separation = 6
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Settings/ColorContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 200
 
-[node name="Button2" type="Button" parent="TabContainer/Settings/Settings/ColorContainer/HBoxContainer4"]
+[node name="Button2" type="Button" parent="TabContainer/Settings/Settings/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 24
 text = "Export Colors to Clipboard"
 
-[node name="Button" type="Button" parent="TabContainer/Settings/Settings/ColorContainer/HBoxContainer4"]
+[node name="Button" type="Button" parent="TabContainer/Settings/Settings/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("1_r150o")
 theme_override_font_sizes/font_size = 24
 text = "Import Colors from Clipboard"
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/Settings/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 35
+
+[node name="SettingSplit" type="HSplitContainer" parent="TabContainer/Settings/Settings/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
+metadata/_tab_index = 0
+
+[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="UiSettingContainer" type="VBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Text Client Font Size:"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer" node_paths=PackedStringArray("Nodes")]
+layout_mode = 2
+rounded = true
+allow_greater = true
+alignment = 1
+script = ExtResource("12_h1m7h")
+Id = "text_client"
+DefaultSize = 20
+Nodes = [NodePath("../../../../../../../Text Client/Text Client/ScrollContainer/PanelContainer/MarginContainer/Messages")]
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Hints Table Font Size:"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer2"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer2" node_paths=PackedStringArray("Nodes")]
+layout_mode = 2
+rounded = true
+allow_greater = true
+alignment = 1
+script = ExtResource("12_h1m7h")
+Id = "text_client"
+DefaultSize = 20
+Nodes = [NodePath("../../../../../../../Hints/Hints/VBoxContainer/RichTextLabel")]
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("1_r150o")
+theme_override_font_sizes/font_size = 24
+text = "Players Table Font Size:"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer3"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Settings/VBoxContainer/SettingSplit/UiSettingContainer/HBoxContainer3" node_paths=PackedStringArray("Nodes")]
+layout_mode = 2
+rounded = true
+allow_greater = true
+alignment = 1
+script = ExtResource("12_h1m7h")
+Id = "text_client"
+DefaultSize = 24
+Nodes = [NodePath("../../../../../../../Players/Players/RichTextLabel")]
 
 [node name="Credits" type="MarginContainer" parent="TabContainer"]
 visible = false

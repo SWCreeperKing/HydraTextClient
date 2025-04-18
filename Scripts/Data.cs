@@ -65,6 +65,8 @@ public class Data
         ["tooltip_bgcolor"] = new("Tooltip Background Color", new Color(0.055f, 0.063f, 0.071f, 0.749f))
     };
 
+    public Dictionary<string, int> FontSizes = [];
+
     public List<SortObject> HintSortOrder = [];
     public bool[] HintOptions = [false, true, true, true, true];
     public long WordWrap = 0;
