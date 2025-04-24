@@ -1,5 +1,6 @@
-using ArchipelagoMultiTextClient.Scripts;
 using Godot;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class LineEditHide : LineEdit
 {

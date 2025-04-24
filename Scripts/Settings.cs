@@ -1,20 +1,23 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
-using ArchipelagoMultiTextClient.Scripts;
 using Godot;
 using Newtonsoft.Json;
 
-public partial class Settings : ScrollContainer
+namespace ArchipelagoMultiTextClient.Scripts;
+
+public partial class Settings : Control
 {
+    public static ItemFilterDialog ItemFilterDialog;
+    
     [Export] private Font _Font;
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
+    [Export] private ItemFilterDialog _ItemFilter;
     private List<ColorPickerButton> _Buttons = [];
 
     public override void _Ready()
     {
+        ItemFilterDialog = _ItemFilter;
         foreach (var (key, setting) in MainController.Data.ColorSettings)
         {
             var box = new HBoxContainer();

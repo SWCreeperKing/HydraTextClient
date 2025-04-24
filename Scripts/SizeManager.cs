@@ -1,7 +1,8 @@
 using System.Collections.Generic;
-using ArchipelagoMultiTextClient.Scripts;
 using Godot;
 using Godot.Collections;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class SizeManager : SpinBox
 {
@@ -17,7 +18,6 @@ public partial class SizeManager : SpinBox
 
         ValueChanged += val =>
         {
-            GD.Print("Changed");
             FontSizes[Id] = (int)val;
             UpdateFontSize();
         };

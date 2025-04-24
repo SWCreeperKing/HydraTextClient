@@ -1,5 +1,7 @@
 using Godot;
 
+namespace ArchipelagoMultiTextClient.Scripts;
+
 public partial class LinkButton : Button
 {
     [Export] private string _Link;

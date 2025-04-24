@@ -1,5 +1,6 @@
 using Godot;
-using ArchipelagoMultiTextClient.Scripts;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class RichToolTip : RichTextLabel
 {
@@ -19,7 +20,7 @@ public partial class RichToolTip : RichTextLabel
         panel.Color = MainController.Data["tooltip_bgcolor"];
         
         Label tooltip = new();
-        tooltip.AddThemeFontOverride("font", MainController.Font);
+        tooltip.Theme = MainController.GlobalTheme;
         tooltip.AddThemeFontSizeOverride("font_size", 18);
         tooltip.Text = forText;
         

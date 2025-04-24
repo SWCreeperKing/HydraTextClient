@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.DataPackage;
 using Archipelago.MultiClient.Net.Helpers;
-using ArchipelagoMultiTextClient.Scripts;
 using CreepyUtil.Archipelago;
 using Godot;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class HintManager : MarginContainer
 {
@@ -39,7 +40,7 @@ public partial class HintManager : MarginContainer
         foreach (var item in arr.Order())
         {
             Button hintButton = new();
-            hintButton.AddThemeFontOverride("font", MainController.Font);
+            hintButton.Theme = MainController.GlobalTheme;
             hintButton.AddThemeFontSizeOverride("font_size", 18);
             if (locations)
             {
@@ -57,7 +58,7 @@ public partial class HintManager : MarginContainer
         }
 
         LineEdit searchBar = new();
-        searchBar.AddThemeFontOverride("font", MainController.Font);
+        searchBar.Theme = MainController.GlobalTheme;
         searchBar.AddThemeFontSizeOverride("font_size", 24);
         searchBar.PlaceholderText = "Search Items";
         searchBar.TextChanged += text =>

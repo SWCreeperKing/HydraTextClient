@@ -5,9 +5,11 @@ using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using CreepyUtil.Archipelago;
+using CreepyUtil.DiscordRpc;
 using Godot;
 using Newtonsoft.Json;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
+using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using Environment = System.Environment;
 
 namespace ArchipelagoMultiTextClient.Scripts;
@@ -17,7 +19,7 @@ public partial class MainController : Control
     public static string SaveDir =
         $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/HydraTextClient";
 
-    public static Font Font;
+    public static Theme GlobalTheme;
     public static Data Data;
     public static Dictionary<string, SlotClient> ClientList = [];
     public static List<ApClient> ActiveClients = [];
@@ -28,12 +30,14 @@ public partial class MainController : Control
     public static ApClient ChosenTextClient = null;
     public static double ConnectionCooldown;
     public static Dictionary<ApClient, HashSet<Hint>> HintsMap = [];
+    public static string LastLocationChecked = null;
+    private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
     private static readonly Dictionary<long, string> LocationIdToName = [];
     private static bool _UpdateHints;
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
-    private static Dictionary<ItemFlags, string> _ItemColorNameCache = [];
+    private static StyleBoxFlat Background = new();
 
     public static Dictionary<HintStatus, string> HintStatusColor = new()
     {
@@ -59,7 +63,7 @@ public partial class MainController : Control
     public static Dictionary<HintStatus, string> HintStatusText =
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
-    [Export] private Font _UIFont;
+    [Export] private Theme _UITheme;
     [Export] private LineEdit _AddressField;
     [Export] private LineEdit _PasswordField;
     [Export] private LineEdit _PortField;
@@ -70,7 +74,8 @@ public partial class MainController : Control
     [Export] private HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
     [Export] private Label _ConnectionTimer;
-    [Export] public TextClient TextClient;
+    [Export] private TextClient _TextClient;
+    [Export] private Timer _DiscordTimer;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -79,7 +84,7 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
-        Font = _UIFont;
+        GlobalTheme = _UITheme;
         Data = new Data();
         if (!Directory.Exists(SaveDir))
         {
@@ -95,6 +100,8 @@ public partial class MainController : Control
 
     public override void _Ready()
     {
+        RichPresenceController.Init();
+        _DiscordTimer.Start();
         _SlotField.TextSubmitted += TryAddSlot;
         _SlotAddButton.Pressed += () => TryAddSlot(Slot);
         _AddressField.TextChanged += s => Data.Address = s;
@@ -107,6 +114,9 @@ public partial class MainController : Control
         {
             AddSlot(player);
         }
+
+        Background.BgColor = Data["background_color"];
+        _TabContainer.AddThemeStyleboxOverride("panel", Background);
     }
 
     public override void _Process(double delta)
@@ -125,7 +135,7 @@ public partial class MainController : Control
         }
 
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
-        if (updateRequest || _UpdateHints)
+        if (updateRequest || _UpdateHints || TextClient.HintRequest)
         {
             List<Hint> hints = [];
             foreach (var client in ActiveClients)
@@ -143,7 +153,7 @@ public partial class MainController : Control
                                 PlayerSlots.ContainsKey(difference.FindingPlayer) &&
                                 PlayerSlots.ContainsKey(difference.ReceivingPlayer) &&
                                 client.PlayerSlot == difference.ReceivingPlayer
-                            )) continue; // display hint rules
+                            )) continue;
 
                         TextClient.Messages.Enqueue(difference);
                     }
@@ -152,22 +162,11 @@ public partial class MainController : Control
                 HintsMap[client] = client.Hints;
             }
 
-            if (updateRequest)
-            {
-                TextClient.HintRequest = false;
-                TextClient.HintRequestTimer = 0;
-            }
-
+            TextClient.HintRequest = false;
             HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
             HintTable.RefreshUI = true;
 
             _UpdateHints = false;
-        }
-
-        if (TextClient.HintRequestTimer >= 3)
-        {
-            TextClient.HintRequest = false;
-            TextClient.HintRequestTimer = 0;
         }
 
         var anyRunning = ClientList.Values.Any(client => client.IsRunning);
@@ -321,36 +320,48 @@ public partial class MainController : Control
         _PortField.Editable = toggle;
     }
 
+    public void UpdateDiscord()
+    {
+        if (!DiscordIntegration.DiscordAlive)
+        {
+            DiscordIntegration.CheckDiscord(DiscordIntegration.DiscordAppId);
+        }
+
+        DiscordIntegration.UpdateActivity();
+    }
+
     public static ColorSetting PlayerColor(string playerName)
         => Data
-           [
-                playerName == "Server"
-                    ? "player_server"
-                    : PlayerSlots.ContainsValue(playerName)
-                        ? "player_color"
-                        : "player_generic"];
+        [
+            playerName == "Server"
+                ? "player_server"
+                : PlayerSlots.ContainsValue(playerName)
+                    ? "player_color"
+                    : "player_generic"];
 
     public static ColorSetting PlayerColor(int playerSlot)
         => Data
-           [
-                playerSlot == 0
-                    ? "player_server"
-                    : PlayerSlots.ContainsKey(playerSlot)
-                        ? "player_color"
-                        : "player_generic"];
+        [
+            playerSlot == 0
+                ? "player_server"
+                : PlayerSlots.ContainsKey(playerSlot)
+                    ? "player_color"
+                    : "player_generic"];
 
-    public static string GetItemHexColor(ItemFlags flags)
+    public static string GetItemHexColor(ItemFlags flags) => Data[GetItemColorString(flags)].Hex;
+
+    public static string GetItemColorString(ItemFlags flags)
     {
-        if (_ItemColorNameCache.TryGetValue(flags, out var color)) return Data[color];
-        if (flags.HasFlag(ItemFlags.Advancement))
+        if (ItemColorHexCache.TryGetValue(flags, out var color)) return color;
+        if ((flags & Advancement) == Advancement)
         {
             color = "item_progressive";
         }
-        else if (flags.HasFlag(ItemFlags.NeverExclude))
+        else if ((flags & NeverExclude) == NeverExclude)
         {
             color = "item_useful";
         }
-        else if (flags.HasFlag(ItemFlags.Trap))
+        else if ((flags & Trap) == Trap)
         {
             color = "item_trap";
         }
@@ -359,13 +370,15 @@ public partial class MainController : Control
             color = "item_normal";
         }
 
-        return Data[_ItemColorNameCache[flags] = color];
+        return ItemColorHexCache[flags] = color;
     }
 
     public static void RefreshUIColors()
     {
+        Background.BgColor = Data["background_color"];
         TextClient.RefreshText = true;
         PlayerTable.RefreshUI = true;
+        ItemFilterer.RefreshUI = true;
         _UpdateHints = true;
     }
 

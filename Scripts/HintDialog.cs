@@ -1,7 +1,8 @@
-using Godot;
 using System.Threading.Tasks;
-using ArchipelagoMultiTextClient.Scripts;
 using CreepyUtil.Archipelago;
+using Godot;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class HintDialog : ConfirmationDialog
 {

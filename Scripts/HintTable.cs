@@ -5,7 +5,9 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
+using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using static ArchipelagoMultiTextClient.Scripts.Settings;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -60,6 +62,11 @@ public partial class HintTable : TextTable
         MetaClicked += raw =>
         {
             var s = (string)raw;
+            if (s.StartsWith("itemdialog"))
+            {
+                Settings.ItemFilterDialog.SetItem(s);
+                return;
+            }
             if (s.StartsWith("SortOrder&"))
             {
                 s = s[10..];
@@ -108,6 +115,8 @@ public partial class HintTable : TextTable
                       Priority => _ShowPriority.ButtonPressed,
                       _ => false
                   })
+                 .Where(hint => !MainController.Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
+                                filter.ShowInHintsTable)
                  .OrderBy(hint => hint.LocationId);
 
         orderedHints = SortOrder.Aggregate(orderedHints, (current, option) => option.Name switch
@@ -145,18 +154,18 @@ public partial class HintTable : TextTable
 
     public int GetOrderSlot(int slot) => PlayerSlots.ContainsKey(slot) ? Players.Length + slot : slot;
 
-    public int SortNumber(ItemFlags flags)
+    public static int SortNumber(ItemFlags flags)
     {
         if (ItemToSortIdCache.TryGetValue(flags, out var id)) return id;
-        if (flags.HasFlag(ItemFlags.Advancement))
+        if ((flags & Advancement) == Advancement)
         {
             id = 0;
         }
-        else if (flags.HasFlag(ItemFlags.NeverExclude))
+        else if ((flags & NeverExclude) == NeverExclude)
         {
             id = 1;
         }
-        else if (flags.HasFlag(ItemFlags.Trap))
+        else if ((flags & Trap) == Trap)
         {
             id = 10;
         }
@@ -165,7 +174,7 @@ public partial class HintTable : TextTable
             id = 2;
         }
 
-        return id;
+        return ItemToSortIdCache[flags] = id;
     }
 }
 
@@ -173,6 +182,7 @@ public readonly struct HintData(Hint hint)
 {
     public readonly string ReceivingPlayer = Players[hint.ReceivingPlayer];
     public readonly int ReceivingPlayerSlot = hint.ReceivingPlayer;
+    public readonly long ItemId = hint.ItemId;
     public readonly string Item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
     public readonly ItemFlags ItemFlags = hint.ItemFlags;
     public readonly string FindingPlayer = Players[hint.FindingPlayer];
@@ -181,9 +191,11 @@ public readonly struct HintData(Hint hint)
     public readonly string Location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
     public readonly long LocationId = hint.LocationId;
     public readonly string Entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
+    public readonly string GetCopy = hint.GetCopy();
 
-    public string GetCopyText()
-        => $"`{ReceivingPlayer}`'s __{Item}__ is in `{FindingPlayer}`'s world at **{Location}**\n-# {Entrance}";
+    public readonly string ItemUid = ItemFilter.MakeUidCode(hint.ItemId,
+        ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer),
+        PlayerGames[hint.ReceivingPlayer], hint.ItemFlags);
 
     public string[] GetData()
     {
@@ -204,9 +216,9 @@ public readonly struct HintData(Hint hint)
 
         return
         [
-            $"[url=\"{GetCopyText()}\"]Copy[/url]",
+            $"[url=\"{GetCopy}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
-            $"[color={itemColor}]{Item.Clean()}[/color]",
+            $"[color={itemColor}][url={Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags)}]{Item.Clean()}[/url][/color]",
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
             $"[color={hintColor}]{hintStatus}[/color]",
             $"[color={locationColor}]{Location.Clean()}[/color]",

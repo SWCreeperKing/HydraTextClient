@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using Godot;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +7,16 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
-using ArchipelagoMultiTextClient.Scripts;
+using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using static ArchipelagoMultiTextClient.Scripts.Settings;
+
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class TextClient : VBoxContainer
 {
     public static ConcurrentQueue<ClientMessage> Messages = [];
     public static bool HintRequest;
-    public static double HintRequestTimer;
     public static bool RefreshText;
     public static bool ClearClient;
     public static List<string> CopyList = [];
@@ -29,6 +30,10 @@ public partial class TextClient : VBoxContainer
     [Export] private Button _SendMessageButton;
     [Export] private Button _ScrollToBottom;
     [Export] private ScrollContainer _ScrollContainer;
+    [Export] private CheckBox _ShowProgressive;
+    [Export] private CheckBox _ShowUseful;
+    [Export] private CheckBox _ShowNormal;
+    [Export] private CheckBox _ShowTraps;
     private Queue<ClientMessage> _ChatMessages = new(250);
     private Queue<ClientMessage> _ItemLog = new(250);
     private Queue<ClientMessage> _Both = new(500);
@@ -96,16 +101,51 @@ public partial class TextClient : VBoxContainer
                 return;
             }
 
+            LastLocationChecked = null;
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly", "NoText"]);
             Task.Delay(750).GetAwaiter().GetResult();
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
-            ConnectionCooldown = 7 + 3 * ActiveClients.Count;
+            ConnectionCooldown = 5 + 1 * ActiveClients.Count;
             _LastSelected = l;
         };
 
-        _Messages.MetaClicked += s => DisplayServer.ClipboardSet(CopyList[int.Parse((string)s)]);
+        _Messages.MetaClicked += meta =>
+        {
+            var s = (string)meta;
+            if (s.StartsWith("itemdialog"))
+            {
+                Settings.ItemFilterDialog.SetItem(s);
+                return;
+            }
+            DisplayServer.ClipboardSet(CopyList[int.Parse(s)]);
+        };
+
+        _ShowProgressive.Pressed += () =>
+        {
+            MainController.Data.ItemLogOptions[0] = _ShowProgressive.ButtonPressed;
+            RefreshText = true;
+        };
+        _ShowUseful.Pressed += () =>
+        {
+            MainController.Data.ItemLogOptions[1] = _ShowUseful.ButtonPressed;
+            RefreshText = true;
+        };
+        _ShowNormal.Pressed += () =>
+        {
+            MainController.Data.ItemLogOptions[2] = _ShowNormal.ButtonPressed;
+            RefreshText = true;
+        };
+        _ShowTraps.Pressed += () =>
+        {
+            MainController.Data.ItemLogOptions[3] = _ShowTraps.ButtonPressed;
+            RefreshText = true;
+        };
+        _ShowProgressive.ButtonPressed = MainController.Data.ItemLogOptions[0];
+        _ShowUseful.ButtonPressed = MainController.Data.ItemLogOptions[1];
+        _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
+        _ShowTraps.ButtonPressed = MainController.Data.ItemLogOptions[3];
     }
 
     public override void _Process(double delta)
@@ -121,11 +161,6 @@ public partial class TextClient : VBoxContainer
         {
             Clear();
             ClearClient = false;
-        }
-
-        if (HintRequest)
-        {
-            HintRequestTimer += delta;
         }
 
         if (!HintRequest && !Messages.IsEmpty)
@@ -170,17 +205,48 @@ public partial class TextClient : VBoxContainer
         switch (_Content.Selected)
         {
             case 0: // text only
-                _Messages.Text = string.Join("\n", _ChatMessages.Select(msg => msg.GenString()));
+                _Messages.Text = string.Join("\n", _ChatMessages.Where(Filter).Select(msg => msg.GenString()));
                 break;
             case 1: // items only
-                _Messages.Text = string.Join("\n", _ItemLog.Select(msg => msg.GenString()));
+                _Messages.Text = string.Join("\n", _ItemLog.Where(Filter).Select(msg => msg.GenString()));
                 break;
             case 2: // both
-                _Messages.Text = string.Join("\n", _Both.Select(msg => msg.GenString()));
+                _Messages.Text = string.Join("\n", _Both.Where(Filter).Select(msg => msg.GenString()));
                 break;
         }
 
         RefreshText = false;
+    }
+
+    public bool Filter(ClientMessage message)
+    {
+        if (message.IsItemLog)
+        {
+            var itemMessagePart = message.MessageParts[2];
+            var flags = itemMessagePart.Flags!.Value;
+            var id = long.Parse(itemMessagePart.Text);
+            var playerSlot = itemMessagePart.Player!.Value;
+
+            var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
+
+            if (MainController.Data.ItemFilters.TryGetValue(uid, out var itemFilter) && !itemFilter.ShowInItemLog) return false;
+            
+            if ((flags & ItemFlags.Advancement) == ItemFlags.Advancement)
+            {
+                return MainController.Data.ItemLogOptions[0];
+            }
+
+            if ((flags & ItemFlags.NeverExclude) == ItemFlags.NeverExclude)
+            {
+                return MainController.Data.ItemLogOptions[1];
+            }
+
+            return (flags & ItemFlags.Trap) == ItemFlags.Trap
+                ? MainController.Data.ItemLogOptions[3]
+                : MainController.Data.ItemLogOptions[2];
+        }
+
+        return true;
     }
 
     public void SendMessage(string message)
@@ -205,18 +271,24 @@ public partial class TextClient : VBoxContainer
         Messages.Clear();
         HintRequest = false;
     }
+
+    public void MetaClicked(string meta) { }
 }
 
 public readonly struct ClientMessage(
     JsonMessagePart[] messageParts,
     bool isItemLog = false,
     bool isServer = false,
-    ChatPrintJsonPacket chatPrintJsonPacket = null)
+    ChatPrintJsonPacket chatPrintJsonPacket = null,
+    bool isHint = false,
+    string copyText = null)
 {
     public readonly bool IsItemLog = isItemLog;
     public readonly bool IsServer = isServer;
+    public readonly bool IsHint = isHint;
     public readonly JsonMessagePart[] MessageParts = messageParts;
     public readonly ChatPrintJsonPacket ChatPacket = chatPrintJsonPacket;
+    public readonly string CopyText = copyText;
 
     public readonly bool IsHintRequest =
         chatPrintJsonPacket is not null && chatPrintJsonPacket.Message.StartsWith("!hint");
@@ -229,7 +301,8 @@ public readonly struct ClientMessage(
         {
             color = PlayerColor(ChatPacket.Slot);
             TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot, false)}: {ChatPacket.Message}");
-            return $"[color={color}][url={copyId}]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
+            return
+                $"[color={color}][url={copyId}]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
         }
 
         StringBuilder messageBuilder = new();
@@ -240,8 +313,15 @@ public readonly struct ClientMessage(
                 $"[color={MainController.Data["player_server"].Hex}][url={copyId}]Server[/url][/color]: ");
         }
 
-        foreach (var part in MessageParts)
+        if (IsItemLog)
         {
+            messageBuilder.Append($"[url={copyId}][Copy][/url] ");
+            TextClient.CopyList.Add(CopyText);
+        }
+
+        for (var i = 0; i < MessageParts.Length; i++)
+        {
+            var part = MessageParts[i];
             switch (part.Type)
             {
                 case JsonMessagePartType.PlayerId:
@@ -250,9 +330,12 @@ public readonly struct ClientMessage(
                     messageBuilder.Append($"[color={color}]{GetAlias(slot, true)}[/color]");
                     break;
                 case JsonMessagePartType.ItemId:
-                    var item = ItemIdToItemName(long.Parse(part.Text), part.Player!.Value);
-                    color = GetItemHexColor(part.Flags!.Value);
-                    messageBuilder.Append($"[color={color}]{item.Clean()}[/color]");
+                    var itemId = long.Parse(part.Text);
+                    var game = PlayerGames[part.Player!.Value];
+                    var item = ItemIdToItemName(itemId, part.Player!.Value);
+                    var flags = part.Flags!.Value;
+                    color = GetItemHexColor(flags);
+                    messageBuilder.Append($"[color={color}][url={Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}]{item.Clean()}[/url][/color]");
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);
@@ -272,6 +355,14 @@ public readonly struct ClientMessage(
                     break;
                 default:
                     var text = (part.Text ?? "").Clean();
+
+                    if (IsHint && i == 0)
+                    {
+                        messageBuilder.Append($"[url={copyId}][Hint][/url]: ");
+                        TextClient.CopyList.Add(CopyText);
+                        break;
+                    }
+
                     messageBuilder.Append(text);
                     if (IsServer)
                     {
@@ -292,8 +383,7 @@ public readonly struct ClientMessage(
     ];
 
     public static implicit operator ClientMessage(Hint hint)
-    {
-        return new ClientMessage([
+        => new([
             TextParts[0],
             new JsonMessagePart
             {
@@ -327,8 +417,7 @@ public readonly struct ClientMessage(
                 Type = JsonMessagePartType.HintStatus,
                 HintStatus = hint.Status
             }
-        ]);
-    }
+        ], isHint: true, copyText: hint.GetCopy());
 }
 
 public static class TextHelper
@@ -336,4 +425,51 @@ public static class TextHelper
     public static string Clean(this string text) => text.Replace("[", "[lb]");
     public static string CleanRb(this string text) => text.Replace("]", "[rb]");
     public static string ReplaceB(this string text) => text.Replace("[", "<").Replace("]", ">");
+
+    public static string GetCopy(this Hint hint)
+    {
+        var receivingPlayer = Players[hint.ReceivingPlayer];
+        var item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
+        var findingPlayer = Players[hint.FindingPlayer];
+        var location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
+        var entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
+
+        return $"`{receivingPlayer}`'s __{item}__ is in `{findingPlayer}`'s world at **{location}**\n-# {entrance}";
+    }
+
+    public static string GetCopy(this HintPrintJsonPacket hint)
+    {
+        var receivingPlayer = Players[hint.ReceivingPlayer];
+        var item = ItemIdToItemName(hint.Item.Item, hint.ReceivingPlayer);
+        var findingPlayerSlot = int.Parse(hint.Data[7].Text);
+        var findingPlayer = Players[findingPlayerSlot];
+        var location = LocationIdToLocationName(long.Parse(hint.Data[5].Text), findingPlayerSlot);
+        var entrance = hint.Data.Length == 11 ? "Vanilla" : hint.Data[9].Text;
+
+        return $"`{receivingPlayer}`'s __{item}__ is in `{findingPlayer}`'s world at **{location}**\n-# {entrance}";
+    }
+
+    public static string GetItemLogCopy(this JsonMessagePart[] parts)
+    {
+        string item;
+        string location;
+        var firstPlayerSlot = int.Parse(parts[0].Text);
+        var firstPlayer = Players[firstPlayerSlot];
+        var itemId = long.Parse(parts[2].Text);
+        var locationId = long.Parse(parts[^2].Text);
+        location = LocationIdToLocationName(locationId, firstPlayerSlot);
+
+        if (parts[1].Text is " found their ")
+        {
+            item = ItemIdToItemName(itemId, firstPlayerSlot);
+
+            return $"`{firstPlayer}` found their __{item}__ (**{location}**)";
+        }
+
+        var secondPlayerSlot = int.Parse(parts[4].Text);
+        var secondPlayer = Players[secondPlayerSlot];
+        item = ItemIdToItemName(itemId, secondPlayerSlot);
+
+        return $"`{firstPlayer}` sent __{item}__ to `{secondPlayer}` (**{location}**)";
+    }
 }

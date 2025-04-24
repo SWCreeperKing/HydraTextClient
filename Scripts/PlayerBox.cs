@@ -1,5 +1,7 @@
 using Godot;
 
+namespace ArchipelagoMultiTextClient.Scripts;
+
 public partial class PlayerBox : Control
 {
     [Export] private Label _PlayerName;
