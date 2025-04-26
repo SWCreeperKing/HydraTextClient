@@ -1,3 +1,13 @@
+# v.0.4.1
+
+---
+- Fixed rich presence not updating correctly when switching clients
+- Rich presence now disposes when program is closed
+- Fixed the error text disappearing when trying to connect
+- Client cooldown is canceled when a connection error happens
+- Added manual retry rich presence connection button, rich presence connected notifier & version number
+- Mostly proper disconnection behavior
+
 # v.0.4
 
 ---

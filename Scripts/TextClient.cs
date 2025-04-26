@@ -103,7 +103,6 @@ public partial class TextClient : VBoxContainer
 
             LastLocationChecked = null;
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly", "NoText"]);
-            Task.Delay(750).GetAwaiter().GetResult();
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);

@@ -528,14 +528,14 @@ public static class RichPresenceController
             =>
         {
             if (ActiveClients.Count == 0) return "Not connected";
-            var game = PlayerGames[ActiveClients[0].PlayerSlot];
+            var game = PlayerGames[ChosenTextClient.PlayerSlot];
             return GameToTitle.GetValueOrDefault(game, game);
         };
 
         DiscordIntegration.State = () =>
         {
             if (ActiveClients.Count == 0) return "";
-            var client = ActiveClients[0];
+            var client = ChosenTextClient;
             var locations = client.Session.Locations;
             return $"In the Multiworld ({locations.AllLocationsChecked.Count} / {locations.AllLocations.Count})";
         };
@@ -543,7 +543,7 @@ public static class RichPresenceController
         DiscordIntegration.LargeImage = () =>
         {
             if (ActiveClients.Count == 0) return "archipelago";
-            var game = PlayerGames[ActiveClients[0].PlayerSlot];
+            var game = PlayerGames[ChosenTextClient.PlayerSlot];
             return GameToImage.GetValueOrDefault(game, "archipelago");
         };
 

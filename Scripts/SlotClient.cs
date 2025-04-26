@@ -10,7 +10,7 @@ namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class SlotClient : PanelContainer
 {
-    private static int ClientCount = 0;
+    private static int ClientCount;
     public bool IsRunning;
 
     [Export] private Button _ConnectButton;
@@ -20,6 +20,7 @@ public partial class SlotClient : PanelContainer
     [Export] private Button _DeleteButton;
     [Export] private RichTextLabel _ErrorLabel;
     public ApClient Client = new();
+    public bool IsConnected = false;
     public bool IsTextClient = false;
     private MainController _Main;
 
@@ -38,6 +39,8 @@ public partial class SlotClient : PanelContainer
         _ConnectButton.Pressed += TryConnection;
         _DisconnectButton.Pressed += TryDisconnection;
     }
+
+    public override void _Process(double delta) => Client.UpdateConnection();
 
     public void TryConnection()
     {
@@ -65,92 +68,85 @@ public partial class SlotClient : PanelContainer
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
 
-        Task.Run(() =>
+        try
         {
-            try
+            string[] error;
+            error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: tags);
+
+            if (error is not null && error.Length > 0)
             {
-                string[] error;
-                lock (Client)
-                {
-                    error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: tags);
-                    Client.Session.Socket.PacketReceived += packet =>
-                    {
-                        switch (packet)
-                        {
-                            case HintPrintJsonPacket hintPacket:
-                                TextClient.Messages.Enqueue(new ClientMessage(hintPacket.Data, isHint: true,
-                                    copyText: hintPacket.GetCopy()));
-                                break;
-                            case ChatPrintJsonPacket message:
-                                TextClient.Messages.Enqueue(new ClientMessage(message.Data,
-                                    chatPrintJsonPacket: message));
-                                break;
-                            case BouncedPacket:
-                                break;
-                            case PrintJsonPacket updatePacket:
-                                if (updatePacket.Data.Length == 1)
-                                {
-                                    TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, isServer: true));
-                                }
-
-                                if (updatePacket.Data.Length < 2) break; 
-                                if (updatePacket.Data[1].Text is " found their " or " sent ")
-                                {
-                                    var playerSlot = int.Parse(updatePacket.Data[0].Text);
-                                    if (playerSlot == ActiveClients[0].PlayerSlot)
-                                    {
-                                        var locationId = long.Parse(updatePacket.Data[^2].Text);
-                                        LastLocationChecked = LocationIdToLocationName(locationId, playerSlot);
-                                    }
-                                    
-                                    TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, true,
-                                        copyText: updatePacket.Data.GetItemLogCopy()));
-                                }
-
-                                break;
-                        }
-                    };
-                }
-
-                if (error is not null && error.Length > 0)
-                {
-                    CallDeferred("ConnectionFailed", error);
-                }
-                else
-                {
-                    CallDeferred("HasConnected");
-                }
+                ConnectionFailed(error);
             }
-            catch (Exception e)
+            else
             {
-                CallDeferred("ConnectionFailed", new[] { e.Message, e.StackTrace });
+                HasConnected();
             }
-        });
+        }
+        catch (Exception e)
+        {
+            ConnectionFailed(new[] { e.Message, e.StackTrace });
+        }
     }
 
     public void TryDisconnection()
     {
-        Task.Run(() =>
-        {
-            lock (Client)
-            {
-                Client.TryDisconnect();
-            }
-
-            CallDeferred("HasDisconnected");
-        });
+        Client.TryDisconnect();
+        HasDisconnected();
     }
 
     public void ConnectionFailed(string[] error)
     {
+        IsConnected = false;
         IsRunning = false;
         _ErrorLabel.Visible = true;
         _ErrorLabel.Text = string.Join("\n", error);
+        ConnectionCooldown = 0;
         TryDisconnection();
     }
 
     public void HasConnected()
     {
+        Client.Session.Socket.PacketReceived += packet =>
+        {
+            switch (packet)
+            {
+                case HintPrintJsonPacket hintPacket:
+                    TextClient.Messages.Enqueue(new ClientMessage(hintPacket.Data, isHint: true,
+                        copyText: hintPacket.GetCopy()));
+                    break;
+                case ChatPrintJsonPacket message:
+                    TextClient.Messages.Enqueue(new ClientMessage(message.Data,
+                        chatPrintJsonPacket: message));
+                    break;
+                case BouncedPacket:
+                    break;
+                case PrintJsonPacket updatePacket:
+                    if (updatePacket.Data.Length == 1)
+                    {
+                        TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, isServer: true));
+                    }
+
+                    if (updatePacket.Data.Length < 2) break;
+                    if (updatePacket.Data[1].Text is " found their " or " sent ")
+                    {
+                        var playerSlot = int.Parse(updatePacket.Data[0].Text);
+                        if (playerSlot == ChosenTextClient.PlayerSlot)
+                        {
+                            var locationId = long.Parse(updatePacket.Data[^2].Text);
+                            LastLocationChecked = LocationIdToLocationName(locationId, playerSlot);
+                        }
+
+                        TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, true,
+                            copyText: updatePacket.Data.GetItemLogCopy()));
+                    }
+
+                    break;
+            }
+        };
+
+        Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
+
+        IsConnected = true;
         _ConnectingLabel.Visible = false;
         _ConnectButton.Visible = false;
         _DisconnectButton.Visible = true;
@@ -159,8 +155,8 @@ public partial class SlotClient : PanelContainer
 
     public void HasDisconnected()
     {
+        IsConnected = false;
         IsRunning = false;
-        _ErrorLabel.Visible = false;
         _ConnectingLabel.Visible = false;
         _ConnectButton.Visible = true;
         _DeleteButton.Visible = true;
@@ -171,5 +167,5 @@ public partial class SlotClient : PanelContainer
     }
 
 
-    public void Say(string message) { Client.Say(message); }
+    public void Say(string message) => Client.Say(message);
 }

@@ -22,7 +22,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotContainer", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotContainer", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -43,6 +43,8 @@ _TabContainer = NodePath("TabContainer")
 _ConnectionTimer = NodePath("TabContainer/Login/MarginContainer2/VBoxContainer/Label")
 _TextClient = NodePath("TabContainer/Text Client/Text Client")
 _DiscordTimer = NodePath("Timer")
+_DiscordText = NodePath("TabContainer/Login/MarginContainer/MultiTextClient/Label")
+_DiscordReconnect = NodePath("TabContainer/Login/MarginContainer/MultiTextClient/Button")
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -53,10 +55,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
-current_tab = 5
+current_tab = 0
 
 [node name="Login" type="HSplitContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 split_offset = 450
@@ -138,7 +139,26 @@ size_flags_vertical = 3
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
+text = "Retry Rich Presence Connection"
+
+[node name="Label" type="Label" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+modulate = Color(0.784314, 1, 0.784314, 1)
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 24
+text = "Rich Presence Connected!"
+horizontal_alignment = 1
+
+[node name="Button2" type="Button" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 24
 text = "Safety Save"
+
+[node name="Label2" type="Label" parent="TabContainer/Login/MarginContainer/MultiTextClient"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "HydraTextClient v.0.4.1"
 
 [node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login"]
 layout_mode = 2
@@ -559,6 +579,7 @@ script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
 [node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ItemFilter")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -934,5 +955,6 @@ wait_time = 30.0
 
 [connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
 [connection signal="toggled" from="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
-[connection signal="pressed" from="TabContainer/Login/MarginContainer/MultiTextClient/Button" to="." method="Save"]
+[connection signal="pressed" from="TabContainer/Login/MarginContainer/MultiTextClient/Button" to="." method="TryReconnectDiscord"]
+[connection signal="pressed" from="TabContainer/Login/MarginContainer/MultiTextClient/Button2" to="." method="Save"]
 [connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]

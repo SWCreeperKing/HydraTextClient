@@ -34,7 +34,7 @@ public partial class HintDialog : ConfirmationDialog
     public override void _Ready()
         => Confirmed += () =>
         {
-            Task.Delay(500).GetAwaiter().GetResult();
+            Task.Delay(300).GetAwaiter().GetResult();
             Client.Say(_IsLocation ? $"!hint_location {_Location}" : $"!hint {_Item}");
             MainController.MoveToTab = 1;
         };

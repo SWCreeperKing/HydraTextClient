@@ -5,7 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Archipelago.MultiClient.Net">
-      <HintPath>..\..\C#\Archipelago.MultiClient.Net\Archipelago.MultiClient.Net\bin\Debug\net6.0\Archipelago.MultiClient.Net.dll</HintPath>
+      <HintPath>Lib\Archipelago.MultiClient.Net.dll</HintPath>
     </Reference>
     <Reference Include="CreepyUtil.Archipelago">
       <HintPath>..\..\C#\CreepyUtil\CreepyUtil.Archipelago\bin\Debug\net8.0\CreepyUtil.Archipelago.dll</HintPath>
@@ -14,15 +14,17 @@
       <HintPath>..\..\C#\CreepyUtil\CreepyUtil.DiscordRpc\bin\Debug\net8.0\CreepyUtil.DiscordRpc.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\C#\Archipelago.MultiClient.Net\Archipelago.MultiClient.Net\bin\Debug\net6.0\Newtonsoft.Json.dll</HintPath>
+      <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Changelog.md" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Lib\" />
   </ItemGroup>
 </Project>

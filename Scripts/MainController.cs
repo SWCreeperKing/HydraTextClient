@@ -76,6 +76,8 @@ public partial class MainController : Control
     [Export] private Label _ConnectionTimer;
     [Export] private TextClient _TextClient;
     [Export] private Timer _DiscordTimer;
+    [Export] private Label _DiscordText;
+    [Export] private Button _DiscordReconnect;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -121,6 +123,9 @@ public partial class MainController : Control
 
     public override void _Process(double delta)
     {
+        _DiscordText.Visible = DiscordIntegration.DiscordAlive;
+        _DiscordReconnect.Visible = !DiscordIntegration.DiscordAlive;
+        
         // ReSharper disable once AssignmentInConditionalExpression
         if (_ConnectionTimer.Visible = ConnectionCooldown > 0) // intentional (because funny)
         {
@@ -322,12 +327,13 @@ public partial class MainController : Control
 
     public void UpdateDiscord()
     {
-        if (!DiscordIntegration.DiscordAlive)
-        {
-            DiscordIntegration.CheckDiscord(DiscordIntegration.DiscordAppId);
-        }
-
         DiscordIntegration.UpdateActivity();
+    }
+
+    public void TryReconnectDiscord()
+    {
+        if (DiscordIntegration.DiscordAlive) return;
+        DiscordIntegration.CheckDiscord(DiscordIntegration.DiscordAppId);
     }
 
     public static ColorSetting PlayerColor(string playerName)
@@ -394,6 +400,7 @@ public partial class MainController : Control
     public override void _Notification(int what)
     {
         if (what != NotificationWMCloseRequest) return;
+        DiscordIntegration.Discord.Dispose();
         Save();
         GetTree().Quit();
     }
