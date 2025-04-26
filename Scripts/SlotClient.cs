@@ -68,24 +68,30 @@ public partial class SlotClient : PanelContainer
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
 
-        try
+        Task.Run(() =>
         {
-            string[] error;
-            error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: tags);
+            try
+            {
+                string[] error;
+                lock (Client)
+                {
+                    error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: tags);
+                }
 
-            if (error is not null && error.Length > 0)
-            {
-                ConnectionFailed(error);
+                if (error is not null && error.Length > 0)
+                {
+                    CallDeferred("ConnectionFailed", error);
+                }
+                else
+                {
+                    CallDeferred("HasConnected");
+                }
             }
-            else
+            catch (Exception e)
             {
-                HasConnected();
+                CallDeferred("ConnectionFailed", [e.Message, e.StackTrace]);
             }
-        }
-        catch (Exception e)
-        {
-            ConnectionFailed(new[] { e.Message, e.StackTrace });
-        }
+        });
     }
 
     public void TryDisconnection()
