@@ -20,7 +20,6 @@ public partial class SlotClient : PanelContainer
     [Export] private Button _DeleteButton;
     [Export] private RichTextLabel _ErrorLabel;
     public ApClient Client = new();
-    public bool IsConnected = false;
     public bool IsTextClient = false;
     private MainController _Main;
 
@@ -96,13 +95,15 @@ public partial class SlotClient : PanelContainer
 
     public void TryDisconnection()
     {
-        Client.TryDisconnect();
-        HasDisconnected();
+        Task.Run(() =>
+        {
+            Client.TryDisconnect();
+            CallDeferred("HasDisconnected");
+        });
     }
 
     public void ConnectionFailed(string[] error)
     {
-        IsConnected = false;
         IsRunning = false;
         _ErrorLabel.Visible = true;
         _ErrorLabel.Text = string.Join("\n", error);
@@ -152,7 +153,6 @@ public partial class SlotClient : PanelContainer
 
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
 
-        IsConnected = true;
         _ConnectingLabel.Visible = false;
         _ConnectButton.Visible = false;
         _DisconnectButton.Visible = true;
@@ -161,7 +161,6 @@ public partial class SlotClient : PanelContainer
 
     public void HasDisconnected()
     {
-        IsConnected = false;
         IsRunning = false;
         _ConnectingLabel.Visible = false;
         _ConnectButton.Visible = true;

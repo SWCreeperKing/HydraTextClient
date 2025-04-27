@@ -102,6 +102,7 @@ public partial class MainController : Control
 
     public override void _Ready()
     {
+        Data.NullCheck();
         RichPresenceController.Init();
         _DiscordTimer.Start();
         _SlotField.TextSubmitted += TryAddSlot;

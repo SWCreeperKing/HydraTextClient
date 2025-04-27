@@ -53,6 +53,12 @@ public class Data
     public long WordWrap = 0;
     public long Content = 0;
 
+    public void NullCheck()
+    {
+        if (ColorSettings is not null) return;
+        ColorSettings = new Dictionary<string, ColorSetting>(DefaultDict);
+    }
+
     public ColorSetting this[string colorId]
     {
         get => ColorSettings.GetValueOrDefault(colorId, DefaultDict[colorId]);
@@ -75,7 +81,7 @@ public class ItemFilter(long id, string name, string game, ItemFlags flags)
     public readonly string Name = name;
     public readonly string Game = game;
     public readonly ItemFlags Flags = flags;
-    public readonly string UidCode = MakeUidCode(id, name, game, flags); 
+    public readonly string UidCode = MakeUidCode(id, name, game, flags);
     public bool ShowInItemLog = true;
     public bool ShowInHintsTable = true;
 

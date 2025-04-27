@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
 using Newtonsoft.Json;
 
@@ -7,7 +8,7 @@ namespace ArchipelagoMultiTextClient.Scripts;
 public partial class Settings : Control
 {
     public static ItemFilterDialog ItemFilterDialog;
-    
+
     [Export] private Font _Font;
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
@@ -52,6 +53,13 @@ public partial class Settings : Control
             {
                 var colors =
                     JsonConvert.DeserializeObject<Dictionary<string, ColorSetting>>(DisplayServer.ClipboardGet());
+                if (colors is null) return;
+
+                foreach (var key in MainController.Data.ColorSettings.Keys.Where(key => !colors.ContainsKey(key)))
+                {
+                    colors.Add(key, MainController.Data.ColorSettings[key]);
+                }
+
                 MainController.Data.ColorSettings = colors;
                 RefreshPickers();
             }

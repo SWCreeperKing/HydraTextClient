@@ -1,3 +1,11 @@
+# v.0.4.2hf
+
+---
+- Fixed funny problems with color settings
+- Added more scroll containers
+- Fixed disconnecting breaking everything
+- Added Licenses
+
 # v.0.4.1
 
 ---
