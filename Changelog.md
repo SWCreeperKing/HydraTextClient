@@ -1,3 +1,15 @@
+# v.0.4.3
+
+---
+- Updated from `Godot 4.5 (dev 2)` to `Godot 4.5 (dev 3)` 
+- Limited max fps from vsync (monitor) to 20fps
+- Used the new `FoldableContainer` in `Godot 4.5 (dev 3)` for `Items & Locations`
+- `FoldableContainer` (:D) to hide text client filters
+- Changed renderer from `Forward+` to `Compatibility`
+- Added icon made by Raphael2512
+- Added item log filter: `Show Related to you only`
+- Changed `[Copy]` in the item log to an image and added a tooltip
+
 # v.0.4.2hf
 
 ---

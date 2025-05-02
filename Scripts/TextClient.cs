@@ -34,6 +34,7 @@ public partial class TextClient : VBoxContainer
     [Export] private CheckBox _ShowUseful;
     [Export] private CheckBox _ShowNormal;
     [Export] private CheckBox _ShowTraps;
+    [Export] private CheckBox _ShowOnlyYou;
     private Queue<ClientMessage> _ChatMessages = new(250);
     private Queue<ClientMessage> _ItemLog = new(250);
     private Queue<ClientMessage> _Both = new(500);
@@ -118,6 +119,7 @@ public partial class TextClient : VBoxContainer
                 Settings.ItemFilterDialog.SetItem(s);
                 return;
             }
+
             DisplayServer.ClipboardSet(CopyList[int.Parse(s)]);
         };
 
@@ -141,10 +143,16 @@ public partial class TextClient : VBoxContainer
             MainController.Data.ItemLogOptions[3] = _ShowTraps.ButtonPressed;
             RefreshText = true;
         };
+        _ShowOnlyYou.Pressed += () =>
+        {
+            MainController.Data.ItemLogOptions[4] = _ShowTraps.ButtonPressed;
+            RefreshText = true;
+        };
         _ShowProgressive.ButtonPressed = MainController.Data.ItemLogOptions[0];
         _ShowUseful.ButtonPressed = MainController.Data.ItemLogOptions[1];
         _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
         _ShowTraps.ButtonPressed = MainController.Data.ItemLogOptions[3];
+        _ShowOnlyYou.ButtonPressed = MainController.Data.ItemLogOptions[4];
     }
 
     public override void _Process(double delta)
@@ -167,6 +175,8 @@ public partial class TextClient : VBoxContainer
             while (!HintRequest && !Messages.IsEmpty)
             {
                 Messages.TryDequeue(out var message);
+                if (!Filter(message)) continue;
+                
                 _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
                 _Both.Enqueue(message);
 
@@ -219,33 +229,31 @@ public partial class TextClient : VBoxContainer
 
     public bool Filter(ClientMessage message)
     {
-        if (message.IsItemLog)
-        {
-            var itemMessagePart = message.MessageParts[2];
-            var flags = itemMessagePart.Flags!.Value;
-            var id = long.Parse(itemMessagePart.Text);
-            var playerSlot = itemMessagePart.Player!.Value;
+        if (!message.IsItemLog) return true;
+        
+        if (MainController.Data.ItemLogOptions[4] &&
+            !message.MessageParts.Any(part => ActiveClients.Any(client => client.PlayerSlot == part.Player)))
+            return false;
+        
+        var itemMessagePart = message.MessageParts[2];
+        var flags = itemMessagePart.Flags!.Value;
+        var id = long.Parse(itemMessagePart.Text);
+        var playerSlot = itemMessagePart.Player!.Value;
 
-            var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
+        var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
 
-            if (MainController.Data.ItemFilters.TryGetValue(uid, out var itemFilter) && !itemFilter.ShowInItemLog) return false;
-            
-            if ((flags & ItemFlags.Advancement) == ItemFlags.Advancement)
-            {
-                return MainController.Data.ItemLogOptions[0];
-            }
+        if (MainController.Data.ItemFilters.TryGetValue(uid, out var itemFilter) &&
+            !itemFilter.ShowInItemLog) return false;
 
-            if ((flags & ItemFlags.NeverExclude) == ItemFlags.NeverExclude)
-            {
-                return MainController.Data.ItemLogOptions[1];
-            }
+        if ((flags & ItemFlags.Advancement) != 0)
+            return MainController.Data.ItemLogOptions[0];
 
-            return (flags & ItemFlags.Trap) == ItemFlags.Trap
-                ? MainController.Data.ItemLogOptions[3]
-                : MainController.Data.ItemLogOptions[2];
-        }
+        if ((flags & ItemFlags.NeverExclude) != 0)
+            return MainController.Data.ItemLogOptions[1];
 
-        return true;
+        return (flags & ItemFlags.Trap) != 0
+            ? MainController.Data.ItemLogOptions[3]
+            : MainController.Data.ItemLogOptions[2];
     }
 
     public void SendMessage(string message)
@@ -314,7 +322,8 @@ public readonly struct ClientMessage(
 
         if (IsItemLog)
         {
-            messageBuilder.Append($"[url={copyId}][Copy][/url] ");
+            var fontSize = MainController.Data.FontSizes["text_client"];
+            messageBuilder.Append($"[hint=\"Click to Copy\"][url={copyId}][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
             TextClient.CopyList.Add(CopyText);
         }
 
@@ -334,7 +343,8 @@ public readonly struct ClientMessage(
                     var item = ItemIdToItemName(itemId, part.Player!.Value);
                     var flags = part.Flags!.Value;
                     color = GetItemHexColor(flags);
-                    messageBuilder.Append($"[color={color}][url={Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}]{item.Clean()}[/url][/color]");
+                    messageBuilder.Append(
+                        $"[color={color}][url={Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}]{item.Clean()}[/url][/color]");
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);

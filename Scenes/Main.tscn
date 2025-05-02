@@ -22,7 +22,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotContainer", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotContainer", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,6 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
+_Version = "0.4.3"
 _UITheme = ExtResource("4_erwvk")
 _AddressField = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit")
@@ -45,6 +46,7 @@ _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/Text Client")
 _DiscordTimer = NodePath("Timer")
 _DiscordText = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Label")
 _DiscordReconnect = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Button")
+_VersionLabel = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Label2")
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -55,7 +57,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
-current_tab = 6
+current_tab = 1
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
 visible = false
@@ -164,7 +166,7 @@ text = "Safety Save"
 [node name="Label2" type="Label" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-text = "HydraTextClient v.0.4.1"
+text = "HydraTextClient v."
 
 [node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login/Login"]
 layout_mode = 2
@@ -228,7 +230,6 @@ size_flags_vertical = 3
 theme_override_constants/separation = 15
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -241,66 +242,70 @@ metadata/_tab_index = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client"]
 layout_mode = 2
 
-[node name="Text Client" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps")]
+[node name="Text Client" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 script = ExtResource("5_pbw6q")
 _Main = NodePath("../../../..")
-_SelectedClient = NodePath("VBoxContainer/HBoxContainer2/HBoxContainer/OptionButton")
-_WordWrap = NodePath("VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2/OptionButton2")
-_Content = NodePath("VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3/OptionButton2")
+_SelectedClient = NodePath("FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/OptionButton")
+_WordWrap = NodePath("FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2/OptionButton2")
+_Content = NodePath("FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3/OptionButton2")
 _Messages = NodePath("ScrollContainer/PanelContainer/MarginContainer/Messages")
 _SendMessage = NodePath("HBoxContainer/LineEdit")
 _SendMessageButton = NodePath("HBoxContainer/Button")
 _ScrollToBottom = NodePath("HBoxContainer/Button2")
 _ScrollContainer = NodePath("ScrollContainer")
-_ShowProgressive = NodePath("VBoxContainer/FlowContainer/CheckBox5")
-_ShowUseful = NodePath("VBoxContainer/FlowContainer/CheckBox2")
-_ShowNormal = NodePath("VBoxContainer/FlowContainer/CheckBox3")
-_ShowTraps = NodePath("VBoxContainer/FlowContainer/CheckBox4")
+_ShowProgressive = NodePath("FoldableContainer/VBoxContainer/FlowContainer/CheckBox5")
+_ShowUseful = NodePath("FoldableContainer/VBoxContainer/FlowContainer/CheckBox2")
+_ShowNormal = NodePath("FoldableContainer/VBoxContainer/FlowContainer/CheckBox3")
+_ShowTraps = NodePath("FoldableContainer/VBoxContainer/FlowContainer/CheckBox4")
+_ShowOnlyYou = NodePath("FoldableContainer/VBoxContainer/FlowContainer/CheckBox6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client"]
+[node name="FoldableContainer" type="FoldableContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer"]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 16
 text = "Please only switch clients when required"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 40
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Client"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Word Wrap"
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
@@ -315,17 +320,17 @@ popup/item_2/id = 2
 popup/item_3/text = "Word (Smart)"
 popup/item_3/id = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Content"
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/HBoxContainer2/HBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
@@ -338,43 +343,50 @@ popup/item_1/id = 1
 popup/item_2/text = "Both"
 popup/item_2/id = 2
 
-[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer"]
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/FlowContainer"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 18
 text = "Item Log Filters: "
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/FlowContainer"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Progressive"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/FlowContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Useful"
 
-[node name="CheckBox3" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/FlowContainer"]
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Normal"
 
-[node name="CheckBox4" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/VBoxContainer/FlowContainer"]
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Traps"
+
+[node name="CheckBox6" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/Text Client/FoldableContainer/VBoxContainer/FlowContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 16
+button_pressed = true
+text = "Show Related to you only"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client/ScrollContainer/Text Client"]
 layout_mode = 2
@@ -761,6 +773,7 @@ script = ExtResource("14_346fj")
 _Columns = Array[String](["Item", "Game", "Item Log", "Hint Table", "        "])
 
 [node name="Credits" type="MarginContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
@@ -797,7 +810,7 @@ horizontal_alignment = 1
 
 [node name="Button2" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
 layout_mode = 2
-text = "Godot 4.5 (dev 2)"
+text = "Godot 4.5 (dev 3)"
 _Link = "https://godotengine.org/"
 
 [node name="Button3" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
@@ -846,6 +859,22 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Serpent.AI"
 _Link = "https://github.com/SerpentAI/Archipelago/releases"
+
+[node name="HSeparator5" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label4" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 24
+text = "Icon Artist"
+horizontal_alignment = 1
+
+[node name="Button8" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+text = "Raphael2512"
+_Link = "https://linktr.ee/raphael2512"
 
 [node name="Hint" type="ConfirmationDialog" parent="."]
 mode = 2

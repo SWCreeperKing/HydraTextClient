@@ -63,6 +63,7 @@ public partial class MainController : Control
     public static Dictionary<HintStatus, string> HintStatusText =
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
+    [Export] private string _Version;
     [Export] private Theme _UITheme;
     [Export] private LineEdit _AddressField;
     [Export] private LineEdit _PasswordField;
@@ -78,6 +79,7 @@ public partial class MainController : Control
     [Export] private Timer _DiscordTimer;
     [Export] private Label _DiscordText;
     [Export] private Button _DiscordReconnect;
+    [Export] private Label _VersionLabel;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -86,6 +88,7 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
+        _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;
         Data = new Data();
         if (!Directory.Exists(SaveDir))
@@ -126,7 +129,7 @@ public partial class MainController : Control
     {
         _DiscordText.Visible = DiscordIntegration.DiscordAlive;
         _DiscordReconnect.Visible = !DiscordIntegration.DiscordAlive;
-        
+
         // ReSharper disable once AssignmentInConditionalExpression
         if (_ConnectionTimer.Visible = ConnectionCooldown > 0) // intentional (because funny)
         {
@@ -326,10 +329,7 @@ public partial class MainController : Control
         _PortField.Editable = toggle;
     }
 
-    public void UpdateDiscord()
-    {
-        DiscordIntegration.UpdateActivity();
-    }
+    public void UpdateDiscord() { DiscordIntegration.UpdateActivity(); }
 
     public void TryReconnectDiscord()
     {

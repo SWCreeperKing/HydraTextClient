@@ -49,7 +49,7 @@ public class Data
     public Dictionary<string, int> FontSizes = [];
     public List<SortObject> HintSortOrder = [];
     public bool[] HintOptions = [false, true, true, true, true];
-    public bool[] ItemLogOptions = [true, true, true, true];
+    public bool[] ItemLogOptions = [true, true, true, true, true];
     public long WordWrap = 0;
     public long Content = 0;
 
