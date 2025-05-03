@@ -30,23 +30,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "0.4.3"
+_Version = "0.4.4hf"
 _UITheme = ExtResource("4_erwvk")
-_AddressField = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer/LineEdit")
-_PasswordField = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit")
-_PortField = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit")
-_SlotField = NodePath("TabContainer/Login/Login/MarginContainer2/VBoxContainer/HBoxContainer/LineEdit")
-_SlotContainer = NodePath("TabContainer/Login/Login/MarginContainer2/VBoxContainer/ScrollContainer/VBoxContainer")
-_SlotAddButton = NodePath("TabContainer/Login/Login/MarginContainer2/VBoxContainer/HBoxContainer/Button")
+_AddressField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer/LineEdit")
+_PasswordField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2/LineEdit")
+_PortField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3/LineEdit")
+_SlotField = NodePath("TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer/LineEdit")
+_SlotContainer = NodePath("TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/VBoxContainer")
+_SlotAddButton = NodePath("TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer/Button")
 _SlotPackedScene = ExtResource("3_kln2b")
 _HintManager = NodePath("TabContainer/Items & Locations")
 _TabContainer = NodePath("TabContainer")
-_ConnectionTimer = NodePath("TabContainer/Login/Login/MarginContainer2/VBoxContainer/Label")
+_ConnectionTimer = NodePath("TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/Label")
 _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/Text Client")
 _DiscordTimer = NodePath("Timer")
-_DiscordText = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Label")
-_DiscordReconnect = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Button")
-_VersionLabel = NodePath("TabContainer/Login/Login/MarginContainer/MultiTextClient/Label2")
+_DiscordText = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Label")
+_DiscordReconnect = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button")
+_VersionLabel = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Label2")
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -57,7 +57,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
-current_tab = 1
+current_tab = 2
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
 visible = false
@@ -69,7 +69,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("4_erwvk")
-split_offset = 450
+split_offset = 500
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Login/Login"]
 layout_mode = 2
@@ -78,16 +78,20 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Login/Login/MarginContainer"]
+layout_mode = 2
+
+[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -95,11 +99,11 @@ theme_override_font_sizes/font_size = 24
 text = "archipelago.gg"
 placeholder_text = "Address"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -108,7 +112,7 @@ placeholder_text = "Password"
 secret = true
 script = ExtResource("2_idj7w")
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2"]
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/h_separation = 10
@@ -116,11 +120,11 @@ theme_override_font_sizes/font_size = 24
 button_pressed = true
 text = "Hide"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer3"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -131,25 +135,25 @@ script = ExtResource("2_idj7w")
 NumberOnly = true
 IsPort = true
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer3"]
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/h_separation = 10
 theme_override_font_sizes/font_size = 24
 text = "Hide"
 
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Retry Rich Presence Connection"
 
-[node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 modulate = Color(0.784314, 1, 0.784314, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
@@ -157,13 +161,13 @@ theme_override_font_sizes/font_size = 24
 text = "Rich Presence Connected!"
 horizontal_alignment = 1
 
-[node name="Button2" type="Button" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="Button2" type="Button" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Safety Save"
 
-[node name="Label2" type="Label" parent="TabContainer/Login/Login/MarginContainer/MultiTextClient"]
+[node name="Label2" type="Label" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "HydraTextClient v."
@@ -175,13 +179,16 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Login/Login/MarginContainer2"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="Messages" type="RichTextLabel" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer"]
+[node name="Messages" type="RichTextLabel" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
 modulate = Color(1, 0.580562, 0.563035, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
@@ -194,17 +201,17 @@ bbcode_enabled = true
 text = "Please limit or disconnect from slots you don't need open, it causes unneeded stress on the AP servers"
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Add"
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -213,23 +220,20 @@ placeholder_text = "Slot Name"
 max_length = 16
 keep_editing_on_text_submit = true
 
-[node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Timer"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -443,7 +447,6 @@ theme_override_font_sizes/font_size = 24
 text = "Scroll To Bottom"
 
 [node name="Hints" type="MarginContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
@@ -1002,8 +1005,8 @@ size_flags_horizontal = 3
 [node name="Timer" type="Timer" parent="."]
 wait_time = 30.0
 
-[connection signal="toggled" from="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
-[connection signal="toggled" from="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/MarginContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
-[connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/MultiTextClient/Button" to="." method="TryReconnectDiscord"]
-[connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/MultiTextClient/Button2" to="." method="Save"]
+[connection signal="toggled" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
+[connection signal="toggled" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
+[connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button" to="." method="TryReconnectDiscord"]
+[connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button2" to="." method="Save"]
 [connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]

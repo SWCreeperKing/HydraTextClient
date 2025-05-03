@@ -8,6 +8,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Godot;
+using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.Settings;
 
@@ -145,7 +146,7 @@ public partial class TextClient : VBoxContainer
         };
         _ShowOnlyYou.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[4] = _ShowTraps.ButtonPressed;
+            MainController.Data.ItemLogOptions[4] = _ShowOnlyYou.ButtonPressed;
             RefreshText = true;
         };
         _ShowProgressive.ButtonPressed = MainController.Data.ItemLogOptions[0];
@@ -176,7 +177,7 @@ public partial class TextClient : VBoxContainer
             {
                 Messages.TryDequeue(out var message);
                 if (!Filter(message)) continue;
-                
+
                 _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
                 _Both.Enqueue(message);
 
@@ -229,12 +230,13 @@ public partial class TextClient : VBoxContainer
 
     public bool Filter(ClientMessage message)
     {
+        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found) return false;
         if (!message.IsItemLog) return true;
-        
+
         if (MainController.Data.ItemLogOptions[4] &&
             !message.MessageParts.Any(part => ActiveClients.Any(client => client.PlayerSlot == part.Player)))
             return false;
-        
+
         var itemMessagePart = message.MessageParts[2];
         var flags = itemMessagePart.Flags!.Value;
         var id = long.Parse(itemMessagePart.Text);
@@ -323,7 +325,8 @@ public readonly struct ClientMessage(
         if (IsItemLog)
         {
             var fontSize = MainController.Data.FontSizes["text_client"];
-            messageBuilder.Append($"[hint=\"Click to Copy\"][url={copyId}][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
+            messageBuilder.Append(
+                $"[hint=\"Click to Copy\"][url={copyId}][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
             TextClient.CopyList.Add(CopyText);
         }
 

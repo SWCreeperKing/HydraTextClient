@@ -216,7 +216,7 @@ public readonly struct HintData(Hint hint)
 
         return
         [
-            $"[url=\"{GetCopy}\"][/url]",
+            $"[url=\"{GetCopy}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
             $"[color={itemColor}][url={Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags)}]{Item.Clean()}[/url][/color]",
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",

@@ -14,6 +14,8 @@ public partial class SizeManager : SpinBox
 
     public override void _Ready()
     {
+        FontSizes.TryAdd(Id, DefaultSize);
+        
         Value = FontSizes.GetValueOrDefault(Id, DefaultSize);
 
         ValueChanged += val =>

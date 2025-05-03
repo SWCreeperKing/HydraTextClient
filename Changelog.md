@@ -1,3 +1,10 @@
+# v.0.4.4hf
+
+---
+- Added more scroll containers
+- Fixed `Copy` not appearing in the hints tab
+- Fixed not actually being able to change the `Show Related to you only` setting
+
 # v.0.4.3
 
 ---
