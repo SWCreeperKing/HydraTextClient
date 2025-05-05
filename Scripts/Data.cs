@@ -42,9 +42,7 @@ public class Data
     public string Password;
     public int Port = 12345;
     public List<string> SlotNames = [];
-
     public Dictionary<string, ColorSetting> ColorSettings = new(DefaultDict);
-
     public Dictionary<string, ItemFilter> ItemFilters = [];
     public Dictionary<string, int> FontSizes = [];
     public List<SortObject> HintSortOrder = [];
@@ -52,6 +50,7 @@ public class Data
     public bool[] ItemLogOptions = [true, true, true, true, true];
     public long WordWrap = 0;
     public long Content = 0;
+    public int TextClientLineSeparation = 0;
 
     public void NullCheck()
     {

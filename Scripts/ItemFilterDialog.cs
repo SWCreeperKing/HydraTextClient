@@ -31,7 +31,7 @@ public partial class ItemFilterDialog : ConfirmationDialog
     }
 
     public string GetMetaString(string itemName, string gameName, long itemId, ItemFlags flags)
-        => $"\"itemdialog{itemName}&-&{gameName}&-&{itemId}&-&{(int)flags}\"";
+        => $"itemdialog{itemName}&-&{gameName}&-&{itemId}&-&{(int)flags}".Replace("\"", "'");
 
     public void SetItem(string meta)
     {

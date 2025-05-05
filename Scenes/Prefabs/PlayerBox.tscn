@@ -8,6 +8,7 @@ offset_right = 213.0
 offset_bottom = 56.0
 theme = ExtResource("1_5uer8")
 folded = true
+title_alignment = 1
 script = ExtResource("1_afgk6")
 _BoxContainer = NodePath("PlayerBox/VBoxContainer")
 _FlowContainer = NodePath("PlayerBox/HFlowContainer")

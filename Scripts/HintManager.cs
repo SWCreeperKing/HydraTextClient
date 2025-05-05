@@ -16,6 +16,7 @@ public partial class HintManager : MarginContainer
     [Export] private HintDialog _SendHintConfirmation;
     private Dictionary<ApClient, PlayerBox> _HintSenderBoxes = [];
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
+    private Dictionary<string, Button> _LocationButtons = [];
 
     public void RegisterPlayer(ApClient client)
     {
@@ -25,9 +26,10 @@ public partial class HintManager : MarginContainer
             kv => (GameDataLookup)kv.Value);
         var largeCache = cache[client.PlayerGames[client.PlayerSlot]];
         var items = largeCache.Items.Select(kv => kv.Key);
-        var locations = largeCache.Locations.Select(kv => kv.Key);
+        var locations = largeCache.Locations
+                                  .Where(kv => client.Session.Locations.AllMissingLocations.Contains(kv.Value));
         SetupBoxes(items, client, _HintSenderBoxes, false, _HintSender);
-        SetupBoxes(locations, client, _HintLocationSenderBoxes, true, _HintLocationSender);
+        SetupBoxes(locations.Select(kv => kv.Key), client, _HintLocationSenderBoxes, true, _HintLocationSender);
     }
 
     public void SetupBoxes(IEnumerable<string> arr, ApClient client, Dictionary<ApClient, PlayerBox> dict,
@@ -45,6 +47,7 @@ public partial class HintManager : MarginContainer
             if (locations)
             {
                 hintButton.Pressed += () => HintLocation(item, client);
+                _LocationButtons.Add(item, hintButton);
             }
             else
             {
@@ -64,10 +67,24 @@ public partial class HintManager : MarginContainer
         searchBar.TextChanged += text =>
         {
             var split = text.Split(" ");
+            Queue<Button> toRemove = [];
             foreach (var button in buttons)
             {
-                button.Visible =
-                    split.All(word => button.Text.Contains(word, StringComparison.CurrentCultureIgnoreCase));
+                try
+                {
+                    button.Visible =
+                        split.All(word => button.Text.Contains(word, StringComparison.CurrentCultureIgnoreCase));
+                }
+                catch
+                {
+                    toRemove.Enqueue(button);
+                }
+            }
+
+            if (toRemove.Count == 0) return;
+            foreach (var button in toRemove)
+            {
+                buttons.Remove(button);
             }
         };
 
@@ -101,5 +118,17 @@ public partial class HintManager : MarginContainer
         _SendHintConfirmation.Client = client;
         _SendHintConfirmation.Item = item;
         _SendHintConfirmation.Show();
+    }
+
+    public void LocationCheck(long[] newLocations, int playerSlot)
+    {
+        var found = newLocations.Select(l => MainController.LocationIdToLocationName(l, playerSlot));
+        foreach (var (key, button) in _LocationButtons.Where(kv => found.Contains(kv.Key)))
+        {
+            _LocationButtons.Remove(key);
+
+            button.GetParent().RemoveChild(button);
+            button.QueueFree();
+        }
     }
 }

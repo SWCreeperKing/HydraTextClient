@@ -63,7 +63,7 @@ public partial class ItemFilterer : TextTable
                            $"[color={color}]{item.Name}[/color]", item.Game,
                            GetShowHideText(hash, item.ShowInItemLog, false),
                            GetShowHideText(hash, item.ShowInHintsTable, true),
-                           $"[url=&&&{hash}]Remove[/url]"
+                           $"[url=\"&&&{hash}\"]Remove[/url]"
                        ];
                    })
                   .ToList());

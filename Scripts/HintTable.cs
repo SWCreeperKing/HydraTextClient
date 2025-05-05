@@ -141,11 +141,11 @@ public partial class HintTable : TextTable
             var so = SortOrder.First(so => so.Name == columnText);
             var place = SortOrder.IndexOf(so) + 1;
             return so.IsDescending
-                ? $"[url=SortOrder&{columnText}]{columnText} {place}▼[/url]" // ↓▼▽v
-                : $"[url=SortOrder&{columnText}]{columnText} {place}▲[/url]"; // ↑▲△^
+                ? $"[url=\"SortOrder&{columnText}\"]{columnText} {place}▼[/url]" // ↓▼▽v
+                : $"[url=\"SortOrder&{columnText}\"]{columnText} {place}▲[/url]"; // ↑▲△^
         }
 
-        return $"[url=SortOrder&{columnText}]{columnText} -[/url]";
+        return $"[url=\"SortOrder&{columnText}\"]{columnText} -[/url]";
     }
 
     public IOrderedEnumerable<HintData> Order(IOrderedEnumerable<HintData> arr, Func<HintData, int> compare,
@@ -218,7 +218,7 @@ public readonly struct HintData(Hint hint)
         [
             $"[url=\"{GetCopy}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
-            $"[color={itemColor}][url={Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags)}]{Item.Clean()}[/url][/color]",
+            $"[color={itemColor}][url=\"{Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags)}\"]{Item.Clean()}[/url][/color]",
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
             $"[color={hintColor}]{hintStatus}[/color]",
             $"[color={locationColor}]{Location.Clean()}[/color]",

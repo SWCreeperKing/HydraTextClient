@@ -1,3 +1,13 @@
+# v.0.4.5
+
+---
+- Fixed some text not being 'cleaned'
+- Locations in `Items & Locations` are now all missing locations and now removes checked locations
+- Fixed a problem with save data from an old save not adapting correctly
+- Fixed an incorrect parent-child with a container in the Text Client messing with the ScrollContainers
+- Added a `Line Separation` setting for the Text Client
+- RichTextLabel allows you to select text? that's on now for the Text Client 
+
 # v.0.4.4hf
 
 ---

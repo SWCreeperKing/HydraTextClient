@@ -36,6 +36,7 @@ public partial class TextClient : VBoxContainer
     [Export] private CheckBox _ShowNormal;
     [Export] private CheckBox _ShowTraps;
     [Export] private CheckBox _ShowOnlyYou;
+    [Export] private SpinBox _LineSeparation;
     private Queue<ClientMessage> _ChatMessages = new(250);
     private Queue<ClientMessage> _ItemLog = new(250);
     private Queue<ClientMessage> _Both = new(500);
@@ -124,6 +125,17 @@ public partial class TextClient : VBoxContainer
             DisplayServer.ClipboardSet(CopyList[int.Parse(s)]);
         };
 
+        if (MainController.Data.ItemLogOptions.Length < 5)
+        {
+            bool[] corrected = [true, true, true, true, true];
+            for (var i = 0; i < MainController.Data.ItemLogOptions.Length; i++)
+            {
+                corrected[i] = MainController.Data.ItemLogOptions[i];
+            }
+
+            MainController.Data.ItemLogOptions = corrected;
+        }
+
         _ShowProgressive.Pressed += () =>
         {
             MainController.Data.ItemLogOptions[0] = _ShowProgressive.ButtonPressed;
@@ -154,6 +166,15 @@ public partial class TextClient : VBoxContainer
         _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
         _ShowTraps.ButtonPressed = MainController.Data.ItemLogOptions[3];
         _ShowOnlyYou.ButtonPressed = MainController.Data.ItemLogOptions[4];
+        
+        _LineSeparation.Value = MainController.Data.TextClientLineSeparation;
+        _LineSeparation.ValueChanged += d =>
+        {
+            MainController.Data.TextClientLineSeparation = (int)d;
+            _Messages.RemoveThemeConstantOverride("line_separation");
+            _Messages.AddThemeConstantOverride("line_separation", MainController.Data.TextClientLineSeparation);
+        };
+        _Messages.AddThemeConstantOverride("line_separation", MainController.Data.TextClientLineSeparation);
     }
 
     public override void _Process(double delta)
@@ -311,7 +332,7 @@ public readonly struct ClientMessage(
             color = PlayerColor(ChatPacket.Slot);
             TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot, false)}: {ChatPacket.Message}");
             return
-                $"[color={color}][url={copyId}]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
+                $"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
         }
 
         StringBuilder messageBuilder = new();
@@ -319,14 +340,14 @@ public readonly struct ClientMessage(
         if (IsServer)
         {
             messageBuilder.Append(
-                $"[color={MainController.Data["player_server"].Hex}][url={copyId}]Server[/url][/color]: ");
+                $"[color={MainController.Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
         }
 
         if (IsItemLog)
         {
             var fontSize = MainController.Data.FontSizes["text_client"];
             messageBuilder.Append(
-                $"[hint=\"Click to Copy\"][url={copyId}][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
+                $"[hint=\"Click to Copy\"][url=\"{copyId}\"][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
             TextClient.CopyList.Add(CopyText);
         }
 
@@ -347,7 +368,7 @@ public readonly struct ClientMessage(
                     var flags = part.Flags!.Value;
                     color = GetItemHexColor(flags);
                     messageBuilder.Append(
-                        $"[color={color}][url={Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}]{item.Clean()}[/url][/color]");
+                        $"[color={color}][url=\"{Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}\"]{item.Clean()}[/url][/color]");
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);
@@ -370,7 +391,7 @@ public readonly struct ClientMessage(
 
                     if (IsHint && i == 0)
                     {
-                        messageBuilder.Append($"[url={copyId}][Hint][/url]: ");
+                        messageBuilder.Append($"[url=\"{copyId}\"][Hint][/url]: ");
                         TextClient.CopyList.Add(CopyText);
                         break;
                     }
