@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using GodotPlugins.Game;
 using Newtonsoft.Json;
 
 namespace ArchipelagoMultiTextClient.Scripts;
@@ -19,7 +20,7 @@ public partial class Settings : Control
     public override void _Ready()
     {
         ItemFilterDialog = _ItemFilter;
-        foreach (var (key, setting) in MainController.Data.ColorSettings)
+        foreach (var (key, setting) in MainController.Data.GetColors())
         {
             var box = new HBoxContainer();
             var label = new Label();
@@ -45,28 +46,12 @@ public partial class Settings : Control
             _Buttons.Add(picker);
         }
 
-        _ExportColors.Pressed += ()
-            => DisplayServer.ClipboardSet(JsonConvert.SerializeObject(MainController.Data.ColorSettings));
+        _ExportColors.Pressed += () => DisplayServer.ClipboardSet(MainController.Data.Colors);
         _ImportColors.Pressed += () =>
         {
-            try
-            {
-                var colors =
-                    JsonConvert.DeserializeObject<Dictionary<string, ColorSetting>>(DisplayServer.ClipboardGet());
-                if (colors is null) return;
-
-                foreach (var key in MainController.Data.ColorSettings.Keys.Where(key => !colors.ContainsKey(key)))
-                {
-                    colors.Add(key, MainController.Data.ColorSettings[key]);
-                }
-
-                MainController.Data.ColorSettings = colors;
-                RefreshPickers();
-            }
-            catch
-            {
-                //ignored
-            }
+            MainController.Data.Colors = DisplayServer.ClipboardGet();
+            MainController.RefreshUIColors();
+            RefreshPickers();
         };
     }
 

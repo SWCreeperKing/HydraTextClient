@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.DataConstant;
@@ -38,11 +39,12 @@ file class DataConstant
 
 public class Data
 {
+    private Dictionary<string, ColorSetting> _UiColorSettings = new(DefaultDict);
+
     public string Address = "archipelago.gg";
     public string Password;
     public int Port = 12345;
     public List<string> SlotNames = [];
-    public Dictionary<string, ColorSetting> ColorSettings = new(DefaultDict);
     public Dictionary<string, ItemFilter> ItemFilters = [];
     public Dictionary<string, int> FontSizes = [];
     public List<SortObject> HintSortOrder = [];
@@ -52,17 +54,45 @@ public class Data
     public long Content = 0;
     public int TextClientLineSeparation = 0;
 
+    public string Colors
+    {
+        get => string.Join(";;;", _UiColorSettings.Select(kv => $"{kv.Key}==={kv.Value.SettingName}==={kv.Value.Hex}"));
+        set
+        {
+            var raw = value
+                     .Split(";;;")
+                     .Select(item => item.Split("==="))
+                     .ToDictionary(item => item[0], item => new ColorSetting(item[1], new Color(item[2])));
+            
+            if (raw is null || raw.Count == 0) return;
+            
+            foreach (var key in _UiColorSettings.Keys.Where(key => !raw.ContainsKey(key)))
+            {
+                raw.Add(key, _UiColorSettings[key]);
+            }
+
+            _UiColorSettings = raw;
+        }
+    }
+
+    public Dictionary<string, ColorSetting> ColorSettings // backwards compatability
+    {
+        set => _UiColorSettings = value;
+    }
+
     public void NullCheck()
     {
-        if (ColorSettings is not null) return;
-        ColorSettings = new Dictionary<string, ColorSetting>(DefaultDict);
+        if (_UiColorSettings is not null) return;
+        _UiColorSettings = new Dictionary<string, ColorSetting>(DefaultDict);
     }
 
     public ColorSetting this[string colorId]
     {
-        get => ColorSettings.GetValueOrDefault(colorId, DefaultDict[colorId]);
-        set => ColorSettings[colorId] = value;
+        get => _UiColorSettings.GetValueOrDefault(colorId, DefaultDict[colorId]);
+        set => _UiColorSettings[colorId] = value;
     }
+
+    public Dictionary<string, ColorSetting> GetColors() => _UiColorSettings;
 }
 
 public readonly struct ColorSetting(string settingName, Color color)

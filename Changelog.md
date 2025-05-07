@@ -1,3 +1,11 @@
+# v.0.4.5hf1
+
+---
+- Added a button that will open save directory in the settings
+- Fixed a bug on linux that would fail to load color data from the save
+  - As a consequence the save file has been optimized
+    - Should be backwards compatible 
+
 # v.0.4.5
 
 ---

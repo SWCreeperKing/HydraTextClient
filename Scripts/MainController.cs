@@ -339,6 +339,8 @@ public partial class MainController : Control
         DiscordIntegration.CheckDiscord(DiscordIntegration.DiscordAppId);
     }
 
+    public void OpenSaveDir() => OS.ShellOpen(SaveDir);
+    
     public static ColorSetting PlayerColor(string playerName)
         => Data
         [

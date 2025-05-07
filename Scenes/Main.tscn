@@ -30,7 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "0.4.5"
+_Version = "0.4.5hf1"
 _UITheme = ExtResource("4_erwvk")
 _AddressField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2/LineEdit")
@@ -57,9 +57,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
-current_tab = 0
+current_tab = 5
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -623,7 +624,6 @@ script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
 [node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ItemFilter")]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -649,7 +649,7 @@ size_flags_vertical = 3
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 200
+theme_override_constants/separation = 50
 
 [node name="Button2" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
@@ -657,6 +657,13 @@ size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
 text = "Export Colors to Clipboard"
+
+[node name="Button3" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 24
+text = "Open Save Dir"
 
 [node name="Button" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
@@ -1027,4 +1034,5 @@ wait_time = 30.0
 [connection signal="toggled" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
 [connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button" to="." method="TryReconnectDiscord"]
 [connection signal="pressed" from="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button2" to="." method="Save"]
+[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4/Button3" to="." method="OpenSaveDir"]
 [connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]
