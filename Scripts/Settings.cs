@@ -21,7 +21,11 @@ public partial class Settings : Control
     public override void _Ready()
     {
         _ShowFoundHints.ButtonPressed = MainController.Data.ShowFoundHints;
-        _ShowFoundHints.Pressed += () => MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
+        _ShowFoundHints.Pressed += () =>
+        {
+            MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
+            TextClient.RefreshText = true;
+        };
         
         ItemFilterDialog = _ItemFilter;
         foreach (var (key, setting) in MainController.Data.GetColors())

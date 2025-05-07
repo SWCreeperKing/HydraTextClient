@@ -623,7 +623,7 @@ autowrap_mode = 0
 script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
-[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ItemFilter")]
+[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_ItemFilter")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -636,6 +636,7 @@ _Font = ExtResource("1_r150o")
 _ColorContainer = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings/ColorContainer")
 _ExportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button2")
 _ImportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button")
+_ShowFoundHints = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox5")
 _ItemFilter = NodePath("../../ItemFilter")
 metadata/_tab_index = 5
 
