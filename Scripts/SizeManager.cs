@@ -23,6 +23,7 @@ public partial class SizeManager : SpinBox
             FontSizes[Id] = (int)val;
             UpdateFontSize();
         };
+        UpdateFontSize();
     }
 
     public void UpdateFontSize()

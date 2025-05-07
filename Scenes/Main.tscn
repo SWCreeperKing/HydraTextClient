@@ -702,6 +702,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 24
+text = "Show Found hints in the Text Client"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
@@ -721,7 +727,6 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
-allow_greater = true
 alignment = 1
 script = ExtResource("12_h1m7h")
 Id = "text_client"
@@ -747,10 +752,9 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
-allow_greater = true
 alignment = 1
 script = ExtResource("12_h1m7h")
-Id = "text_client"
+Id = "hint_table"
 DefaultSize = 20
 Nodes = [NodePath("../../../../../../../../Hints/Hints/VBoxContainer/RichTextLabel")]
 
@@ -773,10 +777,9 @@ theme_override_constants/separation = 20
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
-allow_greater = true
 alignment = 1
 script = ExtResource("12_h1m7h")
-Id = "text_client"
+Id = "player_table"
 DefaultSize = 24
 Nodes = [NodePath("../../../../../../../../Players/Players/RichTextLabel")]
 

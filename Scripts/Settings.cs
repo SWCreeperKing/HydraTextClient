@@ -14,11 +14,15 @@ public partial class Settings : Control
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
+    [Export] private CheckBox _ShowFoundHints;
     [Export] private ItemFilterDialog _ItemFilter;
     private List<ColorPickerButton> _Buttons = [];
 
     public override void _Ready()
     {
+        _ShowFoundHints.ButtonPressed = MainController.Data.ShowFoundHints;
+        _ShowFoundHints.Pressed += () => MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
+        
         ItemFilterDialog = _ItemFilter;
         foreach (var (key, setting) in MainController.Data.GetColors())
         {

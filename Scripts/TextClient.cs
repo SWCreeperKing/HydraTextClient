@@ -54,6 +54,8 @@ public partial class TextClient : VBoxContainer
 
         _WordWrap.ItemSelected += i
             => _Messages.AutowrapMode = (TextServer.AutowrapMode)(MainController.Data.WordWrap = i);
+        _Messages.AutowrapMode = (TextServer.AutowrapMode)MainController.Data.WordWrap;
+        
         _Content.ItemSelected += i =>
         {
             MainController.Data.Content = i;
@@ -251,7 +253,7 @@ public partial class TextClient : VBoxContainer
 
     public bool Filter(ClientMessage message)
     {
-        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found) return false;
+        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found && !MainController.Data.ShowFoundHints) return false;
         if (!message.IsItemLog) return true;
 
         if (MainController.Data.ItemLogOptions[4] &&

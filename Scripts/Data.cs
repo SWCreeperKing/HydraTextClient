@@ -50,8 +50,9 @@ public class Data
     public List<SortObject> HintSortOrder = [];
     public bool[] HintOptions = [false, true, true, true, true];
     public bool[] ItemLogOptions = [true, true, true, true, true];
-    public long WordWrap = 0;
-    public long Content = 0;
+    public bool ShowFoundHints = false;
+    public long WordWrap = 3;
+    public long Content = 2;
     public int TextClientLineSeparation = 0;
 
     public string Colors
