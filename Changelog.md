@@ -1,14 +1,14 @@
-# v.0.4.5hf1
+# v.0.4.5-hf1
 
----
 - Added a button that will open save directory in the settings
 - Fixed a bug on linux that would fail to load color data from the save
   - As a consequence the save file has been optimized
     - Should be backwards compatible 
-
+- Fixed a bug with font size changers acting funny
+  
+---
 # v.0.4.5
 
----
 - Fixed some text not being 'cleaned'
 - Locations in `Items & Locations` are now all missing locations and now removes checked locations
 - Fixed a problem with save data from an old save not adapting correctly
@@ -16,16 +16,16 @@
 - Added a `Line Separation` setting for the Text Client
 - RichTextLabel allows you to select text? that's on now for the Text Client 
 
+---
 # v.0.4.4hf
 
----
 - Added more scroll containers
 - Fixed `Copy` not appearing in the hints tab
 - Fixed not actually being able to change the `Show Related to you only` setting
 
+---
 # v.0.4.3
 
----
 - Updated from `Godot 4.5 (dev 2)` to `Godot 4.5 (dev 3)` 
 - Limited max fps from vsync (monitor) to 20fps
 - Used the new `FoldableContainer` in `Godot 4.5 (dev 3)` for `Items & Locations`
@@ -35,17 +35,17 @@
 - Added item log filter: `Show Related to you only`
 - Changed `[Copy]` in the item log to an image and added a tooltip
 
+---
 # v.0.4.2hf
 
----
 - Fixed funny problems with color settings
 - Added more scroll containers
 - Fixed disconnecting breaking everything
 - Added Licenses
 
+---
 # v.0.4.1
 
----
 - Fixed rich presence not updating correctly when switching clients
 - Rich presence now disposes when program is closed
 - Fixed the error text disappearing when trying to connect
@@ -53,9 +53,9 @@
 - Added manual retry rich presence connection button, rich presence connected notifier & version number
 - Mostly proper disconnection behavior
 
+---
 # v.0.4
 
----
 - Fixed a few small bugs
 - Added copy text to hints and item logs in the text client
 - ~~stole~~ implemented serpent.ai's rich presence
@@ -63,9 +63,9 @@
 - Added filtering for specific items
   - click on an item in the item log in the text client or the hint table in the hints tab to add them to the filter in the settings 
 
+---
 # v.0.3.1
 
----
 - Font size changer for text client, hints table, and players table added to the settings
 - Fixed a (probably) non-noticeable bug with disconnecting and `Items & Locations`
 - Decreased connection cooldown from 15 to 5, cooldown increases the more slots you have connected: + (1 * connected)
@@ -75,9 +75,9 @@
     - disincentivizes having too many slots open
     - it is possible that i might slightly decrease it further in the future, but until ap allows for something that allows you to connect with multiple slots at the cost of having only 1 connected i am very hesitant to decrease it further
 
+---
 # v.0.3
 
----
 - Up arrow now correctly goes to the last msg you sent instead of the first one
 - `Items` renamed to `Items & Locations`, the hints now have a friend again :D its hint_locations
 - Made the headers in `Items & Locations` buttons so it's far easier to show/hide their contents
@@ -90,9 +90,9 @@
 - You can click on messages in the text client to copy them (not including hints, go to the hints tab to copy a hint)
 - Import/Export colors in settings
 
+---
 # v.0.2
 
----
 - Reduced Players Tab's text size from 32 to 24
 - Made player names be aliases in the text client
 - Added a tooltip in the text client on player names to show the non nickname and game
@@ -105,7 +105,7 @@
 - Very Slightly Improved the message syncing
 - Made the Text Client only send out a message from the input every 300ms to reduce spamming the server 
 
+---
 # v.0.1
 
----
 - Initial Release
