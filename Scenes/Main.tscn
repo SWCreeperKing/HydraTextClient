@@ -57,10 +57,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 24
-current_tab = 1
+current_tab = 0
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -233,6 +232,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 15
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

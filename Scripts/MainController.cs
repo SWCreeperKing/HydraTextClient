@@ -261,7 +261,8 @@ public partial class MainController : Control
             Players = client.PlayerNames;
         }
 
-        client.Session.Locations.CheckedLocationsUpdated += locations => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
+        client.Session.Locations.CheckedLocationsUpdated += locations
+            => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
         PlayerSlots.Add(client.PlayerSlot, client.PlayerName);
         ActiveClients.Add(client);
         HintsMap.Add(client, null);

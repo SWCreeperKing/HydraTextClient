@@ -8,10 +8,10 @@
       <HintPath>Lib\Archipelago.MultiClient.Net.dll</HintPath>
     </Reference>
     <Reference Include="CreepyUtil.Archipelago">
-      <HintPath>..\..\C#\CreepyUtil\CreepyUtil.Archipelago\bin\Debug\net8.0\CreepyUtil.Archipelago.dll</HintPath>
+      <HintPath>Lib\CreepyUtil.Archipelago.dll</HintPath>
     </Reference>
     <Reference Include="CreepyUtil.DiscordRpc">
-      <HintPath>..\..\C#\CreepyUtil\CreepyUtil.DiscordRpc\bin\Debug\net8.0\CreepyUtil.DiscordRpc.dll</HintPath>
+      <HintPath>Lib\CreepyUtil.DiscordRpc.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
