@@ -43,9 +43,10 @@ public partial class SlotClient : PanelContainer
 
     public void TryConnection()
     {
+        ClientCount++;
         if (ClientCount >= 7)
         {
-            ConnectionFailed(["Can only have 1 slots connected"]);
+            ConnectionFailed(["Can only have 7 slots connected"]);
             return;
         }
 
@@ -62,7 +63,6 @@ public partial class SlotClient : PanelContainer
         _ConnectingLabel.Visible = true;
         LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
 
-        ClientCount++;
         ConnectionCooldown = 5 + 1 * ActiveClients.Count;
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
