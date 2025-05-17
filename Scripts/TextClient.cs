@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
+using CreepyUtil.Archipelago;
 using Godot;
 using Newtonsoft.Json;
+using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.Settings;
 
@@ -37,16 +39,18 @@ public partial class TextClient : VBoxContainer
     [Export] private CheckBox _ShowTraps;
     [Export] private CheckBox _ShowOnlyYou;
     [Export] private SpinBox _LineSeparation;
-    private Queue<ClientMessage> _ChatMessages = new(250);
-    private Queue<ClientMessage> _ItemLog = new(250);
-    private Queue<ClientMessage> _Both = new(500);
-    private List<string> _SentMessages = new(50);
+    private LimitedQueue<ClientMessage> _ChatMessages = new(250);
+    private LimitedQueue<ClientMessage> _ItemLog = new(250);
+    private LimitedQueue<ClientMessage> _Both = new(500);
+    private LimitedList<string> _SentMessages = new(50);
     private ScrollBar _VScrollBar;
     private string[] _CurrentPlayers = [];
     private int _ScrollBackNum;
     private bool _ToScroll;
     private double _MessageCooldown;
     private long _LastSelected;
+    private bool _WasLastMessageHintLocation = false;
+    private string _HeldText;
 
     public override void _Ready()
     {
@@ -55,7 +59,7 @@ public partial class TextClient : VBoxContainer
         _WordWrap.ItemSelected += i
             => _Messages.AutowrapMode = (TextServer.AutowrapMode)(MainController.Data.WordWrap = i);
         _Messages.AutowrapMode = (TextServer.AutowrapMode)MainController.Data.WordWrap;
-        
+
         _Content.ItemSelected += i =>
         {
             MainController.Data.Content = i;
@@ -65,12 +69,36 @@ public partial class TextClient : VBoxContainer
         _Content.Selected = (int)MainController.Data.Content;
 
         _SendMessage.TextSubmitted += SendMessage;
+        _SendMessage.FocusExited += () =>
+        {
+            if (_ScrollBackNum == -1) return;
+            _SendMessage.Text = "";
+            _HeldText = "";
+            _ScrollBackNum = -1;
+        };
+
         _SendMessage.GuiInput += input =>
         {
-            if (_SendMessage.Text != "") return;
             if (_SentMessages.Count == 0) return;
-            if (input is not InputEventKey key) return;
+            if (input is InputEventMouseMotion) return;
+            if (input is InputEventMouseButton iemb && GetRect().HasPoint(iemb.Position)) return;
+            if (input is not InputEventKey key)
+            {
+                GD.Print("reset");
+                if (_ScrollBackNum != -1) return;
+                _SendMessage.Text = "";
+                _HeldText = "";
+                _ScrollBackNum = -1;
+                return;
+            }
+
             if (!key.IsPressed()) return;
+
+            if (_ScrollBackNum == -1 && _SendMessage.Text != "" && _SendMessage.Text != _HeldText)
+            {
+                _HeldText = _SendMessage.Text;
+            }
+
             switch (key.Keycode)
             {
                 case Key.Up:
@@ -83,9 +111,11 @@ public partial class TextClient : VBoxContainer
                     return;
             }
 
-            _ScrollBackNum = Math.Clamp(_ScrollBackNum, 0, _SentMessages.Count - 1);
-            _SendMessage.Text = _SentMessages[_ScrollBackNum];
+            _ScrollBackNum = Math.Clamp(_ScrollBackNum, -1, _SentMessages.Count - 1);
+            GD.Print(_ScrollBackNum);
+            _SendMessage.Text = _ScrollBackNum == -1 ? _HeldText : _SentMessages[_ScrollBackNum];
         };
+
         _SendMessage.FocusEntered += () => _ScrollBackNum = _SentMessages.Count - 1;
 
         _SendMessageButton.Pressed += () => SendMessage(_SendMessage.Text);
@@ -100,10 +130,15 @@ public partial class TextClient : VBoxContainer
 
         _SelectedClient.ItemSelected += l =>
         {
-            if (ConnectionCooldown > 0)
+            if (!_Main.IsLocalHosted())
             {
-                _SelectedClient.Selected = (int)_LastSelected;
-                return;
+                if (ConnectionCooldown > 0)
+                {
+                    _SelectedClient.Selected = (int)_LastSelected;
+                    return;
+                }
+
+                ConnectionCooldown = 4;
             }
 
             LastLocationChecked = null;
@@ -111,7 +146,6 @@ public partial class TextClient : VBoxContainer
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
-            ConnectionCooldown = 5 + 1 * ActiveClients.Count;
             _LastSelected = l;
         };
 
@@ -168,7 +202,7 @@ public partial class TextClient : VBoxContainer
         _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
         _ShowTraps.ButtonPressed = MainController.Data.ItemLogOptions[3];
         _ShowOnlyYou.ButtonPressed = MainController.Data.ItemLogOptions[4];
-        
+
         _LineSeparation.Value = MainController.Data.TextClientLineSeparation;
         _LineSeparation.ValueChanged += d =>
         {
@@ -194,29 +228,26 @@ public partial class TextClient : VBoxContainer
             ClearClient = false;
         }
 
-        if (!HintRequest && !Messages.IsEmpty)
+        while (!HintRequest && !Messages.IsEmpty)
         {
-            while (!HintRequest && !Messages.IsEmpty)
+            Messages.TryDequeue(out var message);
+            if (!Filter(message, _WasLastMessageHintLocation, out _WasLastMessageHintLocation)) continue;
+
+            _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
+            _Both.Enqueue(message);
+
+            if (message.IsItemLog)
             {
-                Messages.TryDequeue(out var message);
-                if (!Filter(message)) continue;
+                _ItemLog.Enqueue(message);
+            }
+            else
+            {
+                _ChatMessages.Enqueue(message);
+            }
 
-                _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
-                _Both.Enqueue(message);
-
-                if (message.IsItemLog)
-                {
-                    _ItemLog.Enqueue(message);
-                }
-                else
-                {
-                    _ChatMessages.Enqueue(message);
-                }
-
-                if (message.IsHintRequest)
-                {
-                    HintRequest = true;
-                }
+            if (message.IsHintRequest)
+            {
+                HintRequest = true;
             }
 
             RefreshText = true;
@@ -235,25 +266,38 @@ public partial class TextClient : VBoxContainer
         if (!RefreshText) return;
 
         CopyList.Clear();
-        switch (_Content.Selected)
+        _Messages.Text = _Content.Selected switch
         {
-            case 0: // text only
-                _Messages.Text = string.Join("\n", _ChatMessages.Where(Filter).Select(msg => msg.GenString()));
-                break;
-            case 1: // items only
-                _Messages.Text = string.Join("\n", _ItemLog.Where(Filter).Select(msg => msg.GenString()));
-                break;
-            case 2: // both
-                _Messages.Text = string.Join("\n", _Both.Where(Filter).Select(msg => msg.GenString()));
-                break;
-        }
+            0 => FilterMessages(_ChatMessages), // text only
+            1 => FilterMessages(_ItemLog), // items only
+            2 => FilterMessages(_Both), // both
+            _ => _Messages.Text
+        };
 
         RefreshText = false;
+        return;
+
+        string FilterMessages(LimitedQueue<ClientMessage> messages)
+        {
+            var hintLocationBool = false;
+            return string.Join("\n", messages.GetQueue
+                                             .Where(message
+                                                  => Filter(message, hintLocationBool, out hintLocationBool))
+                                             .Select(msg => msg.GenString()));
+        }
     }
 
-    public bool Filter(ClientMessage message)
+    public bool Filter(ClientMessage message, bool wasHintLocation, out bool isHintLocation)
     {
-        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found && !MainController.Data.ShowFoundHints) return false;
+        isHintLocation = false;
+        var split = message.MessageParts[0].Text.Split(": ");
+        if (split.Length > 1)
+        {
+            isHintLocation = split[1].StartsWith("!hint_location ", CurrentCultureIgnoreCase);
+        }
+
+        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
+            !MainController.Data.ShowFoundHints && !wasHintLocation) return false;
         if (!message.IsItemLog) return true;
 
         if (MainController.Data.ItemLogOptions[4] &&
@@ -288,10 +332,11 @@ public partial class TextClient : VBoxContainer
         if (trim == "") return;
         if (_CurrentPlayers.Length == 0) return;
         _MessageCooldown = .3f;
-        _SentMessages.Add(trim);
+        _SentMessages.Add(trim, false);
         ChosenTextClient!.Say(message);
         _SendMessage.Text = "";
-        _ScrollBackNum = _SentMessages.Count - 1;
+        _HeldText = "";
+        _ScrollBackNum = -1;
     }
 
     public void Clear()
@@ -368,9 +413,11 @@ public readonly struct ClientMessage(
                     var game = PlayerGames[part.Player!.Value];
                     var item = ItemIdToItemName(itemId, part.Player!.Value);
                     var flags = part.Flags!.Value;
-                    color = GetItemHexColor(flags);
+                    var metaString = Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags);
+                    color = GetItemHexColor(flags, metaString);
+                    var bgColor = GetItemHexBgColor(flags, metaString);
                     messageBuilder.Append(
-                        $"[color={color}][url=\"{Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags)}\"]{item.Clean()}[/url][/color]");
+                        $"[bgcolor={bgColor}][color={color}][url=\"{metaString}\"]{item.Clean()}[/url][/color][/bgcolor]");
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);

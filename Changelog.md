@@ -1,3 +1,17 @@
+# v.0.4.6
+
+- Hints from `!hint_location` will try to be prioritized to being shown in the text client
+- Actually fixed the up arrow in the text client allowing you to get previously sent messages
+- Bundled all UI font size into a font size setting
+- Enabled transparent window and per pixel transparency (UI background can be transparent)
+- Added background color options for items
+- Added a player not connected color option
+- Login restrictions will no longer apply if you are local hosting
+- Convinced myself to lower the login cooldown again
+- Fixed a bug with locations and connecting with duplicate/reconnecting with the same game
+- Enabled Screen Space Anti-Aliasing (SSAA)
+
+---
 # v.0.4.5-hf1
 
 - Added a button that will open save directory in the settings
@@ -5,7 +19,7 @@
   - As a consequence the save file has been optimized
     - Should be backwards compatible 
 - Fixed a bug with font size changers acting funny
-  
+
 ---
 # v.0.4.5
 

@@ -56,24 +56,12 @@ border_color = Color(0.140447, 0.140447, 0.140447, 1)
 bg_color = Color(0.0107455, 0.0353842, 0.0401603, 1)
 
 [resource]
-AcceptDialog/fonts/title_font = ExtResource("1_7h0ys")
-Button/fonts/font = ExtResource("1_7h0ys")
-CheckBox/fonts/font = ExtResource("1_7h0ys")
+default_font = ExtResource("1_7h0ys")
+default_font_size = 20
 CheckBox/icons/checked = ExtResource("2_70gmd")
 CheckBox/icons/unchecked = ExtResource("3_8clno")
-FoldableContainer/font_sizes/font_size = 24
-FoldableContainer/fonts/font = ExtResource("1_7h0ys")
 HSplitContainer/styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
-Label/fonts/font = ExtResource("1_7h0ys")
-LineEdit/fonts/font = ExtResource("1_7h0ys")
-OptionButton/fonts/font = ExtResource("1_7h0ys")
-RichTextLabel/fonts/bold_font = ExtResource("1_7h0ys")
-RichTextLabel/fonts/bold_italics_font = ExtResource("1_7h0ys")
-RichTextLabel/fonts/italics_font = ExtResource("1_7h0ys")
-RichTextLabel/fonts/mono_font = ExtResource("1_7h0ys")
-RichTextLabel/fonts/normal_font = ExtResource("1_7h0ys")
 TabContainer/constants/icon_separation = 7
-TabContainer/fonts/font = ExtResource("1_7h0ys")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_3xqnl")
 TabContainer/styles/tab_disabled = SubResource("StyleBoxFlat_5mifo")
 TabContainer/styles/tab_focus = SubResource("StyleBoxFlat_nvwvg")

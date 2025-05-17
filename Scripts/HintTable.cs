@@ -67,6 +67,7 @@ public partial class HintTable : TextTable
                 Settings.ItemFilterDialog.SetItem(s);
                 return;
             }
+
             if (s.StartsWith("SortOrder&"))
             {
                 s = s[10..];
@@ -200,12 +201,14 @@ public readonly struct HintData(Hint hint)
     public string[] GetData()
     {
         var receivingPlayerColor = PlayerColor(ReceivingPlayer).Hex;
-        var itemColor = GetItemHexColor(ItemFlags);
+        var metaString =
+            Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
+        var itemColor = GetItemHexColor(ItemFlags, metaString);
+        var itemBgColor = GetItemHexBgColor(ItemFlags, metaString);
         var findingPlayerColor = PlayerColor(FindingPlayer).Hex;
         var hintColor = MainController.Data[HintStatusColor[HintStatus]].Hex;
         var locationColor = MainController.Data["location"].Hex;
-        var entranceColor = MainController.Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"]
-                                          .Hex;
+        var entranceColor = MainController.Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"].Hex;
 
         var hintStatus = HintStatusText[HintStatus];
         if (PlayerSlots.ContainsKey(ReceivingPlayerSlot) && HintStatus is not Found)
@@ -218,7 +221,7 @@ public readonly struct HintData(Hint hint)
         [
             $"[url=\"{GetCopy}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
-            $"[color={itemColor}][url=\"{Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags)}\"]{Item.Clean()}[/url][/color]",
+            $"[bgcolor={itemBgColor}][color={itemColor}][url=\"{metaString}\"]{Item.Clean()}[/url][/color][/bgcolor]",
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
             $"[color={hintColor}]{hintStatus}[/color]",
             $"[color={locationColor}]{Location.Clean()}[/color]",

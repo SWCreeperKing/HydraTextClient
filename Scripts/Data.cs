@@ -8,7 +8,7 @@ using static ArchipelagoMultiTextClient.Scripts.DataConstant;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
-file class DataConstant
+public class DataConstant
 {
     public static ReadOnlyDictionary<string, ColorSetting> DefaultDict = new(new Dictionary<string, ColorSetting>
     {
@@ -16,10 +16,17 @@ file class DataConstant
         ["player_server"] = new("Player (Server)", Colors.Yellow),
         ["player_generic"] = new("Player (Generic)", Colors.Beige),
         ["player_color"] = new("Player (Connected To)", new Color(0.89f, 0.01f, 0.89f)),
+        ["player_color_offline"] = new("Player (Not Connected To)", new Color(0.89f, 0.01f, 0.89f)),
+        ["item_special"] = new("Item (Special)", Colors.ForestGreen),
         ["item_progressive"] = new("Item (Progressive)", Colors.Gold),
         ["item_useful"] = new("Item (Useful)", Colors.Teal),
         ["item_normal"] = new("Item (Normal)", Colors.Beige),
         ["item_trap"] = new("Item (Trap)", Colors.OrangeRed),
+        ["item_bg_special"] = new("Item Background (Special)", Colors.Transparent),
+        ["item_bg_progressive"] = new("Item Background (Progressive)", Colors.Transparent),
+        ["item_bg_useful"] = new("Item Background (Useful)", Colors.Transparent),
+        ["item_bg_normal"] = new("Item Background (Normal)", Colors.Transparent),
+        ["item_bg_trap"] = new("Item Background (Trap)", Colors.Transparent),
         ["location"] = new("Location", Colors.Green),
         ["entrance"] = new("Entrance", new Color(0.39f, 0.58f, 0.91f)),
         ["entrance_vanilla"] = new("Entrance (Vanilla)", Colors.Beige),
@@ -54,6 +61,7 @@ public class Data
     public long WordWrap = 3;
     public long Content = 2;
     public int TextClientLineSeparation = 0;
+    public int GlobalFontSize = 20;
 
     public string Colors
     {
@@ -64,9 +72,9 @@ public class Data
                      .Split(";;;")
                      .Select(item => item.Split("==="))
                      .ToDictionary(item => item[0], item => new ColorSetting(item[1], new Color(item[2])));
-            
+
             if (raw is null || raw.Count == 0) return;
-            
+
             foreach (var key in _UiColorSettings.Keys.Where(key => !raw.ContainsKey(key)))
             {
                 raw.Add(key, _UiColorSettings[key]);
@@ -114,6 +122,7 @@ public class ItemFilter(long id, string name, string game, ItemFlags flags)
     public readonly string UidCode = MakeUidCode(id, name, game, flags);
     public bool ShowInItemLog = true;
     public bool ShowInHintsTable = true;
+    public bool IsSpecial = false;
 
     public static string MakeUidCode(long id, string name, string game, ItemFlags flags) => $"{id}{name}{game}{flags}";
 }

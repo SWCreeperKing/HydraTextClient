@@ -32,6 +32,7 @@ public partial class MainController : Control
     public static Dictionary<ApClient, HashSet<Hint>> HintsMap = [];
     public static string LastLocationChecked = null;
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
+    private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
     private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
     private static readonly Dictionary<long, string> LocationIdToName = [];
     private static bool _UpdateHints;
@@ -88,6 +89,7 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
+        GetViewport().TransparentBg = true;
         _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;
         Data = new Data();
@@ -301,7 +303,22 @@ public partial class MainController : Control
         RefreshUIColors();
     }
 
-    public void SetupPlayerList(ApClient client)
+    public void ToggleLockInput(bool toggle)
+    {
+        _AddressField.Editable = toggle;
+        _PasswordField.Editable = toggle;
+        _PortField.Editable = toggle;
+    }
+    
+    public static void Clear()
+    {
+        PlayerTable.Datas = [];
+        TextClient.ClearClient = true;
+        Players = [];
+        PlayerGames = [];
+    }
+    
+    public static void SetupPlayerList(ApClient client)
     {
         client.OnPlayerStateChanged += (_, slot) =>
         {
@@ -315,40 +332,29 @@ public partial class MainController : Control
                                   .ToArray();
         PlayerTable.RefreshUI = true;
     }
+    
+    public bool IsLocalHosted() => Address.ToLower() is "localhost" or "127.0.0.1";
+    public static void UpdateDiscord() => DiscordIntegration.UpdateActivity();
 
-    public void Clear()
-    {
-        PlayerTable.Datas = [];
-        TextClient.ClearClient = true;
-        Players = [];
-        PlayerGames = [];
-    }
-
-    public void ToggleLockInput(bool toggle)
-    {
-        _AddressField.Editable = toggle;
-        _PasswordField.Editable = toggle;
-        _PortField.Editable = toggle;
-    }
-
-    public void UpdateDiscord() { DiscordIntegration.UpdateActivity(); }
-
-    public void TryReconnectDiscord()
+    public static void TryReconnectDiscord()
     {
         if (DiscordIntegration.DiscordAlive) return;
         DiscordIntegration.CheckDiscord(DiscordIntegration.DiscordAppId);
     }
 
-    public void OpenSaveDir() => OS.ShellOpen(SaveDir);
+    public static void OpenSaveDir() => OS.ShellOpen(SaveDir);
     
     public static ColorSetting PlayerColor(string playerName)
         => Data
         [
             playerName == "Server"
                 ? "player_server"
-                : PlayerSlots.ContainsValue(playerName)
+                : PlayerSlots.ContainsValue(playerName) // connected slots
                     ? "player_color"
-                    : "player_generic"];
+                    : ClientList.ContainsKey(playerName) // all login slots
+                        ? "player_color_offline"
+                        : "player_generic"
+        ];
 
     public static ColorSetting PlayerColor(int playerSlot)
         => Data
@@ -359,9 +365,19 @@ public partial class MainController : Control
                     ? "player_color"
                     : "player_generic"];
 
-    public static string GetItemHexColor(ItemFlags flags) => Data[GetItemColorString(flags)].Hex;
+    public static string GetItemHexColor(ItemFlags flags, string metaData)
+    {
+        if (Data.ItemFilters.TryGetValue(metaData, out var filter) && filter.IsSpecial) return Data["item_special"];
+        return Data[GetItemColorString(flags)].Hex;
+    }
 
-    public static string GetItemColorString(ItemFlags flags)
+    public static string GetItemHexBgColor(ItemFlags flags, string metaData)
+    {
+        if (Data.ItemFilters.TryGetValue(metaData, out var filter) && filter.IsSpecial) return Data["item_bg_special"];
+        return Data[GetItemBgColorString(flags)].Hex;
+    }
+
+    private static string GetItemColorString(ItemFlags flags)
     {
         if (ItemColorHexCache.TryGetValue(flags, out var color)) return color;
         if ((flags & Advancement) == Advancement)
@@ -382,6 +398,29 @@ public partial class MainController : Control
         }
 
         return ItemColorHexCache[flags] = color;
+    }
+
+    private static string GetItemBgColorString(ItemFlags flags)
+    {
+        if (ItemBgColorHexCache.TryGetValue(flags, out var color)) return color;
+        if ((flags & Advancement) == Advancement)
+        {
+            color = "item_bg_progressive";
+        }
+        else if ((flags & NeverExclude) == NeverExclude)
+        {
+            color = "item_bg_useful";
+        }
+        else if ((flags & Trap) == Trap)
+        {
+            color = "item_bg_trap";
+        }
+        else
+        {
+            color = "item_bg_normal";
+        }
+
+        return ItemBgColorHexCache[flags] = color;
     }
 
     public static void RefreshUIColors()

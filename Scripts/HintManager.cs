@@ -16,7 +16,7 @@ public partial class HintManager : MarginContainer
     [Export] private HintDialog _SendHintConfirmation;
     private Dictionary<ApClient, PlayerBox> _HintSenderBoxes = [];
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
-    private Dictionary<string, Button> _LocationButtons = [];
+    private Dictionary<int, Dictionary<string, Button>> _LocationButtons = [];
 
     public void RegisterPlayer(ApClient client)
     {
@@ -37,6 +37,7 @@ public partial class HintManager : MarginContainer
     {
         var playerBox = (PlayerBox)_PlayerBox.Instantiate();
         playerBox.PlayerName = client.PlayerName;
+        var playerButtons = _LocationButtons[client.PlayerSlot] = new Dictionary<string, Button>();
 
         List<Button> buttons = [];
         foreach (var item in arr.Order())
@@ -47,7 +48,7 @@ public partial class HintManager : MarginContainer
             if (locations)
             {
                 hintButton.Pressed += () => HintLocation(item, client);
-                _LocationButtons.Add(item, hintButton);
+                playerButtons.Add(item, hintButton);
             }
             else
             {
@@ -104,6 +105,7 @@ public partial class HintManager : MarginContainer
         playerBox2.QueueFree();
         _HintSenderBoxes.Remove(client);
         _HintLocationSenderBoxes.Remove(client);
+        _LocationButtons.Remove(client.PlayerSlot);
     }
 
     public void HintLocation(string location, ApClient client)
@@ -123,10 +125,10 @@ public partial class HintManager : MarginContainer
     public void LocationCheck(long[] newLocations, int playerSlot)
     {
         var found = newLocations.Select(l => MainController.LocationIdToLocationName(l, playerSlot));
-        foreach (var (key, button) in _LocationButtons.Where(kv => found.Contains(kv.Key)))
+        foreach (var (key, button) in _LocationButtons[playerSlot].Where(kv => found.Contains(kv.Key)))
         {
-            _LocationButtons.Remove(key);
-
+            _LocationButtons[playerSlot].Remove(key);
+    
             button.GetParent().RemoveChild(button);
             button.QueueFree();
         }

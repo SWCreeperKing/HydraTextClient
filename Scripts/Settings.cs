@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
-using GodotPlugins.Game;
-using Newtonsoft.Json;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -10,12 +7,13 @@ public partial class Settings : Control
 {
     public static ItemFilterDialog ItemFilterDialog;
 
-    [Export] private Font _Font;
+    [Export] private Theme _Theme;
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
     [Export] private CheckBox _ShowFoundHints;
     [Export] private ItemFilterDialog _ItemFilter;
+    [Export] private SpinBox _GlobalUiSize;
     private List<ColorPickerButton> _Buttons = [];
 
     public override void _Ready()
@@ -26,10 +24,12 @@ public partial class Settings : Control
             MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
             TextClient.RefreshText = true;
         };
-        
+
         ItemFilterDialog = _ItemFilter;
-        foreach (var (key, setting) in MainController.Data.GetColors())
+        var order = DataConstant.DefaultDict.Keys;
+        foreach (var key in order)
         {
+            var setting = MainController.Data[key];
             var box = new HBoxContainer();
             var label = new Label();
             var picker = new ColorPickerButton();
@@ -39,8 +39,7 @@ public partial class Settings : Control
 
             box.AddThemeConstantOverride("separation", 15);
             label.Text = setting.SettingName;
-            label.AddThemeFontOverride("font", _Font);
-            label.AddThemeFontSizeOverride("font_size", 20);
+            label.Theme = _Theme;
             picker.Color = setting;
             picker.Text = "Color Picker";
             picker.Name = key;
@@ -61,6 +60,9 @@ public partial class Settings : Control
             MainController.RefreshUIColors();
             RefreshPickers();
         };
+
+        _GlobalUiSize.Value = MainController.Data.GlobalFontSize;
+        _GlobalUiSize.ValueChanged += d => SetThemeFontSize((int)d);
     }
 
     public void RefreshPickers()
@@ -70,4 +72,6 @@ public partial class Settings : Control
             picker.Color = MainController.Data[picker.Name];
         }
     }
+
+    public void SetThemeFontSize(int newSize) => MainController.Data.GlobalFontSize = _Theme.DefaultFontSize = newSize;
 }

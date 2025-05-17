@@ -30,7 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "0.4.5-hf1"
+_Version = "v.0.4.6"
 _UITheme = ExtResource("4_erwvk")
 _AddressField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/HBoxContainer2/LineEdit")
@@ -56,11 +56,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
-current_tab = 5
+current_tab = 0
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -95,7 +93,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "archipelago.gg"
 placeholder_text = "Address"
 
@@ -107,7 +104,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 placeholder_text = "Password"
 secret = true
 script = ExtResource("2_idj7w")
@@ -116,7 +112,6 @@ script = ExtResource("2_idj7w")
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/h_separation = 10
-theme_override_font_sizes/font_size = 24
 button_pressed = true
 text = "Hide"
 
@@ -128,7 +123,6 @@ theme_override_constants/separation = 15
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 placeholder_text = "Port"
 virtual_keyboard_type = 2
 script = ExtResource("2_idj7w")
@@ -139,7 +133,6 @@ IsPort = true
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/h_separation = 10
-theme_override_font_sizes/font_size = 24
 text = "Hide"
 
 [node name="HSeparator" type="HSeparator" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
@@ -150,21 +143,18 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Retry Rich Presence Connection"
 
 [node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 modulate = Color(0.784314, 1, 0.784314, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Rich Presence Connected!"
 horizontal_alignment = 1
 
 [node name="Button2" type="Button" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Safety Save"
 
 [node name="Label2" type="Label" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
@@ -192,11 +182,6 @@ theme_override_constants/separation = 15
 modulate = Color(1, 0.580562, 0.563035, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/bold_italics_font_size = 20
-theme_override_font_sizes/italics_font_size = 20
-theme_override_font_sizes/mono_font_size = 20
-theme_override_font_sizes/normal_font_size = 20
-theme_override_font_sizes/bold_font_size = 20
 bbcode_enabled = true
 text = "Please limit or disconnect from slots you don't need open, it causes unneeded stress on the AP servers"
 fit_content = true
@@ -208,14 +193,12 @@ theme_override_constants/separation = 15
 [node name="Button" type="Button" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Add"
 
 [node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 placeholder_text = "Slot Name"
 max_length = 16
 keep_editing_on_text_submit = true
@@ -223,7 +206,6 @@ keep_editing_on_text_submit = true
 [node name="Label" type="Label" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Timer"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/MarginContainer2/ScrollContainer/VBoxContainer"]
@@ -281,7 +263,6 @@ theme_override_constants/separation = 7
 [node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 text = "Please only switch clients when required"
 
 [node name="FlowContainer2" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer"]
@@ -295,13 +276,11 @@ layout_mode = 2
 [node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Client:"
 
 [node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2"]
 layout_mode = 2
@@ -309,13 +288,11 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer4"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Content:"
 
 [node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer4"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 selected = 2
 item_count = 3
 popup/item_0/text = "Text Only"
@@ -331,13 +308,11 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Word Wrap:"
 
 [node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 selected = 0
 item_count = 4
 popup/item_0/text = "Off"
@@ -355,12 +330,16 @@ layout_mode = 2
 [node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Line Separation:"
 
 [node name="SpinBox" type="SpinBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
+
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Show Found hints in the Text Client"
 
 [node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer"]
 layout_mode = 2
@@ -369,41 +348,35 @@ size_flags_vertical = 3
 [node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 18
 text = "Item Log Filters: "
 
 [node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Progressive"
 
 [node name="CheckBox2" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Useful"
 
 [node name="CheckBox3" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Normal"
 
 [node name="CheckBox4" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Traps"
 
 [node name="CheckBox6" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Related to you only"
 
@@ -428,11 +401,6 @@ theme_override_constants/margin_bottom = 3
 layout_mode = 2
 focus_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/bold_italics_font_size = 20
-theme_override_font_sizes/italics_font_size = 20
-theme_override_font_sizes/mono_font_size = 20
-theme_override_font_sizes/normal_font_size = 20
-theme_override_font_sizes/bold_font_size = 20
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
@@ -447,21 +415,18 @@ theme_override_constants/separation = 15
 [node name="Button" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Send"
 
 [node name="LineEdit" type="LineEdit" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 placeholder_text = "Send Message"
 keep_editing_on_text_submit = true
 
 [node name="Button2" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Scroll To Bottom"
 
 [node name="Hints" type="MarginContainer" parent="TabContainer"]
@@ -489,34 +454,29 @@ size_flags_vertical = 3
 [node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 text = "Show Found"
 
 [node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Priority"
 
 [node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Unspecified"
 
 [node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show No Priority"
 
 [node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 16
 button_pressed = true
 text = "Show Avoid"
 
@@ -577,7 +537,6 @@ size_flags_vertical = 3
 [node name="Label" type="Label" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Click an item to hint it"
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Items & Locations/MarginContainer/Split"]
@@ -592,7 +551,6 @@ size_flags_vertical = 3
 [node name="Label" type="Label" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer2/VBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Click an location to hint_location it"
 horizontal_alignment = 2
 
@@ -612,18 +570,14 @@ size_flags_vertical = 3
 [node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Players/Players"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/bold_italics_font_size = 24
-theme_override_font_sizes/italics_font_size = 24
-theme_override_font_sizes/mono_font_size = 24
-theme_override_font_sizes/normal_font_size = 24
-theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
-[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_ItemFilter")]
+[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_ItemFilter", "_GlobalUiSize")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -632,12 +586,13 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 script = ExtResource("6_v1gob")
-_Font = ExtResource("1_r150o")
+_Theme = ExtResource("4_erwvk")
 _ColorContainer = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings/ColorContainer")
 _ExportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button2")
 _ImportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button")
-_ShowFoundHints = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox5")
+_ShowFoundHints = NodePath("../Text Client/ScrollContainer/TextClientContainer/SettingsContainer/VBoxContainer/CheckBox5")
 _ItemFilter = NodePath("../../ItemFilter")
+_GlobalUiSize = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4/SpinBox")
 metadata/_tab_index = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings"]
@@ -656,21 +611,18 @@ theme_override_constants/separation = 50
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Export Colors to Clipboard"
 
 [node name="Button3" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Open Save Dir"
 
 [node name="Button" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Import Colors from Clipboard"
 
 [node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer"]
@@ -703,19 +655,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
-text = "Show Found hints in the Text Client"
-
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = " Text Client Font Size:  "
 horizontal_alignment = 2
 
@@ -740,7 +685,6 @@ layout_mode = 2
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = " Hints Table Font Size:  "
 horizontal_alignment = 2
 
@@ -765,7 +709,6 @@ layout_mode = 2
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = " Players Table Font Size:"
 horizontal_alignment = 2
 
@@ -784,6 +727,50 @@ Id = "player_table"
 DefaultSize = 24
 Nodes = [NodePath("../../../../../../../../Players/Players/RichTextLabel")]
 
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = " Item Filter Table Font Size:"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5" node_paths=PackedStringArray("Nodes")]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+rounded = true
+alignment = 1
+script = ExtResource("12_h1m7h")
+Id = "item_filter_table"
+DefaultSize = 16
+Nodes = [NodePath("../../RichTextLabel")]
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = " Global UI Font Size:"
+horizontal_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+rounded = true
+alignment = 1
+
 [node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 theme_override_constants/separation = 5
@@ -791,9 +778,7 @@ theme_override_constants/separation = 5
 [node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
-text = "Item Filters"
-horizontal_alignment = 1
+text = "   Item Filters"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
@@ -802,7 +787,7 @@ bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 script = ExtResource("14_346fj")
-_Columns = Array[String](["Item", "Game", "Item Log", "Hint Table", "        "])
+_Columns = Array[String](["Item", "Game", "Item Log", "Hint Table", "Mark as Special", "        "])
 
 [node name="Credits" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -836,7 +821,6 @@ theme_override_constants/separation = 5
 [node name="Label" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Tools"
 horizontal_alignment = 1
 
@@ -867,7 +851,6 @@ theme_override_constants/separation = 5
 [node name="Label2" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Developer"
 horizontal_alignment = 1
 
@@ -883,7 +866,6 @@ theme_override_constants/separation = 5
 [node name="Label3" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Archipelago Rich Presence Developer"
 horizontal_alignment = 1
 
@@ -899,7 +881,6 @@ theme_override_constants/separation = 5
 [node name="Label4" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-theme_override_font_sizes/font_size = 24
 text = "Icon Artist"
 horizontal_alignment = 1
 

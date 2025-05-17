@@ -1,10 +1,13 @@
 using System;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
 using CreepyUtil.Archipelago;
 using Godot;
+using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using static ArchipelagoMultiTextClient.Scripts.TextClient;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -43,17 +46,22 @@ public partial class SlotClient : PanelContainer
 
     public void TryConnection()
     {
-        ClientCount++;
-        if (ClientCount >= 7)
+        if (!_Main.IsLocalHosted())
         {
-            ConnectionFailed(["Can only have 7 slots connected"]);
-            return;
-        }
+            ClientCount++;
+            if (ClientCount >= 7)
+            {
+                ConnectionFailed(["Can only have 7 slots connected"]);
+                return;
+            }
 
-        if (ConnectionCooldown > 0)
-        {
-            ConnectionFailed(["Please wait after connecting/changing slots to do so again"]);
-            return;
+            if (ConnectionCooldown > 0)
+            {
+                ConnectionFailed(["Please wait after connecting/changing slots to do so again"]);
+                return;
+            }
+
+            ConnectionCooldown = 4;
         }
 
         IsRunning = true;
@@ -62,8 +70,6 @@ public partial class SlotClient : PanelContainer
         _DeleteButton.Visible = false;
         _ConnectingLabel.Visible = true;
         LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
-
-        ConnectionCooldown = 5 + 1 * ActiveClients.Count;
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
 
@@ -113,42 +119,45 @@ public partial class SlotClient : PanelContainer
 
     public void HasConnected()
     {
-        Client.Session.Socket.PacketReceived += packet =>
+        var playerName = Client.PlayerName;
+        Client.OnConnectionErrorReceived += (err, _)
+            =>
         {
-            switch (packet)
+            switch (err)
             {
-                case HintPrintJsonPacket hintPacket:
-                    TextClient.Messages.Enqueue(new ClientMessage(hintPacket.Data, isHint: true,
-                        copyText: hintPacket.GetCopy()));
-                    break;
-                case ChatPrintJsonPacket message:
-                    TextClient.Messages.Enqueue(new ClientMessage(message.Data,
-                        chatPrintJsonPacket: message));
-                    break;
-                case BouncedPacket:
-                    break;
-                case PrintJsonPacket updatePacket:
-                    if (updatePacket.Data.Length == 1)
-                    {
-                        TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, isServer: true));
-                    }
-
-                    if (updatePacket.Data.Length < 2) break;
-                    if (updatePacket.Data[1].Text is " found their " or " sent ")
-                    {
-                        var playerSlot = int.Parse(updatePacket.Data[0].Text);
-                        if (playerSlot == ChosenTextClient.PlayerSlot)
-                        {
-                            var locationId = long.Parse(updatePacket.Data[^2].Text);
-                            LastLocationChecked = LocationIdToLocationName(locationId, playerSlot);
-                        }
-
-                        TextClient.Messages.Enqueue(new ClientMessage(updatePacket.Data, true,
-                            copyText: updatePacket.Data.GetItemLogCopy()));
-                    }
-
-                    break;
+                case WebSocketException { WebSocketErrorCode: WebSocketError.ConnectionClosedPrematurely }:
+                    GD.PrintErr($"From [{playerName}] Archipelago connection closed (should be handled, ignore)");
+                    return;
+                case JsonSerializationException:
+                    return;
             }
+
+            GD.Print("=== THE FOLLOWING IS A CONNECTION ERROR =====================");
+            GD.Print($"Error from: [{playerName}]");
+            GD.PrintErr(err);
+            GD.Print("============================================================");
+        };
+
+        Client.OnHintPrintJsonPacketReceived += (_, packet)
+            => Messages.Enqueue(new ClientMessage(packet.Data, isHint: true, copyText: packet.GetCopy()));
+
+        Client.OnChatPrintPacketReceived += (_, packet)
+            => Messages.Enqueue(new ClientMessage(packet.Data, chatPrintJsonPacket: packet));
+
+        Client.OnServerMessagePacketReceived += (_, packet)
+            => Messages.Enqueue(new ClientMessage(packet.Data, isServer: true));
+
+        Client.OnItemLogPacketReceived += (_, packet) =>
+        {
+            var playerSlot = int.Parse(packet.Data[0].Text);
+            if (playerSlot == ChosenTextClient.PlayerSlot)
+            {
+                var locationId = long.Parse(packet.Data[^2].Text);
+                LastLocationChecked = LocationIdToLocationName(locationId, playerSlot);
+            }
+
+            Messages.Enqueue(new ClientMessage(packet.Data, true,
+                copyText: packet.Data.GetItemLogCopy()));
         };
 
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
@@ -168,6 +177,7 @@ public partial class SlotClient : PanelContainer
         _DisconnectButton.Visible = false;
         _Main.DisconnectClient(Client);
         Client = new ApClient();
+        if (_Main.IsLocalHosted()) return;
         ClientCount--;
     }
 

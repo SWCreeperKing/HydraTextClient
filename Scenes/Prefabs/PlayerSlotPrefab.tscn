@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://djs7npjk4pm4c"]
 
-[ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_8i4hi"]
 [ext_resource type="Script" uid="uid://dixgt4o511kcv" path="res://Scripts/SlotClient.cs" id="1_frht4"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_puuhv"]
 
 [node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("_ConnectButton", "_ConnectingLabel", "_DisconnectButton", "_PlayerNameLabel", "_DeleteButton", "_ErrorLabel")]
 script = ExtResource("1_frht4")
@@ -29,16 +29,14 @@ theme_override_constants/separation = 15
 [node name="Button" type="Button" parent="MarginContainer2/VBoxContainer/HBoxContainer2"]
 modulate = Color(0.784314, 1, 0.741176, 1)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_8i4hi")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("2_puuhv")
 text = "Connect"
 
 [node name="Label2" type="Label" parent="MarginContainer2/VBoxContainer/HBoxContainer2"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("1_8i4hi")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("2_puuhv")
 text = "Connecting..."
 horizontal_alignment = 2
 
@@ -46,32 +44,25 @@ horizontal_alignment = 2
 visible = false
 modulate = Color(1, 0.815686, 0.819608, 1)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_8i4hi")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("2_puuhv")
 text = "Disconnect"
 
 [node name="Label" type="Label" parent="MarginContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("1_8i4hi")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("2_puuhv")
 text = "SW_Creeper_TUNC"
 horizontal_alignment = 2
 
 [node name="Button2" type="Button" parent="MarginContainer2/VBoxContainer/HBoxContainer2"]
 modulate = Color(1, 0.219608, 0.286275, 1)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("1_8i4hi")
-theme_override_font_sizes/font_size = 24
+theme = ExtResource("2_puuhv")
 text = " X "
 
 [node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer2/VBoxContainer"]
 visible = false
 modulate = Color(1, 0, 0, 1)
 layout_mode = 2
-theme_override_fonts/normal_font = ExtResource("1_8i4hi")
-theme_override_fonts/mono_font = ExtResource("1_8i4hi")
-theme_override_fonts/italics_font = ExtResource("1_8i4hi")
-theme_override_fonts/bold_italics_font = ExtResource("1_8i4hi")
-theme_override_fonts/bold_font = ExtResource("1_8i4hi")
+theme = ExtResource("2_puuhv")
 fit_content = true

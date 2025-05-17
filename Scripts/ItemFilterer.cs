@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Godot;
+using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -25,12 +26,17 @@ public partial class ItemFilterer : TextTable
                 RefreshUI = true;
                 return;
             }
-            
-            var isShowHint = s.StartsWith("&_&");
+
             var hash = s[3..];
             var filter = MainController.Data.ItemFilters[hash];
 
-            if (isShowHint)
+            if (s.StartsWith("_&_"))
+            {
+                filter.IsSpecial = !filter.IsSpecial;
+                HintTable.RefreshUI = true;
+                TextClient.RefreshText = true;
+            }
+            else if (s.StartsWith("&_&"))
             {
                 filter.ShowInHintsTable = !filter.ShowInHintsTable;
                 HintTable.RefreshUI = true;
@@ -56,13 +62,15 @@ public partial class ItemFilterer : TextTable
                   .ThenBy(item => item.Name)
                   .Select(item =>
                    {
-                       var color = MainController.GetItemHexColor(item.Flags);
+                       var color = GetItemHexColor(item.Flags, item.UidCode);
+                       var bgColor = GetItemHexBgColor(item.Flags, item.UidCode);
                        var hash = item.UidCode;
                        return (string[])
                        [
-                           $"[color={color}]{item.Name}[/color]", item.Game,
+                           $"[bgcolor={bgColor}][color={color}]{item.Name}[/color][/bgcolor]", item.Game,
                            GetShowHideText(hash, item.ShowInItemLog, false),
                            GetShowHideText(hash, item.ShowInHintsTable, true),
+                           SpecialMarkText(hash, item.IsSpecial),
                            $"[url=\"&&&{hash}\"]Remove[/url]"
                        ];
                    })
@@ -70,6 +78,11 @@ public partial class ItemFilterer : TextTable
 
         RefreshUI = false;
     }
+
+    public string SpecialMarkText(string hash, bool option)
+        => option
+            ? $"[url=\"_&_{hash}\"][color={Red}]Unmark[/color][/url]"
+            : $"[url=\"_&_{hash}\"][color={Green}]Mark[/color][/url]";
 
     public string GetShowHideText(string hash, bool option, bool isShowHint)
     {

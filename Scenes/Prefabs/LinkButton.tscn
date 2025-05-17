@@ -5,6 +5,5 @@
 
 [node name="Button" type="Button"]
 theme = ExtResource("1_ffleg")
-theme_override_font_sizes/font_size = 24
 text = "Link"
 script = ExtResource("1_rprnt")
