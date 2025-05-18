@@ -79,12 +79,10 @@ public partial class TextClient : VBoxContainer
 
         _SendMessage.GuiInput += input =>
         {
-            if (_SentMessages.Count == 0) return;
-            if (input is InputEventMouseMotion) return;
+            if (_SentMessages.Count == 0 || input is InputEventMouseMotion) return;
             if (input is InputEventMouseButton iemb && GetRect().HasPoint(iemb.Position)) return;
             if (input is not InputEventKey key)
             {
-                GD.Print("reset");
                 if (_ScrollBackNum != -1) return;
                 _SendMessage.Text = "";
                 _HeldText = "";

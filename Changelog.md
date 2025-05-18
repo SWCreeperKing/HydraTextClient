@@ -1,3 +1,8 @@
+# v.0.4.7
+
+- Added countermeasures for if 2 games share the same location id 
+- Added more UI saving i.e. window size and window position
+
 # v.0.4.6
 
 - Hints from `!hint_location` will try to be prioritized to being shown in the text client

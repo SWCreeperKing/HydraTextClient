@@ -1,8 +1,11 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://doy8rp1q74ye0"]
+[gd_resource type="Theme" load_steps=15 format=3 uid="uid://doy8rp1q74ye0"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_7h0ys"]
 [ext_resource type="Texture2D" uid="uid://32132x7kc10h" path="res://Assets/Images/UI/Checkmark.png" id="2_70gmd"]
 [ext_resource type="Texture2D" uid="uid://dsg775cgh8xl4" path="res://Assets/Images/UI/XMark.png" id="3_8clno"]
+[ext_resource type="FontFile" uid="uid://df7jgk7btl4kh" path="res://Assets/Font/CascadiaCode-Bold.ttf" id="3_fryjx"]
+[ext_resource type="FontFile" uid="uid://ccpifsqvycick" path="res://Assets/Font/CascadiaCode-BoldItalic.ttf" id="4_3xqnl"]
+[ext_resource type="FontFile" uid="uid://cne63cpog17en" path="res://Assets/Font/CascadiaCode-Italic.ttf" id="5_pmxma"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -61,6 +64,11 @@ default_font_size = 20
 CheckBox/icons/checked = ExtResource("2_70gmd")
 CheckBox/icons/unchecked = ExtResource("3_8clno")
 HSplitContainer/styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
+RichTextLabel/fonts/bold_font = ExtResource("3_fryjx")
+RichTextLabel/fonts/bold_italics_font = ExtResource("4_3xqnl")
+RichTextLabel/fonts/italics_font = ExtResource("5_pmxma")
+RichTextLabel/fonts/mono_font = ExtResource("1_7h0ys")
+RichTextLabel/fonts/normal_font = ExtResource("1_7h0ys")
 TabContainer/constants/icon_separation = 7
 TabContainer/styles/panel = SubResource("StyleBoxFlat_3xqnl")
 TabContainer/styles/tab_disabled = SubResource("StyleBoxFlat_5mifo")

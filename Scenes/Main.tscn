@@ -1,9 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=21 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_r150o"]
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LineEditHide.cs" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
+[ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/UiSaver.cs" id="4_0sclb"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
 [ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClient.cs" id="5_pbw6q"]
 [ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/HintManager.cs" id="6_4kpch"]
@@ -48,7 +49,7 @@ _DiscordText = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContaine
 _DiscordReconnect = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Button")
 _VersionLabel = NodePath("TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient/Label2")
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="." node_paths=PackedStringArray("Controls")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -57,6 +58,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 current_tab = 0
+script = ExtResource("4_0sclb")
+Controls = {
+"items_and_locations/split": NodePath("Items & Locations/MarginContainer/Split"),
+"login/split_container": NodePath("Login/Login"),
+"settings/split_container/settings_split": NodePath("Settings/ScrollContainer/VBoxContainer/SettingSplit"),
+"text_client/foldable_container/settings_container": NodePath("Text Client/ScrollContainer/TextClientContainer/SettingsContainer")
+}
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
 layout_mode = 2
@@ -83,7 +91,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 15
+theme_override_constants/separation = 7
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
@@ -160,7 +168,13 @@ text = "Safety Save"
 [node name="Label2" type="Label" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
-text = "HydraTextClient v."
+text = "HydraTextClient "
+
+[node name="Button5" parent="TabContainer/Login/Login/MarginContainer/ScrollContainer/MultiTextClient" instance=ExtResource("13_h1m7h")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Donate ❤️ :3"
+_Link = "https://www.patreon.com/c/SW_CreeperKing"
 
 [node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login/Login"]
 layout_mode = 2

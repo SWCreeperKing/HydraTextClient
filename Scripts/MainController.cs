@@ -34,7 +34,7 @@ public partial class MainController : Control
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
     private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
-    private static readonly Dictionary<long, string> LocationIdToName = [];
+    private static readonly Dictionary<string, Dictionary<long, string>> LocationIdToName = [];
     private static bool _UpdateHints;
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
@@ -64,6 +64,8 @@ public partial class MainController : Control
     public static Dictionary<HintStatus, string> HintStatusText =
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
+    public static event EventHandler SaveCalled;
+    
     [Export] private string _Version;
     [Export] private Theme _UITheme;
     [Export] private LineEdit _AddressField;
@@ -102,6 +104,9 @@ public partial class MainController : Control
             Data = JsonConvert.DeserializeObject<Data>(File.ReadAllText($"{SaveDir}/data.json")
                                                            .Replace("\r", "")
                                                            .Replace("\n", ""));
+            GetWindow().Size = Data.WindowSize;
+            if (Data.WindowPosition is null) return;
+            GetWindow().Position = Data.WindowPosition!.Value;
         }
     }
 
@@ -125,6 +130,8 @@ public partial class MainController : Control
 
         Background.BgColor = Data["background_color"];
         _TabContainer.AddThemeStyleboxOverride("panel", Background);
+        SaveCalled += (_, _) => Data.WindowSize = GetWindow().Size;
+        SaveCalled += (_, _) => Data.WindowPosition = GetWindow().Position;
     }
 
     public override void _Process(double delta)
@@ -227,10 +234,16 @@ public partial class MainController : Control
 
     public static string LocationIdToLocationName(long id, int playerSlot)
     {
-        if (!LocationIdToName.TryGetValue(id, out var location))
+        var game = PlayerGames[playerSlot];
+        if (!LocationIdToName.TryGetValue(game, out var locNameDict))
         {
-            location = LocationIdToName[id] =
-                ActiveClients[0].Session.Locations.GetLocationNameFromId(id, PlayerGames[playerSlot]);
+            LocationIdToName[game] = locNameDict = new Dictionary<long, string>();
+        }
+
+        if (!locNameDict.TryGetValue(id, out var location))
+        {
+            location = locNameDict[id] =
+                ActiveClients[0].Session.Locations.GetLocationNameFromId(id, game);
         }
 
         return location;
@@ -309,7 +322,7 @@ public partial class MainController : Control
         _PasswordField.Editable = toggle;
         _PortField.Editable = toggle;
     }
-    
+
     public static void Clear()
     {
         PlayerTable.Datas = [];
@@ -317,7 +330,7 @@ public partial class MainController : Control
         Players = [];
         PlayerGames = [];
     }
-    
+
     public static void SetupPlayerList(ApClient client)
     {
         client.OnPlayerStateChanged += (_, slot) =>
@@ -332,7 +345,7 @@ public partial class MainController : Control
                                   .ToArray();
         PlayerTable.RefreshUI = true;
     }
-    
+
     public bool IsLocalHosted() => Address.ToLower() is "localhost" or "127.0.0.1";
     public static void UpdateDiscord() => DiscordIntegration.UpdateActivity();
 
@@ -343,7 +356,7 @@ public partial class MainController : Control
     }
 
     public static void OpenSaveDir() => OS.ShellOpen(SaveDir);
-    
+
     public static ColorSetting PlayerColor(string playerName)
         => Data
         [
@@ -432,7 +445,11 @@ public partial class MainController : Control
         _UpdateHints = true;
     }
 
-    public static void Save() => File.WriteAllText($"{SaveDir}/data.json", JsonConvert.SerializeObject(Data));
+    public static void Save()
+    {
+        SaveCalled?.Invoke(null, null!);
+        File.WriteAllText($"{SaveDir}/data.json", JsonConvert.SerializeObject(Data));
+    }
 
     public static string GetAlias(int slot, bool additionalInfo)
     {

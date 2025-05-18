@@ -62,6 +62,9 @@ public class Data
     public long Content = 2;
     public int TextClientLineSeparation = 0;
     public int GlobalFontSize = 20;
+    public Vector2I WindowSize = new(1152, 648);
+    public Vector2I? WindowPosition = null;
+    public Dictionary<string, float> UiSettingsSave = new();
 
     public string Colors
     {
