@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=15 format=3 uid="uid://doy8rp1q74ye0"]
+[gd_resource type="Theme" load_steps=17 format=3 uid="uid://doy8rp1q74ye0"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_7h0ys"]
 [ext_resource type="Texture2D" uid="uid://32132x7kc10h" path="res://Assets/Images/UI/Checkmark.png" id="2_70gmd"]
@@ -6,6 +6,9 @@
 [ext_resource type="FontFile" uid="uid://df7jgk7btl4kh" path="res://Assets/Font/CascadiaCode-Bold.ttf" id="3_fryjx"]
 [ext_resource type="FontFile" uid="uid://ccpifsqvycick" path="res://Assets/Font/CascadiaCode-BoldItalic.ttf" id="4_3xqnl"]
 [ext_resource type="FontFile" uid="uid://cne63cpog17en" path="res://Assets/Font/CascadiaCode-Italic.ttf" id="5_pmxma"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pmxma"]
+bg_color = Color(0.109804, 0.121569, 0.129412, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -58,9 +61,13 @@ border_color = Color(0.140447, 0.140447, 0.140447, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8s6ah"]
 bg_color = Color(0.0107455, 0.0353842, 0.0401603, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2vb0"]
+bg_color = Color(0.27451, 0.27451, 0.27451, 1)
+
 [resource]
 default_font = ExtResource("1_7h0ys")
 default_font_size = 20
+AcceptDialog/styles/panel = SubResource("StyleBoxFlat_pmxma")
 CheckBox/icons/checked = ExtResource("2_70gmd")
 CheckBox/icons/unchecked = ExtResource("3_8clno")
 HSplitContainer/styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
@@ -77,3 +84,4 @@ TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_hdcpn")
 TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_dywtt")
 TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_fryjx")
 TabContainer/styles/tabbar_background = SubResource("StyleBoxFlat_8s6ah")
+VSplitContainer/styles/split_bar_background = SubResource("StyleBoxFlat_l2vb0")

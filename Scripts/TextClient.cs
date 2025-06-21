@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
@@ -28,6 +29,7 @@ public partial class TextClient : VBoxContainer
     [Export] private OptionButton _SelectedClient;
     [Export] private OptionButton _WordWrap;
     [Export] private OptionButton _Content;
+    [Export] private OptionButton _ItemLogStyle;
     [Export] private RichTextLabel _Messages;
     [Export] private LineEdit _SendMessage;
     [Export] private Button _SendMessageButton;
@@ -38,6 +40,7 @@ public partial class TextClient : VBoxContainer
     [Export] private CheckBox _ShowNormal;
     [Export] private CheckBox _ShowTraps;
     [Export] private CheckBox _ShowOnlyYou;
+    [Export] private CheckBox _ClearTextOnDisconnect;
     [Export] private SpinBox _LineSeparation;
     private LimitedQueue<ClientMessage> _ChatMessages = new(250);
     private LimitedQueue<ClientMessage> _ItemLog = new(250);
@@ -65,8 +68,16 @@ public partial class TextClient : VBoxContainer
             MainController.Data.Content = i;
             RefreshText = true;
         };
+
+        _ItemLogStyle.ItemSelected += i =>
+        {
+            MainController.Data.ItemLogStyle = i;
+            RefreshText = true;
+        };
+
         _WordWrap.Selected = (int)MainController.Data.WordWrap;
         _Content.Selected = (int)MainController.Data.Content;
+        _ItemLogStyle.Selected = (int)MainController.Data.ItemLogStyle;
 
         _SendMessage.TextSubmitted += SendMessage;
         _SendMessage.FocusExited += () =>
@@ -195,6 +206,12 @@ public partial class TextClient : VBoxContainer
             MainController.Data.ItemLogOptions[4] = _ShowOnlyYou.ButtonPressed;
             RefreshText = true;
         };
+        _ClearTextOnDisconnect.ButtonPressed = MainController.Data.ClearTextWhenDisconnect;
+        _ClearTextOnDisconnect.Pressed += () =>
+        {
+            MainController.Data.ClearTextWhenDisconnect = _ClearTextOnDisconnect.ButtonPressed;
+            RefreshText = true;
+        };
         _ShowProgressive.ButtonPressed = MainController.Data.ItemLogOptions[0];
         _ShowUseful.ButtonPressed = MainController.Data.ItemLogOptions[1];
         _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
@@ -222,8 +239,8 @@ public partial class TextClient : VBoxContainer
 
         if (ClearClient)
         {
-            Clear();
             ClearClient = false;
+            Clear();
         }
 
         while (!HintRequest && !Messages.IsEmpty)
@@ -339,10 +356,14 @@ public partial class TextClient : VBoxContainer
 
     public void Clear()
     {
+        if (!MainController.Data.ClearTextWhenDisconnect) return;
+        _ScrollBackNum = -1;
         _Messages.Text = "";
+        _HeldText = "";
         _ChatMessages.Clear();
         _ItemLog.Clear();
         _Both.Clear();
+        _SentMessages.Clear();
         Messages.Clear();
         HintRequest = false;
     }
@@ -391,8 +412,17 @@ public readonly struct ClientMessage(
         if (IsItemLog)
         {
             var fontSize = MainController.Data.FontSizes["text_client"];
+            var copyStyle = MainController.Data.ItemLogStyle switch
+            {
+                0 => "",
+                1 => $"[img={fontSize}x{fontSize}]",
+                2 => "[Copy] "
+            };
+
+            var copyEndStyle = MainController.Data.ItemLogStyle == 1 ? "[/img]" : "";
+
             messageBuilder.Append(
-                $"[hint=\"Click to Copy\"][url=\"{copyId}\"][img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img][/url][/hint] ");
+                $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}res://Assets/Images/UI/Copy.png{copyEndStyle}[/url][/hint] ");
             TextClient.CopyList.Add(CopyText);
         }
 
@@ -549,7 +579,6 @@ public static class TextHelper
         var secondPlayerSlot = int.Parse(parts[4].Text);
         var secondPlayer = Players[secondPlayerSlot];
         item = ItemIdToItemName(itemId, secondPlayerSlot);
-
         return $"`{firstPlayer}` sent __{item}__ to `{secondPlayer}` (**{location}**)";
     }
 }

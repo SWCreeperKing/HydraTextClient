@@ -16,6 +16,8 @@ namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class MainController : Control
 {
+    public static MainController Main;
+
     public static string SaveDir =
         $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/HydraTextClient";
 
@@ -65,7 +67,7 @@ public partial class MainController : Control
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
     public static event EventHandler SaveCalled;
-    
+
     [Export] private string _Version;
     [Export] private Theme _UITheme;
     [Export] private LineEdit _AddressField;
@@ -91,6 +93,7 @@ public partial class MainController : Control
 
     public override void _EnterTree()
     {
+        Main = this;
         GetViewport().TransparentBg = true;
         _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;
@@ -122,6 +125,7 @@ public partial class MainController : Control
         _AddressField.Text = Data.Address;
         _PasswordField.Text = Data.Password;
         _PortField.Text = $"{Data.Port}";
+        SetAlwaysOnTop(Data.AlwaysOnTop);
 
         foreach (var player in Data.SlotNames)
         {
@@ -187,7 +191,7 @@ public partial class MainController : Control
             _UpdateHints = false;
         }
 
-        var anyRunning = ClientList.Values.Any(client => client.IsRunning);
+        var anyRunning = ClientList.Values.Any(client => client.IsRunning is not null && client.IsRunning!.Value);
         ToggleLockInput(!anyRunning);
     }
 
@@ -202,7 +206,9 @@ public partial class MainController : Control
     public void AddSlot(string playerName)
     {
         var client = (SlotClient)_SlotPackedScene.Instantiate();
-        client.Init(this, playerName);
+        client.PlayerName = playerName;
+        client.Main = this;
+        client.RefreshUi();
         ClientList.Add(playerName, client);
         _SlotContainer.AddChild(client);
     }
@@ -369,14 +375,7 @@ public partial class MainController : Control
                         : "player_generic"
         ];
 
-    public static ColorSetting PlayerColor(int playerSlot)
-        => Data
-        [
-            playerSlot == 0
-                ? "player_server"
-                : PlayerSlots.ContainsKey(playerSlot)
-                    ? "player_color"
-                    : "player_generic"];
+    public static ColorSetting PlayerColor(int playerSlot) => PlayerColor(ActiveClients[0].PlayerNames[playerSlot]);
 
     public static string GetItemHexColor(ItemFlags flags, string metaData)
     {
@@ -457,6 +456,8 @@ public partial class MainController : Control
         if (!additionalInfo) return alias;
         return $"[hint=\"Name: {Players[slot]}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
     }
+
+    public static void SetAlwaysOnTop(bool b) => Data.AlwaysOnTop = Main.GetWindow().AlwaysOnTop = b;
 
     public override void _Notification(int what)
     {

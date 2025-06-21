@@ -2,7 +2,6 @@ using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Packets;
 using CreepyUtil.Archipelago;
 using Godot;
 using Newtonsoft.Json;
@@ -14,62 +13,63 @@ namespace ArchipelagoMultiTextClient.Scripts;
 public partial class SlotClient : PanelContainer
 {
     private static int ClientCount;
-    public bool IsRunning;
+    public bool? IsRunning = false;
 
-    [Export] private Button _ConnectButton;
-    [Export] private Label _ConnectingLabel;
-    [Export] private Button _DisconnectButton;
-    [Export] private Label _PlayerNameLabel;
-    [Export] private Button _DeleteButton;
-    [Export] private RichTextLabel _ErrorLabel;
+    [Export] private RichTextLabel _SlotDisplay;
+    public MainController Main;
     public ApClient Client = new();
     public bool IsTextClient = false;
-    private MainController _Main;
+    private string[]? _Error;
 
-    public string PlayerName { get; private set; }
-
-    public void Init(MainController main, string playerName)
-    {
-        _Main = main;
-        PlayerName = playerName;
-        _PlayerNameLabel.Text = playerName;
-        _DeleteButton.Pressed += () => _Main.RemoveSlot(PlayerName);
-    }
+    public string PlayerName { get; set; }
 
     public override void _Ready()
     {
-        _ConnectButton.Pressed += TryConnection;
-        _DisconnectButton.Pressed += TryDisconnection;
+        _SlotDisplay.MetaClicked += v =>
+        {
+            var s = (string)v;
+            switch (s)
+            {
+                case "disconnect":
+                    TryDisconnection();
+                    break;
+                case "connect":
+                    TryConnection();
+                    break;
+                case "delete":
+                    Main.RemoveSlot(PlayerName);
+                    break;
+            }
+        };
     }
 
     public override void _Process(double delta) => Client.UpdateConnection();
 
     public void TryConnection()
     {
-        if (!_Main.IsLocalHosted())
+        if (!Main.IsLocalHosted())
         {
-            ClientCount++;
             if (ClientCount >= 7)
             {
-                ConnectionFailed(["Can only have 7 slots connected"]);
+                ConnectionFailed(["Can only have 7 slots connected"], false);
                 return;
             }
 
+            ClientCount++;
+            
             if (ConnectionCooldown > 0)
             {
-                ConnectionFailed(["Please wait after connecting/changing slots to do so again"]);
+                ConnectionFailed(["Please wait after connecting/changing slots to do so again"], false);
                 return;
             }
 
             ConnectionCooldown = 4;
         }
 
-        IsRunning = true;
-        _ErrorLabel.Visible = false;
-        _ConnectButton.Visible = false;
-        _DeleteButton.Visible = false;
-        _ConnectingLabel.Visible = true;
-        LoginInfo login = new(_Main.Port, PlayerName, _Main.Address, _Main.Password);
+        IsRunning = null;
+        _Error = null;
+        RefreshUi();
+        LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
 
@@ -103,22 +103,23 @@ public partial class SlotClient : PanelContainer
     {
         Task.Run(() =>
         {
-            Client.TryDisconnect();
+            Client?.TryDisconnect();
             CallDeferred("HasDisconnected");
         });
     }
 
-    public void ConnectionFailed(string[] error)
+    public void ConnectionFailed(string[] error, bool disconnect = true)
     {
         IsRunning = false;
-        _ErrorLabel.Visible = true;
-        _ErrorLabel.Text = string.Join("\n", error);
+        _Error = error;
+        if (!disconnect) return;
         ConnectionCooldown = 0;
         TryDisconnection();
     }
 
     public void HasConnected()
     {
+        IsRunning = true;
         var playerName = Client.PlayerName;
         Client.OnConnectionErrorReceived += (err, _)
             =>
@@ -162,25 +163,45 @@ public partial class SlotClient : PanelContainer
 
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
 
-        _ConnectingLabel.Visible = false;
-        _ConnectButton.Visible = false;
-        _DisconnectButton.Visible = true;
-        _Main.ConnectClient(Client);
+        Main.ConnectClient(Client);
+        RefreshUi();
     }
 
     public void HasDisconnected()
     {
         IsRunning = false;
-        _ConnectingLabel.Visible = false;
-        _ConnectButton.Visible = true;
-        _DeleteButton.Visible = true;
-        _DisconnectButton.Visible = false;
-        _Main.DisconnectClient(Client);
+        Main.DisconnectClient(Client);
         Client = new ApClient();
-        if (_Main.IsLocalHosted()) return;
+        RefreshUi();
+        if (Main.IsLocalHosted()) return;
         ClientCount--;
     }
 
-
     public void Say(string message) => Client.Say(message);
+
+    public void RefreshUi()
+    {
+        var connectText = IsRunning switch
+        {
+            false => "[url=\"connect\"][color=green][bgcolor=darkgreen]  Connect   [/bgcolor][/color][/url]",
+            true => "[url=\"disconnect\"][color=orangered][bgcolor=darkred] Disconnect [/bgcolor][/color][/url]",
+            null => "Connecting. . ."
+        };
+
+        var deleteText = IsRunning is not null && !IsRunning!.Value
+            ? "[url=\"delete\"][color=orangered][bgcolor=darkred] X [/bgcolor][/color][/url]"
+            : "   ";
+
+        var errorText = _Error is not null && _Error.Length > 0
+            ? $"\n[color=red]{string.Join('\n', _Error)}[/color]"
+            : "";
+
+        _SlotDisplay.Text = $"""
+                             [table=3]
+                             [cell]{deleteText}[/cell]
+                             [cell]    {connectText}    [/cell]
+                             [cell]{PlayerName}[/cell]
+                             [/table]{errorText}
+                             """;
+    }
 }

@@ -7,7 +7,7 @@ namespace ArchipelagoMultiTextClient.Scripts;
 
 public static class RichPresenceController
 {
-    public static Godot.Collections.Dictionary<string, string> GameToTitle = new()
+    public static Dictionary<string, string> GameToTitle = new()
     {
         ["A Difficult Game About Climbing"] = "A Difficult Game About Climbing",
         ["A Hat in Time"] = "A Hat in Time",
@@ -263,7 +263,7 @@ public static class RichPresenceController
         ["shapez 2"] = "Shapez 2",
     };
 
-    public static Godot.Collections.Dictionary<string, string> GameToImage = new()
+    public static Dictionary<string, string> GameToImage = new()
     {
         ["A Difficult Game About Climbing"] = "adifficultgameaboutclimbing",
         ["A Hat in Time"] = "ahatintime",

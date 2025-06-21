@@ -4,20 +4,6 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Archipelago.MultiClient.Net">
-      <HintPath>Lib\Archipelago.MultiClient.Net.dll</HintPath>
-    </Reference>
-    <Reference Include="CreepyUtil.Archipelago">
-      <HintPath>Lib\CreepyUtil.Archipelago.dll</HintPath>
-    </Reference>
-    <Reference Include="CreepyUtil.DiscordRpc">
-      <HintPath>Lib\CreepyUtil.DiscordRpc.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Lib\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     <PackageReference Include="NLua" Version="1.7.5" />
   </ItemGroup>
@@ -27,5 +13,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lib\" />
+    <Folder Include="Scripts\Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="BundledApClient">
+      <HintPath>Lib\BundledApClient.dll</HintPath>
+    </Reference>
+    <Reference Include="CreepyUtil.DiscordRpc">
+      <HintPath>Lib\CreepyUtil.DiscordRpc.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

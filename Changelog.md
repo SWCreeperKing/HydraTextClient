@@ -1,7 +1,14 @@
 # v.0.4.7
 
-- Added countermeasures for if 2 games share the same location id 
-- Added more UI saving i.e. window size and window position
+- Added countermeasures for if 2 games share the same location id
+- A lot of tiny UI changes, here are some: 
+  - Added more UI saving i.e. window size and window position
+  - Redid player slots UI
+  - Changed popup UI a bit
+- Added a drop-down in text client to change the item log copy button style  
+- Fixed a bug with connection limit being 6 and not 7
+- Added `Always on top` setting 
+- Fixed `Player (Not Connected To)` not applying to text client 
 
 # v.0.4.6
 

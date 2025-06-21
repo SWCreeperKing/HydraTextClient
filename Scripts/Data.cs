@@ -58,8 +58,11 @@ public class Data
     public bool[] HintOptions = [false, true, true, true, true];
     public bool[] ItemLogOptions = [true, true, true, true, true];
     public bool ShowFoundHints = false;
+    public bool AlwaysOnTop = false;
+    public bool ClearTextWhenDisconnect = true;
     public long WordWrap = 3;
     public long Content = 2;
+    public long ItemLogStyle = 1;
     public int TextClientLineSeparation = 0;
     public int GlobalFontSize = 20;
     public Vector2I WindowSize = new(1152, 648);

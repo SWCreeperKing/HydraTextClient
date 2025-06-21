@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using GodotPlugins.Game;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -12,6 +13,7 @@ public partial class Settings : Control
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
     [Export] private CheckBox _ShowFoundHints;
+    [Export] private CheckBox _AlwaysOnTop;
     [Export] private ItemFilterDialog _ItemFilter;
     [Export] private SpinBox _GlobalUiSize;
     private List<ColorPickerButton> _Buttons = [];
@@ -24,6 +26,9 @@ public partial class Settings : Control
             MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
             TextClient.RefreshText = true;
         };
+
+        _AlwaysOnTop.ButtonPressed = MainController.Data.AlwaysOnTop;
+        _AlwaysOnTop.Pressed += () => MainController.SetAlwaysOnTop(_AlwaysOnTop.ButtonPressed);
 
         ItemFilterDialog = _ItemFilter;
         var order = DataConstant.DefaultDict.Keys;
