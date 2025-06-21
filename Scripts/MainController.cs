@@ -10,6 +10,7 @@ using Godot;
 using Newtonsoft.Json;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
+using static ArchipelagoMultiTextClient.Scripts.PlayerTable;
 using Environment = System.Environment;
 
 namespace ArchipelagoMultiTextClient.Scripts;
@@ -22,7 +23,7 @@ public partial class MainController : Control
         $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/HydraTextClient";
 
     public static Theme GlobalTheme;
-    public static Data Data;
+    public static UserData Data;
     public static Dictionary<string, SlotClient> ClientList = [];
     public static List<ApClient> ActiveClients = [];
     public static Dictionary<int, string> PlayerSlots = [];
@@ -74,7 +75,6 @@ public partial class MainController : Control
     [Export] private LineEdit _PasswordField;
     [Export] private LineEdit _PortField;
     [Export] private LineEdit _SlotField;
-    [Export] private VBoxContainer _SlotContainer;
     [Export] private Button _SlotAddButton;
     [Export] private PackedScene _SlotPackedScene;
     [Export] private HintManager _HintManager;
@@ -85,6 +85,8 @@ public partial class MainController : Control
     [Export] private Label _DiscordText;
     [Export] private Button _DiscordReconnect;
     [Export] private Label _VersionLabel;
+    [Export] private Button _SaveButton;
+    [Export] private SlotTable _SlotTable;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -97,16 +99,16 @@ public partial class MainController : Control
         GetViewport().TransparentBg = true;
         _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;
-        Data = new Data();
+        Data = new UserData();
         if (!Directory.Exists(SaveDir))
         {
             Directory.CreateDirectory(SaveDir);
         }
         else if (File.Exists($"{SaveDir}/data.json"))
         {
-            Data = JsonConvert.DeserializeObject<Data>(File.ReadAllText($"{SaveDir}/data.json")
-                                                           .Replace("\r", "")
-                                                           .Replace("\n", ""));
+            Data = JsonConvert.DeserializeObject<UserData>(File.ReadAllText($"{SaveDir}/data.json")
+                                                               .Replace("\r", "")
+                                                               .Replace("\n", ""));
             GetWindow().Size = Data.WindowSize;
             if (Data.WindowPosition is null) return;
             GetWindow().Position = Data.WindowPosition!.Value;
@@ -136,6 +138,9 @@ public partial class MainController : Control
         _TabContainer.AddThemeStyleboxOverride("panel", Background);
         SaveCalled += (_, _) => Data.WindowSize = GetWindow().Size;
         SaveCalled += (_, _) => Data.WindowPosition = GetWindow().Position;
+
+        if (new Random().Next(100) != 1) return;
+        _SaveButton.Text = "Safty Save";
     }
 
     public override void _Process(double delta)
@@ -205,18 +210,18 @@ public partial class MainController : Control
 
     public void AddSlot(string playerName)
     {
-        var client = (SlotClient)_SlotPackedScene.Instantiate();
+        var client = new SlotClient();
         client.PlayerName = playerName;
         client.Main = this;
-        client.RefreshUi();
         ClientList.Add(playerName, client);
-        _SlotContainer.AddChild(client);
+        SlotTable.RefreshUI = true;
     }
 
     public void RemoveSlot(string playerName)
     {
         var client = ClientList[playerName];
-        _SlotContainer.RemoveChild(client);
+        _SlotTable.RemoveChild(client);
+        SlotTable.RefreshUI = true;
         ClientList.Remove(playerName);
         Data.SlotNames.Remove(playerName);
         client.QueueFree();
@@ -288,6 +293,7 @@ public partial class MainController : Control
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
+
         RefreshUIColors();
     }
 
@@ -331,7 +337,7 @@ public partial class MainController : Control
 
     public static void Clear()
     {
-        PlayerTable.Datas = [];
+        Datas = [];
         TextClient.ClearClient = true;
         Players = [];
         PlayerGames = [];
@@ -341,15 +347,15 @@ public partial class MainController : Control
     {
         client.OnPlayerStateChanged += (_, slot) =>
         {
-            PlayerTable.Datas[slot].SetPlayerStatus(client.PlayerStates[slot]);
-            PlayerTable.RefreshUI = true;
+            Datas[slot].SetPlayerStatus(client.PlayerStates[slot]);
+            RefreshUI = true;
         };
+
         client.SetupPlayerList();
-        PlayerTable.Datas = client.PlayerStates
-                                  .Select((state, i)
-                                       => new PlayerData(i, client.PlayerNames[i], client.PlayerGames[i], state))
-                                  .ToArray();
-        PlayerTable.RefreshUI = true;
+        Datas = client.PlayerStates
+                      .Select((state, i)
+                           => new PlayerData(i, client.PlayerGames[i], state))
+                      .ToArray();
     }
 
     public bool IsLocalHosted() => Address.ToLower() is "localhost" or "127.0.0.1";
@@ -363,8 +369,10 @@ public partial class MainController : Control
 
     public static void OpenSaveDir() => OS.ShellOpen(SaveDir);
 
-    public static ColorSetting PlayerColor(string playerName)
-        => Data
+    public static ColorSetting PlayerColor(int playerSlot)
+    {
+        var playerName = ActiveClients[0].PlayerNames[playerSlot];
+        return Data
         [
             playerName == "Server"
                 ? "player_server"
@@ -374,8 +382,7 @@ public partial class MainController : Control
                         ? "player_color_offline"
                         : "player_generic"
         ];
-
-    public static ColorSetting PlayerColor(int playerSlot) => PlayerColor(ActiveClients[0].PlayerNames[playerSlot]);
+    }
 
     public static string GetItemHexColor(ItemFlags flags, string metaData)
     {
@@ -439,7 +446,7 @@ public partial class MainController : Control
     {
         Background.BgColor = Data["background_color"];
         TextClient.RefreshText = true;
-        PlayerTable.RefreshUI = true;
+        RefreshUI = true;
         ItemFilterer.RefreshUI = true;
         _UpdateHints = true;
     }
@@ -450,11 +457,26 @@ public partial class MainController : Control
         File.WriteAllText($"{SaveDir}/data.json", JsonConvert.SerializeObject(Data));
     }
 
-    public static string GetAlias(int slot, bool additionalInfo)
+    public static string GetAlias(int slot, bool additionalInfo = false)
     {
-        var alias = ActiveClients[0].Session.Players.AllPlayers.ElementAt(slot).Alias.Clean();
-        if (!additionalInfo) return alias;
-        return $"[hint=\"Name: {Players[slot]}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
+        if (ActiveClients.Count == 0) return "Not loaded";
+        var name = ActiveClients[0].PlayerNames[slot];
+        var alias = ActiveClients[0].Session.Players.AllPlayers.ElementAt(slot).Alias.Clean().Replace($" ({name})", "");
+        return !additionalInfo
+            ? GetAliasFormated(alias, name)
+            : $"[hint=\"Name: {name}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
+    }
+
+    private static string GetAliasFormated(string alias, string name)
+    {
+        if (alias == name) return name;
+        return Data.AliasDisplay switch
+        {
+            0 => $"{alias} ({name})",
+            1 => alias,
+            2 => name,
+            3 => $"{name} ({alias})"
+        };
     }
 
     public static void SetAlwaysOnTop(bool b) => Data.AlwaysOnTop = Main.GetWindow().AlwaysOnTop = b;

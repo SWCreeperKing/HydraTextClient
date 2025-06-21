@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -44,7 +43,7 @@ public class DataConstant
     });
 }
 
-public class Data
+public class UserData
 {
     private Dictionary<string, ColorSetting> _UiColorSettings = new(DefaultDict);
 
@@ -61,6 +60,7 @@ public class Data
     public bool AlwaysOnTop = false;
     public bool ClearTextWhenDisconnect = true;
     public long WordWrap = 3;
+    public long AliasDisplay = 0;
     public long Content = 2;
     public long ItemLogStyle = 1;
     public int TextClientLineSeparation = 0;

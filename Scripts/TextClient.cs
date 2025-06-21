@@ -3,17 +3,13 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using CreepyUtil.Archipelago;
 using Godot;
-using Newtonsoft.Json;
 using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.Settings;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -30,6 +26,7 @@ public partial class TextClient : VBoxContainer
     [Export] private OptionButton _WordWrap;
     [Export] private OptionButton _Content;
     [Export] private OptionButton _ItemLogStyle;
+    [Export] private OptionButton _AliasDisplay;
     [Export] private RichTextLabel _Messages;
     [Export] private LineEdit _SendMessage;
     [Export] private Button _SendMessageButton;
@@ -60,24 +57,32 @@ public partial class TextClient : VBoxContainer
         _VScrollBar = _ScrollContainer.GetVScrollBar();
 
         _WordWrap.ItemSelected += i
-            => _Messages.AutowrapMode = (TextServer.AutowrapMode)(MainController.Data.WordWrap = i);
-        _Messages.AutowrapMode = (TextServer.AutowrapMode)MainController.Data.WordWrap;
+            => _Messages.AutowrapMode = (TextServer.AutowrapMode)(Data.WordWrap = i);
+        _Messages.AutowrapMode = (TextServer.AutowrapMode)Data.WordWrap;
+
+        _AliasDisplay.ItemSelected += i
+            =>
+        {
+            Data.AliasDisplay = i;
+            RefreshUIColors();
+        };
 
         _Content.ItemSelected += i =>
         {
-            MainController.Data.Content = i;
+            Data.Content = i;
             RefreshText = true;
         };
 
         _ItemLogStyle.ItemSelected += i =>
         {
-            MainController.Data.ItemLogStyle = i;
+            Data.ItemLogStyle = i;
             RefreshText = true;
         };
 
-        _WordWrap.Selected = (int)MainController.Data.WordWrap;
-        _Content.Selected = (int)MainController.Data.Content;
-        _ItemLogStyle.Selected = (int)MainController.Data.ItemLogStyle;
+        _WordWrap.Selected = (int)Data.WordWrap;
+        _AliasDisplay.Selected = (int)Data.AliasDisplay;
+        _Content.Selected = (int)Data.Content;
+        _ItemLogStyle.Selected = (int)Data.ItemLogStyle;
 
         _SendMessage.TextSubmitted += SendMessage;
         _SendMessage.FocusExited += () =>
@@ -170,62 +175,62 @@ public partial class TextClient : VBoxContainer
             DisplayServer.ClipboardSet(CopyList[int.Parse(s)]);
         };
 
-        if (MainController.Data.ItemLogOptions.Length < 5)
+        if (Data.ItemLogOptions.Length < 5)
         {
             bool[] corrected = [true, true, true, true, true];
-            for (var i = 0; i < MainController.Data.ItemLogOptions.Length; i++)
+            for (var i = 0; i < Data.ItemLogOptions.Length; i++)
             {
-                corrected[i] = MainController.Data.ItemLogOptions[i];
+                corrected[i] = Data.ItemLogOptions[i];
             }
 
-            MainController.Data.ItemLogOptions = corrected;
+            Data.ItemLogOptions = corrected;
         }
 
         _ShowProgressive.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[0] = _ShowProgressive.ButtonPressed;
+            Data.ItemLogOptions[0] = _ShowProgressive.ButtonPressed;
             RefreshText = true;
         };
         _ShowUseful.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[1] = _ShowUseful.ButtonPressed;
+            Data.ItemLogOptions[1] = _ShowUseful.ButtonPressed;
             RefreshText = true;
         };
         _ShowNormal.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[2] = _ShowNormal.ButtonPressed;
+            Data.ItemLogOptions[2] = _ShowNormal.ButtonPressed;
             RefreshText = true;
         };
         _ShowTraps.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[3] = _ShowTraps.ButtonPressed;
+            Data.ItemLogOptions[3] = _ShowTraps.ButtonPressed;
             RefreshText = true;
         };
         _ShowOnlyYou.Pressed += () =>
         {
-            MainController.Data.ItemLogOptions[4] = _ShowOnlyYou.ButtonPressed;
+            Data.ItemLogOptions[4] = _ShowOnlyYou.ButtonPressed;
             RefreshText = true;
         };
-        _ClearTextOnDisconnect.ButtonPressed = MainController.Data.ClearTextWhenDisconnect;
+        _ClearTextOnDisconnect.ButtonPressed = Data.ClearTextWhenDisconnect;
         _ClearTextOnDisconnect.Pressed += () =>
         {
-            MainController.Data.ClearTextWhenDisconnect = _ClearTextOnDisconnect.ButtonPressed;
+            Data.ClearTextWhenDisconnect = _ClearTextOnDisconnect.ButtonPressed;
             RefreshText = true;
         };
-        _ShowProgressive.ButtonPressed = MainController.Data.ItemLogOptions[0];
-        _ShowUseful.ButtonPressed = MainController.Data.ItemLogOptions[1];
-        _ShowNormal.ButtonPressed = MainController.Data.ItemLogOptions[2];
-        _ShowTraps.ButtonPressed = MainController.Data.ItemLogOptions[3];
-        _ShowOnlyYou.ButtonPressed = MainController.Data.ItemLogOptions[4];
+        _ShowProgressive.ButtonPressed = Data.ItemLogOptions[0];
+        _ShowUseful.ButtonPressed = Data.ItemLogOptions[1];
+        _ShowNormal.ButtonPressed = Data.ItemLogOptions[2];
+        _ShowTraps.ButtonPressed = Data.ItemLogOptions[3];
+        _ShowOnlyYou.ButtonPressed = Data.ItemLogOptions[4];
 
-        _LineSeparation.Value = MainController.Data.TextClientLineSeparation;
+        _LineSeparation.Value = Data.TextClientLineSeparation;
         _LineSeparation.ValueChanged += d =>
         {
-            MainController.Data.TextClientLineSeparation = (int)d;
+            Data.TextClientLineSeparation = (int)d;
             _Messages.RemoveThemeConstantOverride("line_separation");
-            _Messages.AddThemeConstantOverride("line_separation", MainController.Data.TextClientLineSeparation);
+            _Messages.AddThemeConstantOverride("line_separation", Data.TextClientLineSeparation);
         };
-        _Messages.AddThemeConstantOverride("line_separation", MainController.Data.TextClientLineSeparation);
+        _Messages.AddThemeConstantOverride("line_separation", Data.TextClientLineSeparation);
     }
 
     public override void _Process(double delta)
@@ -312,10 +317,10 @@ public partial class TextClient : VBoxContainer
         }
 
         if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
-            !MainController.Data.ShowFoundHints && !wasHintLocation) return false;
+            !Data.ShowFoundHints && !wasHintLocation) return false;
         if (!message.IsItemLog) return true;
 
-        if (MainController.Data.ItemLogOptions[4] &&
+        if (Data.ItemLogOptions[4] &&
             !message.MessageParts.Any(part => ActiveClients.Any(client => client.PlayerSlot == part.Player)))
             return false;
 
@@ -326,18 +331,18 @@ public partial class TextClient : VBoxContainer
 
         var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
 
-        if (MainController.Data.ItemFilters.TryGetValue(uid, out var itemFilter) &&
+        if (Data.ItemFilters.TryGetValue(uid, out var itemFilter) &&
             !itemFilter.ShowInItemLog) return false;
 
         if ((flags & ItemFlags.Advancement) != 0)
-            return MainController.Data.ItemLogOptions[0];
+            return Data.ItemLogOptions[0];
 
         if ((flags & ItemFlags.NeverExclude) != 0)
-            return MainController.Data.ItemLogOptions[1];
+            return Data.ItemLogOptions[1];
 
         return (flags & ItemFlags.Trap) != 0
-            ? MainController.Data.ItemLogOptions[3]
-            : MainController.Data.ItemLogOptions[2];
+            ? Data.ItemLogOptions[3]
+            : Data.ItemLogOptions[2];
     }
 
     public void SendMessage(string message)
@@ -356,7 +361,7 @@ public partial class TextClient : VBoxContainer
 
     public void Clear()
     {
-        if (!MainController.Data.ClearTextWhenDisconnect) return;
+        if (!Data.ClearTextWhenDisconnect) return;
         _ScrollBackNum = -1;
         _Messages.Text = "";
         _HeldText = "";
@@ -396,7 +401,7 @@ public readonly struct ClientMessage(
         if (ChatPacket is not null)
         {
             color = PlayerColor(ChatPacket.Slot);
-            TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot, false)}: {ChatPacket.Message}");
+            TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot)}: {ChatPacket.Message}");
             return
                 $"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
         }
@@ -406,20 +411,20 @@ public readonly struct ClientMessage(
         if (IsServer)
         {
             messageBuilder.Append(
-                $"[color={MainController.Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
+                $"[color={Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
         }
 
         if (IsItemLog)
         {
-            var fontSize = MainController.Data.FontSizes["text_client"];
-            var copyStyle = MainController.Data.ItemLogStyle switch
+            var fontSize = Data.FontSizes["text_client"];
+            var copyStyle = Data.ItemLogStyle switch
             {
                 0 => "",
                 1 => $"[img={fontSize}x{fontSize}]",
                 2 => "[Copy] "
             };
 
-            var copyEndStyle = MainController.Data.ItemLogStyle == 1 ? "[/img]" : "";
+            var copyEndStyle = Data.ItemLogStyle == 1 ? "[/img]" : "";
 
             messageBuilder.Append(
                 $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}res://Assets/Images/UI/Copy.png{copyEndStyle}[/url][/hint] ");
@@ -449,18 +454,18 @@ public readonly struct ClientMessage(
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);
-                    color = MainController.Data["location"];
+                    color = Data["location"];
                     messageBuilder.Append($"[color={color}]{location.Clean()}[/color]");
                     break;
                 case JsonMessagePartType.EntranceName:
                     var entranceName = part.Text.Trim();
-                    color = MainController.Data[entranceName == "" ? "entrance_vanilla" : "entrance"];
+                    color = Data[entranceName == "" ? "entrance_vanilla" : "entrance"];
                     messageBuilder.Append(
                         $"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]");
                     break;
                 case JsonMessagePartType.HintStatus:
                     var name = HintStatusText[(HintStatus)part.HintStatus!];
-                    color = MainController.Data[HintStatusColor[(HintStatus)part.HintStatus!]];
+                    color = Data[HintStatusColor[(HintStatus)part.HintStatus!]];
                     messageBuilder.Append($"[color={color}]{name.Clean()}[/color]");
                     break;
                 default:
@@ -538,9 +543,9 @@ public static class TextHelper
 
     public static string GetCopy(this Hint hint)
     {
-        var receivingPlayer = Players[hint.ReceivingPlayer];
+        var receivingPlayer = GetAlias(hint.ReceivingPlayer);
+        var findingPlayer = GetAlias(hint.FindingPlayer);
         var item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
-        var findingPlayer = Players[hint.FindingPlayer];
         var location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
         var entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
 
@@ -549,10 +554,10 @@ public static class TextHelper
 
     public static string GetCopy(this HintPrintJsonPacket hint)
     {
-        var receivingPlayer = Players[hint.ReceivingPlayer];
+        var receivingPlayer = GetAlias(hint.ReceivingPlayer);
         var item = ItemIdToItemName(hint.Item.Item, hint.ReceivingPlayer);
         var findingPlayerSlot = int.Parse(hint.Data[7].Text);
-        var findingPlayer = Players[findingPlayerSlot];
+        var findingPlayer = GetAlias(findingPlayerSlot);
         var location = LocationIdToLocationName(long.Parse(hint.Data[5].Text), findingPlayerSlot);
         var entrance = hint.Data.Length == 11 ? "Vanilla" : hint.Data[9].Text;
 
@@ -564,7 +569,7 @@ public static class TextHelper
         string item;
         string location;
         var firstPlayerSlot = int.Parse(parts[0].Text);
-        var firstPlayer = Players[firstPlayerSlot];
+        var firstPlayer = GetAlias(firstPlayerSlot);
         var itemId = long.Parse(parts[2].Text);
         var locationId = long.Parse(parts[^2].Text);
         location = LocationIdToLocationName(locationId, firstPlayerSlot);
@@ -577,7 +582,7 @@ public static class TextHelper
         }
 
         var secondPlayerSlot = int.Parse(parts[4].Text);
-        var secondPlayer = Players[secondPlayerSlot];
+        var secondPlayer = GetAlias(secondPlayerSlot);
         item = ItemIdToItemName(itemId, secondPlayerSlot);
         return $"`{firstPlayer}` sent __{item}__ to `{secondPlayer}` (**{location}**)";
     }

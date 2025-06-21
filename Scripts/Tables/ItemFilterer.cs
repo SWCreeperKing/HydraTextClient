@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
@@ -20,7 +19,7 @@ public partial class ItemFilterer : TextTable
 
             if (s.StartsWith("&&&"))
             {
-                MainController.Data.ItemFilters.Remove(s[3..]);
+                Data.ItemFilters.Remove(s[3..]);
                 TextClient.RefreshText = true;
                 HintTable.RefreshUI = true;
                 RefreshUI = true;
@@ -28,7 +27,7 @@ public partial class ItemFilterer : TextTable
             }
 
             var hash = s[3..];
-            var filter = MainController.Data.ItemFilters[hash];
+            var filter = Data.ItemFilters[hash];
 
             if (s.StartsWith("_&_"))
             {
@@ -55,8 +54,7 @@ public partial class ItemFilterer : TextTable
     {
         if (!RefreshUI) return;
 
-        UpdateData(MainController
-                  .Data.ItemFilters.Values
+        UpdateData(Data.ItemFilters.Values
                   .OrderBy(item => item.Game)
                   .ThenBy(item => HintTable.SortNumber(item.Flags))
                   .ThenBy(item => item.Name)

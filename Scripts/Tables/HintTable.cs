@@ -7,7 +7,6 @@ using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.Settings;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -24,40 +23,40 @@ public partial class HintTable : TextTable
     [Export] private CheckBox _ShowAvoid;
     [Export] private HintChangerWindow _HintChangerWindow;
 
-    public List<SortObject> SortOrder => MainController.Data.HintSortOrder;
+    public List<SortObject> SortOrder => Data.HintSortOrder;
 
     public override void _Ready()
     {
         _ShowFound.Pressed += () =>
         {
-            MainController.Data.HintOptions[0] = _ShowFound.ButtonPressed;
+            Data.HintOptions[0] = _ShowFound.ButtonPressed;
             RefreshUI = true;
         };
         _ShowPriority.Pressed += () =>
         {
-            MainController.Data.HintOptions[1] = _ShowPriority.ButtonPressed;
+            Data.HintOptions[1] = _ShowPriority.ButtonPressed;
             RefreshUI = true;
         };
         _ShowUnspecified.Pressed += () =>
         {
-            MainController.Data.HintOptions[2] = _ShowUnspecified.ButtonPressed;
+            Data.HintOptions[2] = _ShowUnspecified.ButtonPressed;
             RefreshUI = true;
         };
         _ShowNoPriority.Pressed += () =>
         {
-            MainController.Data.HintOptions[3] = _ShowNoPriority.ButtonPressed;
+            Data.HintOptions[3] = _ShowNoPriority.ButtonPressed;
             RefreshUI = true;
         };
         _ShowAvoid.Pressed += () =>
         {
-            MainController.Data.HintOptions[4] = _ShowAvoid.ButtonPressed;
+            Data.HintOptions[4] = _ShowAvoid.ButtonPressed;
             RefreshUI = true;
         };
-        _ShowFound.ButtonPressed = MainController.Data.HintOptions[0];
-        _ShowPriority.ButtonPressed = MainController.Data.HintOptions[1];
-        _ShowUnspecified.ButtonPressed = MainController.Data.HintOptions[2];
-        _ShowNoPriority.ButtonPressed = MainController.Data.HintOptions[3];
-        _ShowAvoid.ButtonPressed = MainController.Data.HintOptions[4];
+        _ShowFound.ButtonPressed = Data.HintOptions[0];
+        _ShowPriority.ButtonPressed = Data.HintOptions[1];
+        _ShowUnspecified.ButtonPressed = Data.HintOptions[2];
+        _ShowNoPriority.ButtonPressed = Data.HintOptions[3];
+        _ShowAvoid.ButtonPressed = Data.HintOptions[4];
 
         MetaClicked += raw =>
         {
@@ -116,7 +115,7 @@ public partial class HintTable : TextTable
                       Priority => _ShowPriority.ButtonPressed,
                       _ => false
                   })
-                 .Where(hint => !MainController.Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
+                 .Where(hint => !Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
                                 filter.ShowInHintsTable)
                  .OrderBy(hint => hint.LocationId);
 
@@ -181,7 +180,7 @@ public partial class HintTable : TextTable
 
 public readonly struct HintData(Hint hint)
 {
-    public readonly string ReceivingPlayer = Players[hint.ReceivingPlayer];
+    public readonly string ReceivingPlayer = GetAlias(hint.ReceivingPlayer);
     public readonly int ReceivingPlayerSlot = hint.ReceivingPlayer;
     public readonly long ItemId = hint.ItemId;
     public readonly string Item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
@@ -200,15 +199,15 @@ public readonly struct HintData(Hint hint)
 
     public string[] GetData()
     {
-        var receivingPlayerColor = PlayerColor(ReceivingPlayer).Hex;
+        var receivingPlayerColor = PlayerColor(ReceivingPlayerSlot).Hex;
         var metaString =
             Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
         var itemColor = GetItemHexColor(ItemFlags, metaString);
         var itemBgColor = GetItemHexBgColor(ItemFlags, metaString);
-        var findingPlayerColor = PlayerColor(FindingPlayer).Hex;
-        var hintColor = MainController.Data[HintStatusColor[HintStatus]].Hex;
-        var locationColor = MainController.Data["location"].Hex;
-        var entranceColor = MainController.Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"].Hex;
+        var findingPlayerColor = PlayerColor(FindingPlayerSlot).Hex;
+        var hintColor = Data[HintStatusColor[HintStatus]].Hex;
+        var locationColor = Data["location"].Hex;
+        var entranceColor = Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"].Hex;
 
         var hintStatus = HintStatusText[HintStatus];
         if (PlayerSlots.ContainsKey(ReceivingPlayerSlot) && HintStatus is not Found)

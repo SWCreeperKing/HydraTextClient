@@ -3,12 +3,11 @@
 [ext_resource type="Script" uid="uid://dixgt4o511kcv" path="res://Scripts/SlotClient.cs" id="1_frht4"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_puuhv"]
 
-[node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("_SlotDisplay")]
-offset_right = 10.0
-offset_bottom = 10.0
+[node name="PanelContainer" type="PanelContainer"]
+offset_right = 536.0
+offset_bottom = 37.0
 size_flags_horizontal = 3
 script = ExtResource("1_frht4")
-_SlotDisplay = NodePath("MarginContainer2/HBoxContainer/RichTextLabel")
 
 [node name="MarginContainer2" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -17,20 +16,12 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer2"]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer2"]
 layout_mode = 2
-
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer2/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
 focus_mode = 0
 theme = ExtResource("2_puuhv")
 bbcode_enabled = true
-text = "[table=3]
-[cell][color=green][bgcolor=darkgreen] Connect [/bgcolor][/color][/cell]
-[cell]			[/cell]
-[cell]SW_Creeper_TUNC		[color=orangered][bgcolor=darkred] X [/bgcolor][/color][/cell]
-[/table]"
+text = "[table=3][cell=2][color=green][bgcolor=#003000] Connect [/bgcolor][/color][/cell][cell]SW_Creeper_TUNC		[color=orangered][bgcolor=#570000] X [/bgcolor][/color]"
 fit_content = true
 autowrap_mode = 0
 meta_underlined = false

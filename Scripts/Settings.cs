@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Godot;
-using GodotPlugins.Game;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 

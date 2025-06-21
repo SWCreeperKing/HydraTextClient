@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
+using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 namespace ArchipelagoMultiTextClient.Scripts;
@@ -13,23 +14,32 @@ public partial class PlayerTable : TextTable
     public override void _Process(double delta)
     {
         if (!RefreshUI) return;
-        RefreshUI = false;
-        if (ActiveClients.Count == 0)
+        try
         {
-            UpdateData([]);
-            return;
-        }
+            RefreshUI = false;
+            if (ActiveClients.Count == 0)
+            {
+                UpdateData([]);
+                return;
+            }
 
-        var client = ActiveClients[0];
-        UpdateData(client.PlayerStates.Select((state, i)
-            => new PlayerData(i, client.PlayerNames[i], client.PlayerGames[i], state).GetData()).ToList());
+            var client = ActiveClients[0];
+            UpdateData(client.PlayerStates
+                             .Select((state, i) => new PlayerData(i, client.PlayerGames[i], state).GetData())
+                             .ToList());
+        }
+        catch (Exception e)
+        {
+            GD.PrintErr(e);
+            RefreshUI = true;
+        }
     }
 }
 
-public struct PlayerData(int slot, string name, string game, ArchipelagoClientState state) : IEquatable<PlayerData>
+public struct PlayerData(int slot, string game, ArchipelagoClientState state) : IEquatable<PlayerData>
 {
-    public readonly string PlayerSlot = $"{slot}";
-    public readonly string PlayerName = name;
+    public readonly int PlayerSlot = slot;
+    public readonly string PlayerName = GetAlias(slot);
     public readonly string PlayerGame = game;
     public string PlayerStatus = ConvertStatus(state);
 
@@ -51,7 +61,7 @@ public struct PlayerData(int slot, string name, string game, ArchipelagoClientSt
     public string[] GetData()
     {
         var statusColor =
-            MainController.Data[
+            Data[
                 PlayerStatus switch
                 {
                     "Disconnected" => "connection_disconnected",
@@ -64,7 +74,7 @@ public struct PlayerData(int slot, string name, string game, ArchipelagoClientSt
             ];
         return
         [
-            $"{PlayerSlot}", $"[color={PlayerColor(PlayerName).Hex}]{PlayerName}[/color]", PlayerGame,
+            $"{PlayerSlot}", $"[color={PlayerColor(PlayerSlot).Hex}]{PlayerName}[/color]", PlayerGame,
             $"[color={statusColor.Hex}]{PlayerStatus}[/color]"
         ];
     }

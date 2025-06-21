@@ -8,6 +8,7 @@ namespace ArchipelagoMultiTextClient.Scripts;
 public abstract partial class TextTable : RichTextLabel
 {
     [Export] private Array<string> _Columns = [];
+    public int Padding = 0;
 
     public void UpdateData(List<string[]> data)
     {
@@ -23,14 +24,14 @@ public abstract partial class TextTable : RichTextLabel
         {
             foreach (var item in data[i])
             {
-                if (i % 2 == 0)
-                {
-                    sb.Append("[cell padding=0,2,0,2] ").Append(item).Append(" [/cell]");
-                }
-                else
-                {
-                    sb.Append("[cell bg=00000044 padding=0,2,0,0] ").Append(item).Append(" [/cell]");
-                }
+                var extraPadding = i % 2 == 0 ? 0 : 3; 
+                sb.Append(i % 2 == 0 ? "[cell padding=0," : "[cell bg=00000044 padding=0,")
+                  .Append(Padding + extraPadding)
+                  .Append(",0,")
+                  .Append(Padding + extraPadding)
+                  .Append("] ")
+                  .Append(item)
+                  .Append(" [/cell]");
             }
         }
 

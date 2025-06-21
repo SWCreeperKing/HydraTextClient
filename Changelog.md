@@ -9,7 +9,12 @@
 - Fixed a bug with connection limit being 6 and not 7
 - Added `Always on top` setting 
 - Fixed `Player (Not Connected To)` not applying to text client 
+- Updated Godot to `4.5 Beta 1`
+- Universal Alias functionality
+  - there are now text client settings along with this
+- Added a typo easter egg (1 in 100)
 
+---
 # v.0.4.6
 
 - Hints from `!hint_location` will try to be prioritized to being shown in the text client

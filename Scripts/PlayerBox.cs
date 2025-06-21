@@ -9,8 +9,8 @@ public partial class PlayerBox : FoldableContainer
 
     public string PlayerName
     {
-        get => Text;
-        set => Text = value;
+        get => Title;
+        set => Title = value;
     }
 
     public void AddNode(Control node, bool appendToFlow)

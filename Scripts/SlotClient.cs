@@ -10,40 +10,23 @@ using static ArchipelagoMultiTextClient.Scripts.TextClient;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
-public partial class SlotClient : PanelContainer
+public partial class SlotClient : Control
 {
     private static int ClientCount;
     public bool? IsRunning = false;
 
-    [Export] private RichTextLabel _SlotDisplay;
     public MainController Main;
     public ApClient Client = new();
     public bool IsTextClient = false;
     private string[]? _Error;
+    private string ConnectForeground = "#00ae00";
+    private string ConnectBackground = "#003000";
+    private string DeleteForeground = "orangered";
+    private string DeleteBackground = "#570000";
 
     public string PlayerName { get; set; }
 
-    public override void _Ready()
-    {
-        _SlotDisplay.MetaClicked += v =>
-        {
-            var s = (string)v;
-            switch (s)
-            {
-                case "disconnect":
-                    TryDisconnection();
-                    break;
-                case "connect":
-                    TryConnection();
-                    break;
-                case "delete":
-                    Main.RemoveSlot(PlayerName);
-                    break;
-            }
-        };
-    }
-
-    public override void _Process(double delta) => Client.UpdateConnection();
+    public void UpdateConnection() => Client.UpdateConnection();
 
     public void TryConnection()
     {
@@ -68,7 +51,7 @@ public partial class SlotClient : PanelContainer
 
         IsRunning = null;
         _Error = null;
-        RefreshUi();
+        SlotTable.RefreshUI = true;
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
@@ -108,7 +91,9 @@ public partial class SlotClient : PanelContainer
         });
     }
 
-    public void ConnectionFailed(string[] error, bool disconnect = true)
+    public void ConnectionFailed() => ConnectionFailed(["No Error Given"], true);
+    public void ConnectionFailed(string[] error) => ConnectionFailed(error, true);
+    public void ConnectionFailed(string[] error, bool disconnect)
     {
         IsRunning = false;
         _Error = error;
@@ -164,7 +149,7 @@ public partial class SlotClient : PanelContainer
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
 
         Main.ConnectClient(Client);
-        RefreshUi();
+        SlotTable.RefreshUI = true;
     }
 
     public void HasDisconnected()
@@ -172,36 +157,30 @@ public partial class SlotClient : PanelContainer
         IsRunning = false;
         Main.DisconnectClient(Client);
         Client = new ApClient();
-        RefreshUi();
+        SlotTable.RefreshUI = true;
         if (Main.IsLocalHosted()) return;
         ClientCount--;
     }
 
     public void Say(string message) => Client.Say(message);
 
-    public void RefreshUi()
+    public string[] GrabUI()
     {
         var connectText = IsRunning switch
         {
-            false => "[url=\"connect\"][color=green][bgcolor=darkgreen]  Connect   [/bgcolor][/color][/url]",
-            true => "[url=\"disconnect\"][color=orangered][bgcolor=darkred] Disconnect [/bgcolor][/color][/url]",
+            false => $"[url=\"connect {PlayerName}\"][color={ConnectForeground}][bgcolor={ConnectBackground}]  Connect   [/bgcolor][/color][/url]",
+            true => $"[url=\"disconnect {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] Disconnect [/bgcolor][/color][/url]",
             null => "Connecting. . ."
         };
 
         var deleteText = IsRunning is not null && !IsRunning!.Value
-            ? "[url=\"delete\"][color=orangered][bgcolor=darkred] X [/bgcolor][/color][/url]"
+            ? $"[url=\"delete {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] X [/bgcolor][/color][/url]"
             : "   ";
 
         var errorText = _Error is not null && _Error.Length > 0
             ? $"\n[color=red]{string.Join('\n', _Error)}[/color]"
             : "";
-
-        _SlotDisplay.Text = $"""
-                             [table=3]
-                             [cell]{deleteText}[/cell]
-                             [cell]    {connectText}    [/cell]
-                             [cell]{PlayerName}[/cell]
-                             [/table]{errorText}
-                             """;
+        
+        return [connectText, $"   {PlayerName}   {errorText}", deleteText];
     }
 }
