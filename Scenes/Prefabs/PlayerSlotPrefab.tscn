@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://djs7npjk4pm4c"]
 
-[ext_resource type="Script" uid="uid://dixgt4o511kcv" path="res://Scripts/SlotClient.cs" id="1_frht4"]
+[ext_resource type="Script" uid="uid://dixgt4o511kcv" path="res://Scripts/Login/SlotClient.cs" id="1_frht4"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_puuhv"]
 
 [node name="PanelContainer" type="PanelContainer"]
