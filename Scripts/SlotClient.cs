@@ -25,8 +25,12 @@ public partial class SlotClient : Control
     private string DeleteBackground = "#570000";
 
     public string PlayerName { get; set; }
-
-    public void UpdateConnection() => Client.UpdateConnection();
+    
+    public override void _Process(double delta)
+    {
+        if (IsRunning is null or false) return;
+        Client.UpdateConnection();
+    }
 
     public void TryConnection()
     {

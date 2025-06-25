@@ -214,6 +214,7 @@ public partial class MainController : Control
         client.PlayerName = playerName;
         client.Main = this;
         ClientList.Add(playerName, client);
+        _SlotTable.AddChild(client);
         SlotTable.RefreshUI = true;
     }
 
@@ -371,17 +372,24 @@ public partial class MainController : Control
 
     public static ColorSetting PlayerColor(int playerSlot)
     {
-        var playerName = ActiveClients[0].PlayerNames[playerSlot];
-        return Data
-        [
-            playerName == "Server"
-                ? "player_server"
-                : PlayerSlots.ContainsValue(playerName) // connected slots
-                    ? "player_color"
-                    : ClientList.ContainsKey(playerName) // all login slots
-                        ? "player_color_offline"
-                        : "player_generic"
-        ];
+        try
+        {
+            var playerName = ActiveClients[0].PlayerNames[playerSlot];
+            return Data
+            [
+                playerName == "Server"
+                    ? "player_server"
+                    : PlayerSlots.ContainsValue(playerName) // connected slots
+                        ? "player_color"
+                        : ClientList.ContainsKey(playerName) // all login slots
+                            ? "player_color_offline"
+                            : "player_generic"
+            ];
+        }
+        catch
+        {
+            return Data["player_generic"];
+        }
     }
 
     public static string GetItemHexColor(ItemFlags flags, string metaData)

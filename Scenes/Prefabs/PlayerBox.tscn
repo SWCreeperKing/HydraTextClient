@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bq2qnb4mebhir"]
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_5uer8"]
-[ext_resource type="Script" uid="uid://ctqabqwkcjlm3" path="res://Scripts/PlayerBox.cs" id="1_afgk6"]
+[ext_resource type="Script" uid="uid://ctqabqwkcjlm3" path="res://Scripts/ItemsTab/PlayerBox.cs" id="1_afgk6"]
 
 [node name="FoldableContainer" type="FoldableContainer" node_paths=PackedStringArray("_BoxContainer", "_FlowContainer")]
 offset_right = 213.0

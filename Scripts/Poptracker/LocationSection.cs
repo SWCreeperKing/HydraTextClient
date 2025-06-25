@@ -16,7 +16,7 @@ public class LocationSection
     protected List<List<string>> VisibilityRules;
     protected string OverlayBackground;
     protected string Ref;
-
+    //Sterlia Waz Here
     public string getName() => Name;
     public List<List<string>> getAccessRules() => AccessRules;
     public List<List<string>> getVisibilityRules() => VisibilityRules;

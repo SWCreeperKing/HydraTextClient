@@ -1,24 +1,27 @@
-[gd_scene load_steps=21 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=23 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LineEditHide.cs" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/UiSaver.cs" id="4_0sclb"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
-[ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClient.cs" id="5_pbw6q"]
-[ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/HintManager.cs" id="6_4kpch"]
-[ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/RichToolTip.cs" id="6_h1m7h"]
-[ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/Settings.cs" id="6_v1gob"]
+[ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClientTab/TextClient.cs" id="5_pbw6q"]
+[ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/ItemsTab/HintManager.cs" id="6_4kpch"]
+[ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/TextClientTab/RichToolTip.cs" id="6_h1m7h"]
+[ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/Settings/Settings.cs" id="6_v1gob"]
 [ext_resource type="Script" uid="uid://bko8pgi5olqc6" path="res://Scripts/Tables/SlotTable.cs" id="7_0sclb"]
 [ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/Tables/PlayerTable.cs" id="7_50glp"]
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
 [ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/Tables/HintTable.cs" id="7_vy5pj"]
-[ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/HintDialog.cs" id="12_grg3l"]
-[ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/SizeManager.cs" id="12_h1m7h"]
+[ext_resource type="Texture2D" uid="uid://b3in73ey7sy5r" path="res://Assets/Images/UI/Adder.png" id="11_sxkr1"]
+[ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/ItemsTab/HintDialog.cs" id="12_grg3l"]
+[ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/Settings/SizeManager.cs" id="12_h1m7h"]
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
 [ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/Tables/ItemFilterer.cs" id="14_346fj"]
-[ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/ItemFilterDialog.cs" id="16_2w5on"]
-[ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintChangerWindow.cs" id="16_erwvk"]
+[ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/Settings/ItemFilterDialog.cs" id="16_2w5on"]
+[ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintTab/HintChangerWindow.cs" id="16_erwvk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fq0cl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -58,7 +61,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 0
+current_tab = 2
 script = ExtResource("4_0sclb")
 Controls = {
 "items_and_locations/split": NodePath("Items & Locations/MarginContainer/Split"),
@@ -69,6 +72,7 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -272,7 +276,7 @@ metadata/_tab_index = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client"]
 layout_mode = 2
 
-[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation")]
+[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation", "_History")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -296,6 +300,7 @@ _ShowTraps = NodePath("SettingsContainer/VBoxContainer/FlowContainer/CheckBox4")
 _ShowOnlyYou = NodePath("SettingsContainer/VBoxContainer/FlowContainer/CheckBox6")
 _ClearTextOnDisconnect = NodePath("SettingsContainer/VBoxContainer/FlowContainer2/CheckBox6")
 _LineSeparation = NodePath("SettingsContainer/VBoxContainer/FlowContainer2/HBoxContainer3/SpinBox")
+_History = NodePath("Label")
 
 [node name="SettingsContainer" type="FoldableContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
 layout_mode = 2
@@ -523,58 +528,72 @@ layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Scroll To Bottom"
 
-[node name="Hints" type="MarginContainer" parent="TabContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_font_sizes/font_size = 12
+text = "Message History:"
+
+[node name="Hints" type="TabContainer" parent="TabContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+current_tab = 1
+metadata/_tab_index = 2
+
+[node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
-metadata/_tab_index = 2
+metadata/_tab_index = 0
 
-[node name="Hints" type="ScrollContainer" parent="TabContainer/Hints"]
+[node name="Hints Table" type="ScrollContainer" parent="TabContainer/Hints/Hints Table"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints Table/Hints Table"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 15
 
-[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Hints/Hints/VBoxContainer"]
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Show Found"
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Priority"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Unspecified"
 
-[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show No Priority"
 
-[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints/VBoxContainer/FlowContainer"]
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Avoid"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangerWindow")]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangerWindow")]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/normal_font_size = 20
@@ -591,16 +610,162 @@ _ShowPriority = NodePath("../FlowContainer/CheckBox5")
 _ShowUnspecified = NodePath("../FlowContainer/CheckBox2")
 _ShowNoPriority = NodePath("../FlowContainer/CheckBox3")
 _ShowAvoid = NodePath("../FlowContainer/CheckBox4")
-_HintChangerWindow = NodePath("../../../../../Window")
+_HintChangerWindow = NodePath("../../../../../../Window")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
+
+[node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 330
+metadata/_tab_index = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+layout_mode = 2
+
+[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer/PanelContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so
+
+item"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+
+[node name="PanelContainer2" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer/PanelContainer2"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so
+
+very long item"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+
+[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/HFlowContainer/PanelContainer3"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so
+
+very long item again"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+layout_mode = 2
+
+[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so's important hint"
+fit_content = true
+autowrap_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer2"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so's semi important hint"
+fit_content = true
+autowrap_mode = 2
+
+[node name="PanelContainer3" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer3"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "So and so's not very important hint"
+fit_content = true
+autowrap_mode = 2
+
+[node name="PanelContainer4" type="PanelContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fq0cl")
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer4"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer4/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "+"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer/VBoxContainer/PanelContainer4"]
+layout_mode = 2
+texture = ExtResource("11_sxkr1")
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
 
 [node name="Items & Locations" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
 visible = false
 layout_mode = 2
 script = ExtResource("6_4kpch")
+_PlayerBox = ExtResource("7_grg3l")
 _HintSender = NodePath("MarginContainer/Split/ScrollContainer/VBoxContainer")
 _HintLocationSender = NodePath("MarginContainer/Split/ScrollContainer2/VBoxContainer2")
-_PlayerBox = ExtResource("7_grg3l")
 _SendHintConfirmation = NodePath("../../Hint")
 metadata/_tab_index = 3
 
@@ -769,7 +934,7 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer" node_paths=PackedStringArray("Nodes")]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -777,7 +942,6 @@ alignment = 1
 script = ExtResource("12_h1m7h")
 Id = "text_client"
 DefaultSize = 20
-Nodes = [NodePath("../../../../../../../../Text Client/ScrollContainer/TextClientContainer/MessagesScroll/MessagesBg/MessagesMargin/Messages")]
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
@@ -793,7 +957,7 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2" node_paths=PackedStringArray("Nodes")]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -801,7 +965,6 @@ alignment = 1
 script = ExtResource("12_h1m7h")
 Id = "hint_table"
 DefaultSize = 20
-Nodes = [NodePath("../../../../../../../../Hints/Hints/VBoxContainer/RichTextLabel")]
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
@@ -817,7 +980,7 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3" node_paths=PackedStringArray("Nodes")]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -825,7 +988,6 @@ alignment = 1
 script = ExtResource("12_h1m7h")
 Id = "player_table"
 DefaultSize = 24
-Nodes = [NodePath("../../../../../../../../Players/Players/RichTextLabel")]
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
@@ -841,7 +1003,7 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5" node_paths=PackedStringArray("Nodes")]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -849,7 +1011,6 @@ alignment = 1
 script = ExtResource("12_h1m7h")
 Id = "item_filter_table"
 DefaultSize = 16
-Nodes = [NodePath("../../RichTextLabel")]
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2

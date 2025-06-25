@@ -1,3 +1,10 @@
+# v.0.4.8
+
+- Fixed bug with clients not disconnecting when loosing connection
+- Fixed bug with copy style was not image the image directory was appearing
+- Improved the changing of viewing previously sent messages
+
+---
 # v.0.4.7
 
 - Added countermeasures for if 2 games share the same location id

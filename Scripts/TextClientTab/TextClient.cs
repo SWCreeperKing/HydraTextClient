@@ -39,6 +39,7 @@ public partial class TextClient : VBoxContainer
     [Export] private CheckBox _ShowOnlyYou;
     [Export] private CheckBox _ClearTextOnDisconnect;
     [Export] private SpinBox _LineSeparation;
+    [Export] private Label _History;
     private LimitedQueue<ClientMessage> _ChatMessages = new(250);
     private LimitedQueue<ClientMessage> _ItemLog = new(250);
     private LimitedQueue<ClientMessage> _Both = new(500);
@@ -116,17 +117,24 @@ public partial class TextClient : VBoxContainer
             switch (key.Keycode)
             {
                 case Key.Up:
-                    _ScrollBackNum++;
+                    _ScrollBackNum--;
                     break;
                 case Key.Down:
-                    _ScrollBackNum--;
+                    _ScrollBackNum++;
                     break;
                 default:
                     return;
             }
 
-            _ScrollBackNum = Math.Clamp(_ScrollBackNum, -1, _SentMessages.Count - 1);
-            GD.Print(_ScrollBackNum);
+            if (_ScrollBackNum == -2)
+            {
+                _ScrollBackNum = _SentMessages.Count - 1;
+            }
+            else if (_ScrollBackNum > _SentMessages.Count - 1)
+            {
+                _ScrollBackNum = -1;
+            }
+
             _SendMessage.Text = _ScrollBackNum == -1 ? _HeldText : _SentMessages[_ScrollBackNum];
         };
 
@@ -235,6 +243,11 @@ public partial class TextClient : VBoxContainer
 
     public override void _Process(double delta)
     {
+        if (_History.IsVisible())
+        {
+            _History.Text = $"[{_ScrollBackNum}] | [{_SentMessages.Count}]";
+        }
+
         _SendMessageButton.Disabled = _MessageCooldown > 0;
 
         if (_MessageCooldown > 0)
@@ -329,10 +342,17 @@ public partial class TextClient : VBoxContainer
         var id = long.Parse(itemMessagePart.Text);
         var playerSlot = itemMessagePart.Player!.Value;
 
-        var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
+        try
+        {
+            var uid = ItemFilter.MakeUidCode(id, ItemIdToItemName(id, playerSlot), PlayerGames[playerSlot], flags);
 
-        if (Data.ItemFilters.TryGetValue(uid, out var itemFilter) &&
-            !itemFilter.ShowInItemLog) return false;
+            if (Data.ItemFilters.TryGetValue(uid, out var itemFilter) &&
+                !itemFilter.ShowInItemLog) return false;
+        }
+        catch
+        {
+            //ignore
+        }
 
         if ((flags & ItemFlags.Advancement) != 0)
             return Data.ItemLogOptions[0];
@@ -420,14 +440,12 @@ public readonly struct ClientMessage(
             var copyStyle = Data.ItemLogStyle switch
             {
                 0 => "",
-                1 => $"[img={fontSize}x{fontSize}]",
+                1 => $"[img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img]",
                 2 => "[Copy] "
             };
 
-            var copyEndStyle = Data.ItemLogStyle == 1 ? "[/img]" : "";
-
             messageBuilder.Append(
-                $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}res://Assets/Images/UI/Copy.png{copyEndStyle}[/url][/hint] ");
+                $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}[/url][/hint] ");
             TextClient.CopyList.Add(CopyText);
         }
 
