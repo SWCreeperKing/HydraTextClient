@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMultiTextClient.Scripts.HintTab;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using static ArchipelagoMultiTextClient.Scripts.Settings.Settings;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Tables;
 
 public partial class HintTable : TextTable
 {
@@ -63,7 +66,7 @@ public partial class HintTable : TextTable
             var s = (string)raw;
             if (s.StartsWith("itemdialog"))
             {
-                Settings.ItemFilterDialog.SetItem(s);
+                ItemFilterDialog.SetItem(s);
                 return;
             }
 
@@ -200,8 +203,7 @@ public readonly struct HintData(Hint hint)
     public string[] GetData()
     {
         var receivingPlayerColor = PlayerColor(ReceivingPlayerSlot).Hex;
-        var metaString =
-            Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
+        var metaString = ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
         var itemColor = GetItemHexColor(ItemFlags, metaString);
         var itemBgColor = GetItemHexBgColor(ItemFlags, metaString);
         var findingPlayerColor = PlayerColor(FindingPlayerSlot).Hex;

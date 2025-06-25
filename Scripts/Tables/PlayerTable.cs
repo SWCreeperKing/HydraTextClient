@@ -4,7 +4,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Tables;
 
 public partial class PlayerTable : TextTable
 {

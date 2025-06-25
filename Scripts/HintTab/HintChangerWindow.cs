@@ -1,7 +1,8 @@
 using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 
 public partial class HintChangerWindow : Window
 {

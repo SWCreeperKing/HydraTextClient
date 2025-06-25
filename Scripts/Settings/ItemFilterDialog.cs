@@ -1,7 +1,7 @@
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Settings;
 
 public partial class ItemFilterDialog : ConfirmationDialog
 {
@@ -16,7 +16,7 @@ public partial class ItemFilterDialog : ConfirmationDialog
         {
             var filter = new ItemFilter(_ItemId, _ItemName, _GameName, _ItemFlags);
             MainController.Data.ItemFilters.Add(filter.UidCode, filter);
-            ItemFilterer.RefreshUI = true;
+            Tables.ItemFilterer.RefreshUI = true;
         };
     }
 

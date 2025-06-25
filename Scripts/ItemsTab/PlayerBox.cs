@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.ItemsTab;
 
 public partial class PlayerBox : FoldableContainer
 {

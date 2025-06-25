@@ -2,7 +2,7 @@ using System.Linq;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Tables;
 
 public partial class ItemFilterer : TextTable
 {
@@ -20,7 +20,7 @@ public partial class ItemFilterer : TextTable
             if (s.StartsWith("&&&"))
             {
                 Data.ItemFilters.Remove(s[3..]);
-                TextClient.RefreshText = true;
+                TextClientTab.TextClient.RefreshText = true;
                 HintTable.RefreshUI = true;
                 RefreshUI = true;
                 return;
@@ -33,7 +33,7 @@ public partial class ItemFilterer : TextTable
             {
                 filter.IsSpecial = !filter.IsSpecial;
                 HintTable.RefreshUI = true;
-                TextClient.RefreshText = true;
+                TextClientTab.TextClient.RefreshText = true;
             }
             else if (s.StartsWith("&_&"))
             {
@@ -43,7 +43,7 @@ public partial class ItemFilterer : TextTable
             else
             {
                 filter.ShowInItemLog = !filter.ShowInItemLog;
-                TextClient.RefreshText = true;
+                TextClientTab.TextClient.RefreshText = true;
             }
 
             RefreshUI = true;

@@ -2,11 +2,12 @@ using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
 using Godot;
 using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.TextClient;
+using static ArchipelagoMultiTextClient.Scripts.TextClientTab.TextClient;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -55,7 +56,7 @@ public partial class SlotClient : Control
 
         IsRunning = null;
         _Error = null;
-        SlotTable.RefreshUI = true;
+        Tables.SlotTable.RefreshUI = true;
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
@@ -153,7 +154,7 @@ public partial class SlotClient : Control
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
 
         Main.ConnectClient(Client);
-        SlotTable.RefreshUI = true;
+        Tables.SlotTable.RefreshUI = true;
     }
 
     public void HasDisconnected()
@@ -161,7 +162,7 @@ public partial class SlotClient : Control
         IsRunning = false;
         Main.DisconnectClient(Client);
         Client = new ApClient();
-        SlotTable.RefreshUI = true;
+        Tables.SlotTable.RefreshUI = true;
         if (Main.IsLocalHosted()) return;
         ClientCount--;
     }

@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 
 public partial class RichToolTip : RichTextLabel
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Settings;
 
 public partial class Settings : Control
 {
@@ -23,7 +23,7 @@ public partial class Settings : Control
         _ShowFoundHints.Pressed += () =>
         {
             MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
-            TextClient.RefreshText = true;
+            TextClientTab.TextClient.RefreshText = true;
         };
 
         _AlwaysOnTop.ButtonPressed = MainController.Data.AlwaysOnTop;

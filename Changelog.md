@@ -1,4 +1,4 @@
-# v.0.4.8
+# v.0.5
 
 - Fixed bug with clients not disconnecting when loosing connection
 - Fixed bug with copy style was not image the image directory was appearing

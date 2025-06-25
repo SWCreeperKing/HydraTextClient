@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 
 public partial class HintOrganizer : HSplitContainer
 {

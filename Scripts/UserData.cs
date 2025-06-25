@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMultiTextClient.Scripts.Tables;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.DataConstant;
 

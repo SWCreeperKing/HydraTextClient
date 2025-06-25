@@ -4,13 +4,15 @@ using System.IO;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMultiTextClient.Scripts.Tables;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
 using CreepyUtil.DiscordRpc;
 using Godot;
 using Newtonsoft.Json;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
-using static ArchipelagoMultiTextClient.Scripts.PlayerTable;
+using static ArchipelagoMultiTextClient.Scripts.Tables.PlayerTable;
 using Environment = System.Environment;
 
 namespace ArchipelagoMultiTextClient.Scripts;
@@ -77,16 +79,16 @@ public partial class MainController : Control
     [Export] private LineEdit _SlotField;
     [Export] private Button _SlotAddButton;
     [Export] private PackedScene _SlotPackedScene;
-    [Export] private HintManager _HintManager;
+    [Export] private ItemsTab.HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
     [Export] private Label _ConnectionTimer;
-    [Export] private TextClient _TextClient;
+    [Export] private TextClientTab.TextClient _TextClient;
     [Export] private Timer _DiscordTimer;
     [Export] private Label _DiscordText;
     [Export] private Button _DiscordReconnect;
     [Export] private Label _VersionLabel;
     [Export] private Button _SaveButton;
-    [Export] private SlotTable _SlotTable;
+    [Export] private Tables.SlotTable _SlotTable;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -162,7 +164,7 @@ public partial class MainController : Control
         }
 
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
-        if (updateRequest || _UpdateHints || TextClient.HintRequest)
+        if (updateRequest || _UpdateHints || TextClientTab.TextClient.HintRequest)
         {
             List<Hint> hints = [];
             foreach (var client in ActiveClients)
@@ -182,16 +184,16 @@ public partial class MainController : Control
                                 client.PlayerSlot == difference.ReceivingPlayer
                             )) continue;
 
-                        TextClient.Messages.Enqueue(difference);
+                        TextClientTab.TextClient.Messages.Enqueue(difference);
                     }
                 }
 
                 HintsMap[client] = client.Hints;
             }
 
-            TextClient.HintRequest = false;
-            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
-            HintTable.RefreshUI = true;
+            TextClientTab.TextClient.HintRequest = false;
+            Tables.HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
+            Tables.HintTable.RefreshUI = true;
 
             _UpdateHints = false;
         }
@@ -215,14 +217,14 @@ public partial class MainController : Control
         client.Main = this;
         ClientList.Add(playerName, client);
         _SlotTable.AddChild(client);
-        SlotTable.RefreshUI = true;
+        Tables.SlotTable.RefreshUI = true;
     }
 
     public void RemoveSlot(string playerName)
     {
         var client = ClientList[playerName];
         _SlotTable.RemoveChild(client);
-        SlotTable.RefreshUI = true;
+        Tables.SlotTable.RefreshUI = true;
         ClientList.Remove(playerName);
         Data.SlotNames.Remove(playerName);
         client.QueueFree();
@@ -339,7 +341,7 @@ public partial class MainController : Control
     public static void Clear()
     {
         Datas = [];
-        TextClient.ClearClient = true;
+        TextClientTab.TextClient.ClearClient = true;
         Players = [];
         PlayerGames = [];
     }
@@ -453,9 +455,9 @@ public partial class MainController : Control
     public static void RefreshUIColors()
     {
         Background.BgColor = Data["background_color"];
-        TextClient.RefreshText = true;
+        TextClientTab.TextClient.RefreshText = true;
         RefreshUI = true;
-        ItemFilterer.RefreshUI = true;
+        Tables.ItemFilterer.RefreshUI = true;
         _UpdateHints = true;
     }
 

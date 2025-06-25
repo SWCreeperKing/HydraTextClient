@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,9 @@ using CreepyUtil.Archipelago;
 using Godot;
 using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using static ArchipelagoMultiTextClient.Scripts.Settings.Settings;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 
 public partial class TextClient : VBoxContainer
 {
@@ -176,7 +176,7 @@ public partial class TextClient : VBoxContainer
             var s = (string)meta;
             if (s.StartsWith("itemdialog"))
             {
-                Settings.ItemFilterDialog.SetItem(s);
+                ItemFilterDialog.SetItem(s);
                 return;
             }
 
@@ -464,7 +464,7 @@ public readonly struct ClientMessage(
                     var game = PlayerGames[part.Player!.Value];
                     var item = ItemIdToItemName(itemId, part.Player!.Value);
                     var flags = part.Flags!.Value;
-                    var metaString = Settings.ItemFilterDialog.GetMetaString(item, game, itemId, flags);
+                    var metaString = ItemFilterDialog.GetMetaString(item, game, itemId, flags);
                     color = GetItemHexColor(flags, metaString);
                     var bgColor = GetItemHexBgColor(flags, metaString);
                     messageBuilder.Append(

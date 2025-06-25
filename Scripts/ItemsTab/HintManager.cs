@@ -6,7 +6,7 @@ using Archipelago.MultiClient.Net.Helpers;
 using CreepyUtil.Archipelago;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.ItemsTab;
 
 public partial class HintManager : MarginContainer
 {
