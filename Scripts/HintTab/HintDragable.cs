@@ -6,14 +6,7 @@ public partial class HintDragable : PanelContainer
 {
     public static bool IsDragging;
     
-    public override void _DropData(Vector2 atPosition, Variant data)
-    {
-    }
-
-    public override bool _CanDropData(Vector2 atPosition, Variant data)
-    {
-        return true;
-    }
+    public override bool _CanDropData(Vector2 atPosition, Variant data) => true;
 
     public override Variant _GetDragData(Vector2 atPosition)
     {

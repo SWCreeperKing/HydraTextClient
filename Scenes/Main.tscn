@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=26 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/Login/LineEditHide.cs" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/UiSaver.cs" id="4_0sclb"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
+[ext_resource type="Script" uid="uid://2gbkqdcf4uh8" path="res://Scripts/Login/MultiworldName.cs" id="5_jyqft"]
 [ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClientTab/TextClient.cs" id="5_pbw6q"]
 [ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/ItemsTab/HintManager.cs" id="6_4kpch"]
 [ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/TextClientTab/RichToolTip.cs" id="6_h1m7h"]
@@ -28,7 +29,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,7 +47,7 @@ _SlotAddButton = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginConta
 _SlotPackedScene = ExtResource("3_kln2b")
 _HintManager = NodePath("TabContainer/Items & Locations")
 _TabContainer = NodePath("TabContainer")
-_ConnectionTimer = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/Label")
+_ConnectionTimer = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/Label3")
 _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/TextClientContainer")
 _DiscordTimer = NodePath("Timer")
 _DiscordText = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/VBoxContainer/Label")
@@ -54,6 +55,7 @@ _DiscordReconnect = NodePath("TabContainer/Login/Login/ScrollContainer/MarginCon
 _VersionLabel = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/VBoxContainer/HBoxContainer4/Label2")
 _SaveButton = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/VBoxContainer/Button2")
 _SlotTable = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/RichTextLabel")
+_NameManager = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient")
 
 [node name="TabContainer" type="TabContainer" parent="." node_paths=PackedStringArray("Controls")]
 layout_mode = 1
@@ -63,7 +65,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 0
+current_tab = 2
 script = ExtResource("4_0sclb")
 Controls = {
 "items_and_locations/split": NodePath("Items & Locations/MarginContainer/Split"),
@@ -74,6 +76,7 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -96,11 +99,16 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2"]
+[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2" node_paths=PackedStringArray("InfoLabel", "NameEdit", "SaveButton", "NameLabel")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 7
+script = ExtResource("5_jyqft")
+InfoLabel = NodePath("Label")
+NameEdit = NodePath("LineEdit2")
+SaveButton = NodePath("Button")
+NameLabel = NodePath("Label2")
 
 [node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
 layout_mode = 2
@@ -148,12 +156,20 @@ theme = ExtResource("4_erwvk")
 theme_override_constants/h_separation = 10
 text = "Hide"
 
+[node name="Label3" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Timer"
+autowrap_mode = 3
+
 [node name="HSeparator2" type="HSeparator" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="Label" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Name the Multiworld
@@ -165,6 +181,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 placeholder_text = "Temporary"
+emoji_menu_enabled = false
+
+[node name="Button" type="Button" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+text = "Save"
+
+[node name="Label2" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Current Multiworld:
+<insert name>"
+autowrap_mode = 3
 
 [node name="HSeparator" type="HSeparator" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
 modulate = Color(1, 1, 1, 0)
@@ -259,11 +288,6 @@ theme = ExtResource("4_erwvk")
 placeholder_text = "Slot Name"
 max_length = 16
 keep_editing_on_text_submit = true
-
-[node name="Label" type="Label" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Timer"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
 layout_mode = 2
@@ -551,7 +575,6 @@ theme_override_font_sizes/font_size = 12
 text = "Message History:"
 
 [node name="Hints" type="TabContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -639,7 +662,14 @@ IndexFollower = NodePath("ScrollContainer2/Hints Organizer/VBoxContainer/PanelCo
 ListContainer = NodePath("ScrollContainer2/Hints Organizer/VBoxContainer")
 metadata/_tab_index = 1
 
+[node name="Label" type="Label" parent="TabContainer/Hints/Hint Organizer"]
+layout_mode = 2
+text = "Coming soon
+had to push hotfix"
+horizontal_alignment = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+visible = false
 layout_mode = 2
 
 [node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer"]
@@ -705,6 +735,7 @@ autowrap_mode = 2
 horizontal_alignment = 1
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+visible = false
 layout_mode = 2
 
 [node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2"]

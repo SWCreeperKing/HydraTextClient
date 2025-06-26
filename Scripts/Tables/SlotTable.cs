@@ -14,7 +14,7 @@ public partial class SlotTable : TextTable
         {
             var s = (string)v;
             var split = s.Split(' ');
-            var playerName = split[1];
+            var playerName = string.Join(' ', split[1..]);
             switch (split[0])
             {
                 case "connect":

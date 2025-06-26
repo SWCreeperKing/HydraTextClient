@@ -2,6 +2,7 @@ using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMultiTextClient.Scripts.Tables;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
 using Godot;
@@ -24,11 +25,22 @@ public partial class SlotClient : Control
     private string ConnectBackground = "#003000";
     private string DeleteForeground = "orangered";
     private string DeleteBackground = "#570000";
+    private double NullTimer;
 
     public string PlayerName { get; set; }
     
     public override void _Process(double delta)
     {
+        if (IsRunning is null) NullTimer += delta;
+        else NullTimer = 0;
+        
+        if ( NullTimer >= 30 && Client?.Session?.Socket is null)
+        {
+            NullTimer = 0;
+            IsRunning = false;
+            SlotTable.RefreshUI = true;
+        }
+        
         if (IsRunning is null or false) return;
         Client.UpdateConnection();
     }
@@ -56,7 +68,7 @@ public partial class SlotClient : Control
 
         IsRunning = null;
         _Error = null;
-        Tables.SlotTable.RefreshUI = true;
+        SlotTable.RefreshUI = true;
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];

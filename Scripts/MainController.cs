@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMultiTextClient.Scripts.Login;
 using ArchipelagoMultiTextClient.Scripts.Tables;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
@@ -82,13 +83,14 @@ public partial class MainController : Control
     [Export] private ItemsTab.HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
     [Export] private Label _ConnectionTimer;
-    [Export] private TextClientTab.TextClient _TextClient;
+    [Export] private TextClient _TextClient;
     [Export] private Timer _DiscordTimer;
     [Export] private Label _DiscordText;
     [Export] private Button _DiscordReconnect;
     [Export] private Label _VersionLabel;
     [Export] private Button _SaveButton;
-    [Export] private Tables.SlotTable _SlotTable;
+    [Export] private SlotTable _SlotTable;
+    [Export] private MultiworldName _NameManager;
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -119,6 +121,7 @@ public partial class MainController : Control
 
     public override void _Ready()
     {
+        _NameManager.ChangeState(MultiworldState.None);
         Data.NullCheck();
         RichPresenceController.Init();
         _DiscordTimer.Start();
@@ -164,7 +167,7 @@ public partial class MainController : Control
         }
 
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
-        if (updateRequest || _UpdateHints || TextClientTab.TextClient.HintRequest)
+        if (updateRequest || _UpdateHints || TextClient.HintRequest)
         {
             List<Hint> hints = [];
             foreach (var client in ActiveClients)
@@ -184,16 +187,16 @@ public partial class MainController : Control
                                 client.PlayerSlot == difference.ReceivingPlayer
                             )) continue;
 
-                        TextClientTab.TextClient.Messages.Enqueue(difference);
+                        TextClient.Messages.Enqueue(difference);
                     }
                 }
 
                 HintsMap[client] = client.Hints;
             }
 
-            TextClientTab.TextClient.HintRequest = false;
-            Tables.HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
-            Tables.HintTable.RefreshUI = true;
+            TextClient.HintRequest = false;
+            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
+            HintTable.RefreshUI = true;
 
             _UpdateHints = false;
         }
@@ -217,14 +220,14 @@ public partial class MainController : Control
         client.Main = this;
         ClientList.Add(playerName, client);
         _SlotTable.AddChild(client);
-        Tables.SlotTable.RefreshUI = true;
+        SlotTable.RefreshUI = true;
     }
 
     public void RemoveSlot(string playerName)
     {
         var client = ClientList[playerName];
         _SlotTable.RemoveChild(client);
-        Tables.SlotTable.RefreshUI = true;
+        SlotTable.RefreshUI = true;
         ClientList.Remove(playerName);
         Data.SlotNames.Remove(playerName);
         client.QueueFree();
@@ -296,6 +299,7 @@ public partial class MainController : Control
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
+        _NameManager.ChangeState(MultiworldState.Load);
 
         RefreshUIColors();
     }
@@ -318,6 +322,7 @@ public partial class MainController : Control
 
         if (ActiveClients.Count == 0)
         {
+            _NameManager.ChangeState(MultiworldState.None);
             Clear();
         }
         else if (ChosenTextClient is null)
@@ -341,7 +346,7 @@ public partial class MainController : Control
     public static void Clear()
     {
         Datas = [];
-        TextClientTab.TextClient.ClearClient = true;
+        TextClient.ClearClient = true;
         Players = [];
         PlayerGames = [];
     }
@@ -455,9 +460,9 @@ public partial class MainController : Control
     public static void RefreshUIColors()
     {
         Background.BgColor = Data["background_color"];
-        TextClientTab.TextClient.RefreshText = true;
+        TextClient.RefreshText = true;
         RefreshUI = true;
-        Tables.ItemFilterer.RefreshUI = true;
+        ItemFilterer.RefreshUI = true;
         _UpdateHints = true;
     }
 
