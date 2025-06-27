@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts.Settings;
+namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
 public partial class Settings : Control
 {

@@ -9,7 +9,7 @@ using CreepyUtil.Archipelago;
 using Godot;
 using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.Settings.Settings;
+using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
 
 namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 

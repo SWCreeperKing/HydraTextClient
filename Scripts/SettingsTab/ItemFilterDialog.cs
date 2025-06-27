@@ -1,7 +1,7 @@
 using Archipelago.MultiClient.Net.Enums;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts.Settings;
+namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
 public partial class ItemFilterDialog : ConfirmationDialog
 {

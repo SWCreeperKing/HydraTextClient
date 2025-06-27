@@ -9,7 +9,7 @@ using Godot;
 using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts.Login;
+namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
 public partial class MultiworldName : VBoxContainer
 {

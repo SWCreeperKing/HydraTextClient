@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.TextClientTab.TextClient;
 
-namespace ArchipelagoMultiTextClient.Scripts.Login;
+namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
 public partial class SlotClient : Control
 {

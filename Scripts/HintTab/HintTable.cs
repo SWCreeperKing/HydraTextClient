@@ -8,7 +8,8 @@ using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.Settings.Settings;
+using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
+using MultiworldName = ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
 
 namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 

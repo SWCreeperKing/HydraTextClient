@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 
-namespace ArchipelagoMultiTextClient.Scripts.Settings;
+namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
 public partial class SizeManager : SpinBox
 {

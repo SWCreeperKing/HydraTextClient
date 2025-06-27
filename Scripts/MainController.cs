@@ -6,7 +6,9 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.Login;
+using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
+using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 using CreepyUtil.Archipelago;
 using CreepyUtil.DiscordRpc;
 using Godot;
@@ -16,8 +18,10 @@ using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.PlayerTable;
 using Environment = System.Environment;
 using HintTable = ArchipelagoMultiTextClient.Scripts.HintTab.HintTable;
-using ItemFilterer = ArchipelagoMultiTextClient.Scripts.Settings.ItemFilterer;
-using SlotTable = ArchipelagoMultiTextClient.Scripts.Login.SlotTable;
+using ItemFilterer = ArchipelagoMultiTextClient.Scripts.SettingsTab.ItemFilterer;
+using MultiworldName = ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
+using SlotClient = ArchipelagoMultiTextClient.Scripts.LoginTab.SlotClient;
+using SlotTable = ArchipelagoMultiTextClient.Scripts.LoginTab.SlotTable;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -30,7 +34,7 @@ public partial class MainController : Control
 
     public static Theme GlobalTheme;
     public static UserData Data;
-    public static Dictionary<string, Login.SlotClient> ClientList = [];
+    public static Dictionary<string, SlotClient> ClientList = [];
     public static List<ApClient> ActiveClients = [];
     public static Dictionary<int, string> PlayerSlots = [];
     public static string[] Players = [];
@@ -83,7 +87,7 @@ public partial class MainController : Control
     [Export] private LineEdit _SlotField;
     [Export] private Button _SlotAddButton;
     [Export] private PackedScene _SlotPackedScene;
-    [Export] private ItemsTab.HintManager _HintManager;
+    [Export] private HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
     [Export] private Label _ConnectionTimer;
     [Export] private TextClient _TextClient;
@@ -219,7 +223,7 @@ public partial class MainController : Control
 
     public void AddSlot(string playerName)
     {
-        var client = new Login.SlotClient();
+        var client = new SlotClient();
         client.PlayerName = playerName;
         client.Main = this;
         ClientList.Add(playerName, client);

@@ -29,7 +29,7 @@ public readonly struct HintData(Hint hint)
     public string[] GetData()
     {
         var receivingPlayerColor = MainController.PlayerColor(ReceivingPlayerSlot).Hex;
-        var metaString = Settings.Settings.ItemFilterDialog.GetMetaString(Item, MainController.PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
+        var metaString = SettingsTab.Settings.ItemFilterDialog.GetMetaString(Item, MainController.PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
         var itemColor = MainController.GetItemHexColor(ItemFlags, metaString);
         var itemBgColor = MainController.GetItemHexBgColor(ItemFlags, metaString);
         var findingPlayerColor = MainController.PlayerColor(FindingPlayerSlot).Hex;

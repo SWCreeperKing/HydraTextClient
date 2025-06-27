@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts.Login;
+namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
 public partial class LineEditHide : LineEdit
 {

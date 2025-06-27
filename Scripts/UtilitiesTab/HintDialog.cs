@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using CreepyUtil.Archipelago;
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts.ItemsTab;
+namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 
 public partial class HintDialog : ConfirmationDialog
 {

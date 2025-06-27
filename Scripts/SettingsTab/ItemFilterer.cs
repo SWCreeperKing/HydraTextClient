@@ -4,7 +4,7 @@ using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts.Settings;
+namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
 public partial class ItemFilterer : TextTable
 {
