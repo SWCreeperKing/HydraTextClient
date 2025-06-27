@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
-using Archipelago.MultiClient.Net.Models;
-using ArchipelagoMultiTextClient.Scripts.HintTab;
+using ArchipelagoMultiTextClient.Scripts.Login;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
@@ -11,12 +10,11 @@ using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.Settings.Settings;
 
-namespace ArchipelagoMultiTextClient.Scripts.Tables;
+namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 
 public partial class HintTable : TextTable
 {
     public static bool RefreshUI;
-    public static IEnumerable<HintData> Datas = [];
     public static Dictionary<ItemFlags, int> ItemToSortIdCache = new();
 
     [Export] private CheckBox _ShowFound;
@@ -109,7 +107,8 @@ public partial class HintTable : TextTable
         if (!RefreshUI) return;
 
         var orderedHints =
-            Datas.Where(hint => hint.HintStatus switch
+            // MultiworldName.CurrentWorld.HintDatas.Values.Where(hint => hint.HintStatus switch
+            MultiworldName.Datas.Where(hint => hint.HintStatus switch
                   {
                       Found => _ShowFound.ButtonPressed,
                       Unspecified => _ShowUnspecified.ButtonPressed,
@@ -179,60 +178,4 @@ public partial class HintTable : TextTable
 
         return ItemToSortIdCache[flags] = id;
     }
-}
-
-public readonly struct HintData(Hint hint)
-{
-    public readonly string ReceivingPlayer = GetAlias(hint.ReceivingPlayer);
-    public readonly int ReceivingPlayerSlot = hint.ReceivingPlayer;
-    public readonly long ItemId = hint.ItemId;
-    public readonly string Item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
-    public readonly ItemFlags ItemFlags = hint.ItemFlags;
-    public readonly string FindingPlayer = Players[hint.FindingPlayer];
-    public readonly int FindingPlayerSlot = hint.FindingPlayer;
-    public readonly HintStatus HintStatus = hint.Status;
-    public readonly string Location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
-    public readonly long LocationId = hint.LocationId;
-    public readonly string Entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
-    public readonly string GetCopy = hint.GetCopy();
-
-    public readonly string ItemUid = ItemFilter.MakeUidCode(hint.ItemId,
-        ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer),
-        PlayerGames[hint.ReceivingPlayer], hint.ItemFlags);
-
-    public string[] GetData()
-    {
-        var receivingPlayerColor = PlayerColor(ReceivingPlayerSlot).Hex;
-        var metaString = ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
-        var itemColor = GetItemHexColor(ItemFlags, metaString);
-        var itemBgColor = GetItemHexBgColor(ItemFlags, metaString);
-        var findingPlayerColor = PlayerColor(FindingPlayerSlot).Hex;
-        var hintColor = Data[HintStatusColor[HintStatus]].Hex;
-        var locationColor = Data["location"].Hex;
-        var entranceColor = Data[Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"].Hex;
-
-        var hintStatus = HintStatusText[HintStatus];
-        if (PlayerSlots.ContainsKey(ReceivingPlayerSlot) && HintStatus is not Found)
-        {
-            hintStatus =
-                $"[url=\"change&{ReceivingPlayer}&_&{FindingPlayerSlot}&_&{Item}&_&{itemColor}&_&{LocationId}\"]{hintStatus}[/url]";
-        }
-
-        return
-        [
-            $"[url=\"{GetCopy}\"]Copy[/url]",
-            $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
-            $"[bgcolor={itemBgColor}][color={itemColor}][url=\"{metaString}\"]{Item.Clean()}[/url][/color][/bgcolor]",
-            $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
-            $"[color={hintColor}]{hintStatus}[/color]",
-            $"[color={locationColor}]{Location.Clean()}[/color]",
-            $"[color={entranceColor}]{Entrance.Clean()}[/color]"
-        ];
-    }
-}
-
-public class SortObject(string name)
-{
-    public readonly string Name = name;
-    public bool IsDescending;
 }

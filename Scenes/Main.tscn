@@ -1,27 +1,27 @@
 [gd_scene load_steps=26 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
-[ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/Login/LineEditHide.cs" id="2_idj7w"]
+[ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
 [ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/UiSaver.cs" id="4_0sclb"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
-[ext_resource type="Script" uid="uid://2gbkqdcf4uh8" path="res://Scripts/Login/MultiworldName.cs" id="5_jyqft"]
+[ext_resource type="Script" uid="uid://2gbkqdcf4uh8" path="res://Scripts/LoginTab/MultiworldName.cs" id="5_jyqft"]
 [ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClientTab/TextClient.cs" id="5_pbw6q"]
-[ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/ItemsTab/HintManager.cs" id="6_4kpch"]
+[ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/UtilitiesTab/HintManager.cs" id="6_4kpch"]
 [ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/TextClientTab/RichToolTip.cs" id="6_h1m7h"]
-[ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/Settings/Settings.cs" id="6_v1gob"]
-[ext_resource type="Script" uid="uid://bko8pgi5olqc6" path="res://Scripts/Tables/SlotTable.cs" id="7_0sclb"]
-[ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/Tables/PlayerTable.cs" id="7_50glp"]
+[ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/SettingsTab/Settings.cs" id="6_v1gob"]
+[ext_resource type="Script" uid="uid://bko8pgi5olqc6" path="res://Scripts/LoginTab/SlotTable.cs" id="7_0sclb"]
+[ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/PlayerTable.cs" id="7_50glp"]
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
-[ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/Tables/HintTable.cs" id="7_vy5pj"]
+[ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTab/HintTable.cs" id="7_vy5pj"]
 [ext_resource type="Script" uid="uid://bfevc6niinecf" path="res://Scripts/HintTab/HintDragable.cs" id="11_fq0cl"]
 [ext_resource type="Script" uid="uid://bpycgg2m3u8wr" path="res://Scripts/HintTab/HintOrganizer.cs" id="11_hwpts"]
 [ext_resource type="Texture2D" uid="uid://b3in73ey7sy5r" path="res://Assets/Images/UI/Adder.png" id="11_sxkr1"]
-[ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/ItemsTab/HintDialog.cs" id="12_grg3l"]
-[ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/Settings/SizeManager.cs" id="12_h1m7h"]
+[ext_resource type="Script" uid="uid://b3h5b302xy1" path="res://Scripts/UtilitiesTab/HintDialog.cs" id="12_grg3l"]
+[ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/SettingsTab/SizeManager.cs" id="12_h1m7h"]
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
-[ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/Tables/ItemFilterer.cs" id="14_346fj"]
-[ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/Settings/ItemFilterDialog.cs" id="16_2w5on"]
+[ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/SettingsTab/ItemFilterer.cs" id="14_346fj"]
+[ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/SettingsTab/ItemFilterDialog.cs" id="16_2w5on"]
 [ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintTab/HintChangerWindow.cs" id="16_erwvk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fq0cl"]
@@ -45,7 +45,7 @@ _PortField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2
 _SlotField = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer/LineEdit")
 _SlotAddButton = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer/Button")
 _SlotPackedScene = ExtResource("3_kln2b")
-_HintManager = NodePath("TabContainer/Items & Locations")
+_HintManager = NodePath("TabContainer/Utilities/Items and Locations/Items and Locations")
 _TabContainer = NodePath("TabContainer")
 _ConnectionTimer = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/Label3")
 _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/TextClientContainer")
@@ -65,10 +65,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 2
+current_tab = 3
 script = ExtResource("4_0sclb")
 Controls = {
-"items_and_locations/split": NodePath("Items & Locations/MarginContainer/Split"),
+"items_and_locations/split": NodePath("Utilities/Items and Locations"),
 "login/foldable/extra": NodePath("Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"),
 "login/split_container": NodePath("Login/Login"),
 "settings/split_container/settings_split": NodePath("Settings/ScrollContainer/VBoxContainer/SettingSplit"),
@@ -575,14 +575,14 @@ theme_override_font_sizes/font_size = 12
 text = "Message History:"
 
 [node name="Hints" type="TabContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-current_tab = 1
+current_tab = 0
 metadata/_tab_index = 2
 
 [node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
@@ -653,6 +653,7 @@ _HintChangerWindow = NodePath("../../../../../../Window")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
 [node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" node_paths=PackedStringArray("IndexFollower", "ListContainer")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -662,14 +663,7 @@ IndexFollower = NodePath("ScrollContainer2/Hints Organizer/VBoxContainer/PanelCo
 ListContainer = NodePath("ScrollContainer2/Hints Organizer/VBoxContainer")
 metadata/_tab_index = 1
 
-[node name="Label" type="Label" parent="TabContainer/Hints/Hint Organizer"]
-layout_mode = 2
-text = "Coming soon
-had to push hotfix"
-horizontal_alignment = 1
-
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
-visible = false
 layout_mode = 2
 
 [node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer"]
@@ -735,7 +729,6 @@ autowrap_mode = 2
 horizontal_alignment = 1
 
 [node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
-visible = false
 layout_mode = 2
 
 [node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2"]
@@ -818,55 +811,54 @@ patch_margin_bottom = 4
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
 
-[node name="Items & Locations" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
-visible = false
+[node name="Utilities" type="TabContainer" parent="TabContainer"]
 layout_mode = 2
-script = ExtResource("6_4kpch")
-_HintSender = NodePath("MarginContainer/Split/ScrollContainer/VBoxContainer")
-_HintLocationSender = NodePath("MarginContainer/Split/ScrollContainer2/VBoxContainer2")
-_PlayerBox = ExtResource("7_grg3l")
-_SendHintConfirmation = NodePath("../../Hint")
+current_tab = 0
 metadata/_tab_index = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Items & Locations"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Split" type="HSplitContainer" parent="TabContainer/Items & Locations/MarginContainer"]
+[node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Items & Locations/MarginContainer/Split"]
+[node name="Items and Locations" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+script = ExtResource("6_4kpch")
+_HintSender = NodePath("../ScrollContainer/VBoxContainer")
+_HintLocationSender = NodePath("../ScrollContainer2/VBoxContainer2")
+_PlayerBox = ExtResource("7_grg3l")
+_SendHintConfirmation = NodePath("../../../../Hint")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Click an item to hint it"
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Items & Locations/MarginContainer/Split"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="TabContainer/Items & Locations/MarginContainer/Split/ScrollContainer2/VBoxContainer2"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/ScrollContainer2/VBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Click an location to hint_location it"

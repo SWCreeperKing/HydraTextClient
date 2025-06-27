@@ -1,9 +1,14 @@
+# v.0.5
+
+
+
+---
 # v.0.4.8
 
 - Fixed bug with clients not disconnecting when loosing connection
 - Fixed bug with copy style was not image the image directory was appearing
 - Improved the changing of viewing previously sent messages
-- Fixed a bug when trying to sign into a slot that had a space in the name
+- Fixed a bug when trying to sign in to a slot that had a space in the name
 
 ---
 # v.0.4.7

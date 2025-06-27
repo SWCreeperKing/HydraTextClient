@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.Login;
-using ArchipelagoMultiTextClient.Scripts.Tables;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
 using CreepyUtil.DiscordRpc;
@@ -13,8 +13,11 @@ using Godot;
 using Newtonsoft.Json;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
-using static ArchipelagoMultiTextClient.Scripts.Tables.PlayerTable;
+using static ArchipelagoMultiTextClient.Scripts.PlayerTable;
 using Environment = System.Environment;
+using HintTable = ArchipelagoMultiTextClient.Scripts.HintTab.HintTable;
+using ItemFilterer = ArchipelagoMultiTextClient.Scripts.Settings.ItemFilterer;
+using SlotTable = ArchipelagoMultiTextClient.Scripts.Login.SlotTable;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -27,7 +30,7 @@ public partial class MainController : Control
 
     public static Theme GlobalTheme;
     public static UserData Data;
-    public static Dictionary<string, SlotClient> ClientList = [];
+    public static Dictionary<string, Login.SlotClient> ClientList = [];
     public static List<ApClient> ActiveClients = [];
     public static Dictionary<int, string> PlayerSlots = [];
     public static string[] Players = [];
@@ -195,7 +198,8 @@ public partial class MainController : Control
             }
 
             TextClient.HintRequest = false;
-            HintTable.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
+            MultiworldName.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
+            // MultiworldName.CurrentWorld.MergeHints(hints.Select(hint => new HintData(hint)).ToArray());
             HintTable.RefreshUI = true;
 
             _UpdateHints = false;
@@ -215,7 +219,7 @@ public partial class MainController : Control
 
     public void AddSlot(string playerName)
     {
-        var client = new SlotClient();
+        var client = new Login.SlotClient();
         client.PlayerName = playerName;
         client.Main = this;
         ClientList.Add(playerName, client);

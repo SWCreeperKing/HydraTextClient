@@ -2,7 +2,6 @@ using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
-using ArchipelagoMultiTextClient.Scripts.Tables;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
 using Godot;
@@ -10,11 +9,10 @@ using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.TextClientTab.TextClient;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.Login;
 
 public partial class SlotClient : Control
 {
-    private static int ClientCount;
     public bool? IsRunning = false;
 
     public MainController Main;
@@ -42,20 +40,18 @@ public partial class SlotClient : Control
         }
         
         if (IsRunning is null or false) return;
-        Client.UpdateConnection();
+        Client?.UpdateConnection();
     }
 
     public void TryConnection()
     {
         if (!Main.IsLocalHosted())
         {
-            if (ClientCount >= 7)
+            if (ActiveClients.Count >= 7)
             {
                 ConnectionFailed(["Can only have 7 slots connected"], false);
                 return;
             }
-
-            ClientCount++;
             
             if (ConnectionCooldown > 0)
             {
@@ -166,7 +162,7 @@ public partial class SlotClient : Control
         Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
 
         Main.ConnectClient(Client);
-        Tables.SlotTable.RefreshUI = true;
+        SlotTable.RefreshUI = true;
     }
 
     public void HasDisconnected()
@@ -174,9 +170,7 @@ public partial class SlotClient : Control
         IsRunning = false;
         Main.DisconnectClient(Client);
         Client = new ApClient();
-        Tables.SlotTable.RefreshUI = true;
-        if (Main.IsLocalHosted()) return;
-        ClientCount--;
+        SlotTable.RefreshUI = true;
     }
 
     public void Say(string message) => Client.Say(message);

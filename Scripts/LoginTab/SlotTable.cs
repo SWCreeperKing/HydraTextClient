@@ -1,7 +1,8 @@
 using System.Linq;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts.Tables;
+namespace ArchipelagoMultiTextClient.Scripts.Login;
 
 public partial class SlotTable : TextTable
 {

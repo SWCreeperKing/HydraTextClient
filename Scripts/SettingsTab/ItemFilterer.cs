@@ -1,8 +1,10 @@
 using System.Linq;
+using ArchipelagoMultiTextClient.Scripts.HintTab;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts.Tables;
+namespace ArchipelagoMultiTextClient.Scripts.Settings;
 
 public partial class ItemFilterer : TextTable
 {

@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
+using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
-namespace ArchipelagoMultiTextClient.Scripts.Tables;
+namespace ArchipelagoMultiTextClient.Scripts;
 
 public partial class PlayerTable : TextTable
 {

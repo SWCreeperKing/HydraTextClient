@@ -13,11 +13,13 @@ namespace ArchipelagoMultiTextClient.Scripts.Login;
 
 public partial class MultiworldName : VBoxContainer
 {
+    public static HydraMultiworld CurrentWorld;
+    public static IEnumerable<HintData> Datas = [];
+    
     [Export] private Label InfoLabel;
     [Export] private LineEdit NameEdit;
     [Export] private Button SaveButton;
     [Export] private Label NameLabel;
-    private HydraMultiworld CurrentWorld;
     private Dictionary<string, HydraMultiworld> AllWorlds = [];
     private Dictionary<string, HydraMultiworld> AllWorldsHash = [];
 
@@ -49,7 +51,7 @@ public partial class MultiworldName : VBoxContainer
                 NameLabel.Visible = false;
                 break;
             case MultiworldState.Load:
-                // LoadName();
+                LoadName();
                 break;
             case MultiworldState.Loaded:
                 InfoLabel.Visible = NameEdit.Visible = SaveButton.Visible = false;
@@ -74,9 +76,11 @@ public partial class MultiworldName : VBoxContainer
         var info = ActiveClients[0].Session.RoomState;
         var uuid =
             $"{info.Seed}{string.Join(",", ActiveClients[0].Session.Players.AllPlayers.Select(player => $"{player.Slot}{player.Name}{player.Game}"))}";
+        uuid = string.Join(",", SHA3_256.HashData(Encoding.UTF8.GetBytes(uuid)));
         
         if (AllWorldsHash.TryGetValue(uuid, out CurrentWorld))
         {
+            CurrentWorld.WorldChosen();
             NameLabel.Text = $"Current Multiworld:\n{CurrentWorld.Name}";
             ChangeState(MultiworldState.Loaded);
             return;

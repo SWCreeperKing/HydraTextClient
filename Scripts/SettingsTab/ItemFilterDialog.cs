@@ -16,7 +16,7 @@ public partial class ItemFilterDialog : ConfirmationDialog
         {
             var filter = new ItemFilter(_ItemId, _ItemName, _GameName, _ItemFlags);
             MainController.Data.ItemFilters.Add(filter.UidCode, filter);
-            Tables.ItemFilterer.RefreshUI = true;
+            ItemFilterer.RefreshUI = true;
         };
     }
 
