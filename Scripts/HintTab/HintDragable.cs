@@ -1,17 +1,16 @@
+using ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 using Godot;
 
 namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 
-public partial class HintDragable : PanelContainer
+public partial class HintDragable : Control
 {
     public static bool IsDragging;
-    
-    public override bool _CanDropData(Vector2 atPosition, Variant data) => true;
 
     public override Variant _GetDragData(Vector2 atPosition)
     {
         IsDragging = true;
-        return 1;
+        return ((PanelText)GetParent()).Id;
     }
 
     public override void _Notification(int what)

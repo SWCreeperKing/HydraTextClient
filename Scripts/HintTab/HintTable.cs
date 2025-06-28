@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
-using ArchipelagoMultiTextClient.Scripts.Login;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
@@ -108,8 +107,7 @@ public partial class HintTable : TextTable
         if (!RefreshUI) return;
 
         var orderedHints =
-            // MultiworldName.CurrentWorld.HintDatas.Values.Where(hint => hint.HintStatus switch
-            MultiworldName.Datas.Where(hint => hint.HintStatus switch
+            MultiworldName.CurrentWorld.HintDatas.Values.Where(hint => hint.HintStatus switch
                   {
                       Found => _ShowFound.ButtonPressed,
                       Unspecified => _ShowUnspecified.ButtonPressed,

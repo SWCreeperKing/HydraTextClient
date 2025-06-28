@@ -5,6 +5,7 @@ using System.Text;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
+using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using CreepyUtil.Archipelago;
 using Godot;
 using static System.StringComparison;
@@ -250,10 +251,7 @@ public partial class TextClient : VBoxContainer
 
         _SendMessageButton.Disabled = _MessageCooldown > 0;
 
-        if (_MessageCooldown > 0)
-        {
-            _MessageCooldown -= delta;
-        }
+        if (_MessageCooldown > 0) _MessageCooldown -= delta;
 
         if (ClearClient)
         {
@@ -264,24 +262,17 @@ public partial class TextClient : VBoxContainer
         while (!HintRequest && !Messages.IsEmpty)
         {
             Messages.TryDequeue(out var message);
+            
+            if (message.IsItemLog) MultiworldName.CurrentWorld.ItemLogItemReceived(message.MessageParts);
             if (!Filter(message, _WasLastMessageHintLocation, out _WasLastMessageHintLocation)) continue;
 
             _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
             _Both.Enqueue(message);
 
-            if (message.IsItemLog)
-            {
-                _ItemLog.Enqueue(message);
-            }
-            else
-            {
-                _ChatMessages.Enqueue(message);
-            }
-
-            if (message.IsHintRequest)
-            {
-                HintRequest = true;
-            }
+            if (message.IsItemLog) _ItemLog.Enqueue(message);
+            else _ChatMessages.Enqueue(message);
+            
+            if (message.IsHintRequest) HintRequest = true;
 
             RefreshText = true;
         }
@@ -603,5 +594,20 @@ public static class TextHelper
         var secondPlayer = GetAlias(secondPlayerSlot);
         item = ItemIdToItemName(itemId, secondPlayerSlot);
         return $"`{firstPlayer}` sent __{item}__ to `{secondPlayer}` (**{location}**)";
+    }
+    
+    public static string GetItemLogToHintId(this JsonMessagePart[] parts)
+    {
+        var firstPlayerSlot = int.Parse(parts[0].Text);
+        var itemId = long.Parse(parts[2].Text);
+        var locationId = long.Parse(parts[^2].Text);
+
+        if (parts[1].Text is " found their ")
+        {
+            return $"{firstPlayerSlot},,{firstPlayerSlot},,{itemId},,{locationId}";
+        }
+
+        var secondPlayerSlot = int.Parse(parts[4].Text);
+        return $"{secondPlayerSlot},,{firstPlayerSlot},,{itemId},,{locationId}";
     }
 }

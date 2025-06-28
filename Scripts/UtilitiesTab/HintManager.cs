@@ -8,7 +8,7 @@ using Godot;
 
 namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 
-public partial class HintManager : MarginContainer
+public partial class HintManager : SplitContainer
 {
     [Export] private VBoxContainer _HintSender;
     [Export] private VBoxContainer _HintLocationSender;
@@ -50,10 +50,7 @@ public partial class HintManager : MarginContainer
                 hintButton.Pressed += () => HintLocation(item, client);
                 playerButtons.Add(item, hintButton);
             }
-            else
-            {
-                hintButton.Pressed += () => HintItem(item, client);
-            }
+            else hintButton.Pressed += () => HintItem(item, client);
 
             hintButton.Text = item;
 
@@ -83,10 +80,7 @@ public partial class HintManager : MarginContainer
             }
 
             if (toRemove.Count == 0) return;
-            foreach (var button in toRemove)
-            {
-                buttons.Remove(button);
-            }
+            foreach (var button in toRemove) buttons.Remove(button);
         };
 
         playerBox.AddNode(searchBar, false);
@@ -128,7 +122,7 @@ public partial class HintManager : MarginContainer
         foreach (var (key, button) in _LocationButtons[playerSlot].Where(kv => found.Contains(kv.Key)))
         {
             _LocationButtons[playerSlot].Remove(key);
-    
+
             button.GetParent().RemoveChild(button);
             button.QueueFree();
         }

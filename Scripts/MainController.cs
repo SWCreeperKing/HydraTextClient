@@ -5,7 +5,6 @@ using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
-using ArchipelagoMultiTextClient.Scripts.Login;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
@@ -77,7 +76,8 @@ public partial class MainController : Control
     public static Dictionary<HintStatus, string> HintStatusText =
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
-    public static event EventHandler SaveCalled;
+    public delegate void SaveHandler();
+    public static event SaveHandler OnSave;
 
     [Export] private string _Version;
     [Export] private Theme _UITheme;
@@ -148,8 +148,8 @@ public partial class MainController : Control
 
         Background.BgColor = Data["background_color"];
         _TabContainer.AddThemeStyleboxOverride("panel", Background);
-        SaveCalled += (_, _) => Data.WindowSize = GetWindow().Size;
-        SaveCalled += (_, _) => Data.WindowPosition = GetWindow().Position;
+        OnSave += () => Data.WindowSize = GetWindow().Size;
+        OnSave += () => Data.WindowPosition = GetWindow().Position;
 
         if (new Random().Next(100) != 1) return;
         _SaveButton.Text = "Safty Save";
@@ -174,7 +174,7 @@ public partial class MainController : Control
         }
 
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
-        if (updateRequest || _UpdateHints || TextClient.HintRequest)
+        if ((updateRequest || _UpdateHints || TextClient.HintRequest) && MultiworldName.CurrentWorld is not null)
         {
             List<Hint> hints = [];
             foreach (var client in ActiveClients)
@@ -202,10 +202,12 @@ public partial class MainController : Control
             }
 
             TextClient.HintRequest = false;
-            MultiworldName.Datas = hints.Select(hint => new HintData(hint)).ToHashSet(_HintDataComparer);
-            // MultiworldName.CurrentWorld.MergeHints(hints.Select(hint => new HintData(hint)).ToArray());
-            HintTable.RefreshUI = true;
+            if (MultiworldName.CurrentWorld is not null)
+            {
+                MultiworldName.CurrentWorld.MergeHints(hints.Select(hint => new HintData(hint)).ToArray());
+            }
 
+            HintTable.RefreshUI = true;
             _UpdateHints = false;
         }
 
@@ -407,6 +409,9 @@ public partial class MainController : Control
         }
     }
 
+    public static bool IsPlayerSlotALoginSlot(int playerSlot)
+        => ClientList.ContainsKey(ActiveClients[0].PlayerNames[playerSlot]);
+
     public static string GetItemHexColor(ItemFlags flags, string metaData)
     {
         if (Data.ItemFilters.TryGetValue(metaData, out var filter) && filter.IsSpecial) return Data["item_special"];
@@ -476,7 +481,7 @@ public partial class MainController : Control
 
     public static void Save()
     {
-        SaveCalled?.Invoke(null, null!);
+        OnSave?.Invoke();
         File.WriteAllText($"{SaveDir}/data.json", JsonConvert.SerializeObject(Data));
     }
 

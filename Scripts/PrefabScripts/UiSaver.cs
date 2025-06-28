@@ -2,7 +2,7 @@ using System;
 using Godot;
 using Godot.Collections;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 
 public partial class UiSaver : TabContainer
 {
@@ -10,7 +10,7 @@ public partial class UiSaver : TabContainer
 
     public override void _Ready()
     {
-        MainController.SaveCalled += (_, _) => SaveControls();
+        MainController.OnSave += SaveControls;
         LoadControls();
     }
 
@@ -52,8 +52,8 @@ public partial class UiSaver : TabContainer
         }
     }
 
-    public void AttachSave(Action save) => MainController.SaveCalled += (_, _) => save();
-    public void AttachLoad(Action load) => MainController.SaveCalled += (_, _) => load();
+    public void AttachSave(Action save) => MainController.OnSave += () => save();
+    public void AttachLoad(Action load) => MainController.OnSave += () => load();
     public void Save(string id, float data) => MainController.Data.UiSettingsSave[id] = data;
     public void Save(string id, int data) => MainController.Data.UiSettingsSave[id] = data;
     public void Save(string id, bool data) => MainController.Data.UiSettingsSave[id] = data ? 1 : 0;

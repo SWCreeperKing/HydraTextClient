@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dgqhkof07vm4x"]
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_ffleg"]
-[ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/LinkButton.cs" id="1_rprnt"]
+[ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="1_rprnt"]
 
 [node name="Button" type="Button"]
 theme = ExtResource("1_ffleg")

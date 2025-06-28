@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ArchipelagoMultiTextClient.Scripts;
+namespace ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 
 public partial class LinkButton : Button
 {

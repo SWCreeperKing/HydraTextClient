@@ -14,8 +14,7 @@ namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 public partial class MultiworldName : VBoxContainer
 {
     public static HydraMultiworld CurrentWorld;
-    public static IEnumerable<HintData> Datas = [];
-    
+
     [Export] private Label InfoLabel;
     [Export] private LineEdit NameEdit;
     [Export] private Button SaveButton;
@@ -23,9 +22,13 @@ public partial class MultiworldName : VBoxContainer
     private Dictionary<string, HydraMultiworld> AllWorlds = [];
     private Dictionary<string, HydraMultiworld> AllWorldsHash = [];
 
+    public delegate void MultiworldChangedHandler(HydraMultiworld? newWorld);
+
+    public static event MultiworldChangedHandler? OnMultiworldChanged;
+
     public override void _Ready()
     {
-        SaveCalled += (_, _) => SaveWorlds();
+        OnSave += SaveWorlds;
         NameEdit.TextSubmitted += SubmitName;
         SaveButton.Pressed += () => SubmitName(NameEdit.Text);
 
@@ -43,7 +46,9 @@ public partial class MultiworldName : VBoxContainer
         switch (state)
         {
             case MultiworldState.None:
+                if (CurrentWorld is not null) SaveWorld(CurrentWorld);
                 CurrentWorld = null;
+                OnMultiworldChanged?.Invoke(null);
                 InfoLabel.Visible = NameEdit.Visible = SaveButton.Visible = NameLabel.Visible = false;
                 break;
             case MultiworldState.New:
@@ -77,16 +82,18 @@ public partial class MultiworldName : VBoxContainer
         var uuid =
             $"{info.Seed}{string.Join(",", ActiveClients[0].Session.Players.AllPlayers.Select(player => $"{player.Slot}{player.Name}{player.Game}"))}";
         uuid = string.Join(",", SHA3_256.HashData(Encoding.UTF8.GetBytes(uuid)));
-        
+
         if (AllWorldsHash.TryGetValue(uuid, out CurrentWorld))
         {
             CurrentWorld.WorldChosen();
             NameLabel.Text = $"Current Multiworld:\n{CurrentWorld.Name}";
+            OnMultiworldChanged?.Invoke(CurrentWorld);
             ChangeState(MultiworldState.Loaded);
             return;
         }
 
         CurrentWorld = new HydraMultiworld(uuid);
+        OnMultiworldChanged?.Invoke(CurrentWorld);
         ChangeState(MultiworldState.New);
     }
 
@@ -100,6 +107,11 @@ public partial class MultiworldName : VBoxContainer
                 multiworld = multiworld.Replace("\r", "");
                 var world = JsonConvert.DeserializeObject<HydraMultiworld>(multiworld);
                 AllWorldsHash[world.Hash] = AllWorlds[world.Name] = world;
+                world.OnHintChanged += (_, _) =>
+                {
+                    HintTable.RefreshUI = true;
+                    HintOrganizer.RefreshUI = true;
+                };
             }
             catch (Exception e)
             {
@@ -110,10 +122,14 @@ public partial class MultiworldName : VBoxContainer
 
     public void SaveWorlds()
     {
-        foreach (var world in AllWorlds.Values.Where(world => world.Changed))
-        {
-            File.WriteAllText($"{SaveDir}/Multiworlds/{world.Name}.json", JsonConvert.SerializeObject(world));
-        }
+        foreach (var world in AllWorlds.Values) SaveWorld(world);
+    }
+
+    public void SaveWorld(HydraMultiworld world)
+    {
+        if (!world.Changed) return;
+        File.WriteAllText($"{SaveDir}/Multiworlds/{world.Name}.json", JsonConvert.SerializeObject(world).Replace("\\\"", "'"));
+        GD.Print($"Saved: [{world.Name}]");   
     }
 }
 
