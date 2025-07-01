@@ -1,6 +1,16 @@
 # v.0.5
 
-
+- Some UI styling changes
+- Added the option to save a multiworld by naming it
+  - Naming it the same as another world will overwrite the previous (might change)
+- Added the ability for hints to be cached
+  - The cached hints will be saved to a file if the multiworld is named 
+- Added the ability to organize hints
+  - The multiworld needs to be named before organizing hints 
+- Renamed Items & Locations tab to Utilities
+- Added a Location Checklist to the Utilities tab
+  - Location Checklist has a very simple custom scripting language
+  - [here is the documentation for it](https://github.com/SWCreeperKing/HydraTextClient/blob/master/ChecklistDocs.md)
 
 ---
 # v.0.4.8

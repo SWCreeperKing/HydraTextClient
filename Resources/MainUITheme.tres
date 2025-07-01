@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=17 format=3 uid="uid://doy8rp1q74ye0"]
+[gd_resource type="Theme" load_steps=23 format=3 uid="uid://doy8rp1q74ye0"]
 
 [ext_resource type="FontFile" uid="uid://dlg8eleo800rl" path="res://Assets/Font/CascadiaMono.ttf" id="1_7h0ys"]
 [ext_resource type="Texture2D" uid="uid://32132x7kc10h" path="res://Assets/Images/UI/Checkmark.png" id="2_70gmd"]
@@ -9,6 +9,66 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pmxma"]
 bg_color = Color(0.109804, 0.121569, 0.129412, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmn60"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a3o43"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.10196078, 0.10196078, 0.10196078, 0.5019608)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 0.6)
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qndb7"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_irvpy"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ffku3"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcq1o"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_detail = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -70,6 +130,14 @@ default_font_size = 20
 AcceptDialog/styles/panel = SubResource("StyleBoxFlat_pmxma")
 CheckBox/icons/checked = ExtResource("2_70gmd")
 CheckBox/icons/unchecked = ExtResource("3_8clno")
+CodeEdit/font_sizes/font_size = 18
+CodeEdit/fonts/font = ExtResource("1_7h0ys")
+FoldableContainer/styles/focus = SubResource("StyleBoxFlat_tmn60")
+FoldableContainer/styles/panel = SubResource("StyleBoxFlat_a3o43")
+FoldableContainer/styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_qndb7")
+FoldableContainer/styles/title_collapsed_panel = SubResource("StyleBoxFlat_irvpy")
+FoldableContainer/styles/title_hover_panel = SubResource("StyleBoxFlat_ffku3")
+FoldableContainer/styles/title_panel = SubResource("StyleBoxFlat_tcq1o")
 HSplitContainer/styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
 RichTextLabel/fonts/bold_font = ExtResource("3_fryjx")
 RichTextLabel/fonts/bold_italics_font = ExtResource("4_3xqnl")

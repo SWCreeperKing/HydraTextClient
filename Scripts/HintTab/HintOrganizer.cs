@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Archipelago.MultiClient.Net.Enums;
 using ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
@@ -13,66 +14,59 @@ public partial class HintOrganizer : HSplitContainer
 {
     public static bool RefreshUI;
     [Export] private HFlowContainer _InventoryContainer;
-    [Export] private DragAndDropData _ListContainer;
-    [Export] private DragAndDropData _IndexFollower;
     [Export] private PackedScene _PanelTextScene;
+    [Export] private DragAndDropDataFolder _Folder;
+    [Export] private PackedScene TEMPFOLDER;
     private Dictionary<string, PanelText> _HintTiles = [];
 
     public override void _EnterTree()
         => OnMultiworldChanged += mw =>
         {
             Clear();
+            _Folder.Title = mw is null ? "No Multiworld Selected" : mw.Name;
             if (mw is null) return;
             Load(mw.ItemOrder);
         };
 
     public override void _Ready()
     {
-        Action<string> dropAction = s =>
+        Action<DragAndDropDataFolder, string> dropAction = (folder, id) =>
         {
-            var panel = _HintTiles[s];
+            var panel = _HintTiles[id];
 
-            if (panel.IsSquarePanel)
-            {
-                _InventoryContainer.RemoveChild(panel);
-                _ListContainer.AddChild(panel);
-                panel.IsSquarePanel = false;
-            }
-
-            var index = _ListContainer.GetChildren().IndexOf(_IndexFollower);
-            _ListContainer.MoveChild(panel, index);
-            CurrentWorld.ItemOrder = _ListContainer.GetChildren()
-                                                   .Where(child => child is PanelText)
-                                                   .Select(child => ((PanelText)child).Id)
-                                                   .ToArray();
+            if (panel.IsSquarePanel) panel.IsSquarePanel = false;
+            folder.MoveChildToFollower(panel);
+            
+            CurrentWorld.ItemOrder = folder.GetTextIdsInChildren();
             CurrentWorld.Changed = true;
         };
 
-        _ListContainer.OnDropData += s => dropAction(s);
-        _IndexFollower.OnDropData += s => dropAction(s);
+        _Folder.SetOnDropData(dropAction);
+        _Folder.IsDragging = () => HintDragable.IsDragging;
     }
 
     public override void _Process(double delta)
     {
-        if (RefreshUI) RefreshUi();
-    }
-
-    public void RefreshUi()
-    {
-        RefreshUI = false;
+        if (!RefreshUI) return;
 
         foreach (var (id, data) in CurrentWorld.HintDatas)
         {
             if (_HintTiles.ContainsKey(id))
             {
-                // if (data.HintStatus is not HintStatus.Priority) RemoveHintTile(id);
+                if (data.HintStatus is not HintStatus.Priority)
+                {
+                    RemoveHintTile(id);
+                    CurrentWorld.Changed = true;
+                }
                 continue;
             }
 
             if (!IsPlayerSlotALoginSlot(data.FindingPlayerSlot)) continue;
-            // if (data.HintStatus is not HintStatus.Priority) continue;
+            if (data.HintStatus is not HintStatus.Priority) continue;
             AddHintTile(data);
         }
+        
+        RefreshUI = false;
     }
 
     public void AddHintTile(HintData data, bool addToInventory = true)
@@ -83,7 +77,7 @@ public partial class HintOrganizer : HSplitContainer
         flowText.IsSquarePanel = addToInventory;
         flowText.Id = data.Id;
         if (addToInventory) _InventoryContainer.AddChild(flowText);
-        else _ListContainer.AddChild(flowText);
+        else _Folder.AddChildToList(flowText);
         _HintTiles.Add(data.Id, flowText);
     }
 
@@ -134,10 +128,6 @@ public partial class HintOrganizer : HSplitContainer
             child.QueueFree();
         }
 
-        foreach (var child in _ListContainer.GetChildren().Where(child => child is PanelText))
-        {
-            _ListContainer.RemoveChild(child);
-            child.QueueFree();
-        }
+        _Folder.ClearFolder();
     }
 }

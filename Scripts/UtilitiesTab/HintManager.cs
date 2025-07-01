@@ -18,6 +18,10 @@ public partial class HintManager : SplitContainer
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
     private Dictionary<int, Dictionary<string, Button>> _LocationButtons = [];
 
+    public delegate void LocationChangeHandler(int slot, string[] locations);
+
+    public static event LocationChangeHandler? LocationChangeEvent;
+
     public void RegisterPlayer(ApClient client)
     {
         var itemReceivedResolver = (ReceivedItemsHelper)client.Session.Items;
@@ -118,7 +122,7 @@ public partial class HintManager : SplitContainer
 
     public void LocationCheck(long[] newLocations, int playerSlot)
     {
-        var found = newLocations.Select(l => MainController.LocationIdToLocationName(l, playerSlot));
+        var found = newLocations.Select(l => MainController.LocationIdToLocationName(l, playerSlot)).ToArray();
         foreach (var (key, button) in _LocationButtons[playerSlot].Where(kv => found.Contains(kv.Key)))
         {
             _LocationButtons[playerSlot].Remove(key);
@@ -126,5 +130,6 @@ public partial class HintManager : SplitContainer
             button.GetParent().RemoveChild(button);
             button.QueueFree();
         }
+        LocationChangeEvent?.Invoke(playerSlot, found);
     }
 }

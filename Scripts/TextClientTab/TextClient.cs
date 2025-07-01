@@ -54,6 +54,10 @@ public partial class TextClient : VBoxContainer
     private bool _WasLastMessageHintLocation = false;
     private string _HeldText;
 
+    public delegate void SelectedClientChangedHandler(ApClient client);
+
+    public static SelectedClientChangedHandler? SelectedClientChangedEvent;
+
     public override void _Ready()
     {
         _VScrollBar = _ScrollContainer.GetVScrollBar();
@@ -169,6 +173,7 @@ public partial class TextClient : VBoxContainer
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
             ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
+            SelectedClientChangedEvent?.Invoke(ChosenTextClient);
             _LastSelected = l;
         };
 
@@ -262,7 +267,7 @@ public partial class TextClient : VBoxContainer
         while (!HintRequest && !Messages.IsEmpty)
         {
             Messages.TryDequeue(out var message);
-            
+
             if (message.IsItemLog) MultiworldName.CurrentWorld.ItemLogItemReceived(message.MessageParts);
             if (!Filter(message, _WasLastMessageHintLocation, out _WasLastMessageHintLocation)) continue;
 
@@ -271,7 +276,7 @@ public partial class TextClient : VBoxContainer
 
             if (message.IsItemLog) _ItemLog.Enqueue(message);
             else _ChatMessages.Enqueue(message);
-            
+
             if (message.IsHintRequest) HintRequest = true;
 
             RefreshText = true;
@@ -452,7 +457,8 @@ public readonly struct ClientMessage(
                     break;
                 case JsonMessagePartType.ItemId:
                     var itemId = long.Parse(part.Text);
-                    var game = PlayerGames[part.Player!.Value];
+                    var game = PlayerGames is null ? "Unknown" :
+                        PlayerGames.Length <= part.Player!.Value ? "Unknown" : PlayerGames[part.Player!.Value];
                     var item = ItemIdToItemName(itemId, part.Player!.Value);
                     var flags = part.Flags!.Value;
                     var metaString = ItemFilterDialog.GetMetaString(item, game, itemId, flags);
@@ -595,7 +601,7 @@ public static class TextHelper
         item = ItemIdToItemName(itemId, secondPlayerSlot);
         return $"`{firstPlayer}` sent __{item}__ to `{secondPlayer}` (**{location}**)";
     }
-    
+
     public static string GetItemLogToHintId(this JsonMessagePart[] parts)
     {
         var firstPlayerSlot = int.Parse(parts[0].Text);

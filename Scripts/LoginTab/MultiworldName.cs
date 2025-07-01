@@ -67,11 +67,11 @@ public partial class MultiworldName : VBoxContainer
 
     public void SubmitName(string name)
     {
-        AllWorldsHash[CurrentWorld.Hash] = AllWorlds[name] = CurrentWorld;
         CurrentWorld.Name = name;
         NameLabel.Text = $"Current Multiworld:\n{name}";
         NameEdit.Text = "";
         CurrentWorld.Changed = true;
+        SetupMultiworld(CurrentWorld);
         ChangeState(MultiworldState.Loaded);
     }
 
@@ -103,21 +103,24 @@ public partial class MultiworldName : VBoxContainer
         {
             try
             {
-                var multiworld = File.ReadAllText(file);
-                multiworld = multiworld.Replace("\r", "");
-                var world = JsonConvert.DeserializeObject<HydraMultiworld>(multiworld);
-                AllWorldsHash[world.Hash] = AllWorlds[world.Name] = world;
-                world.OnHintChanged += (_, _) =>
-                {
-                    HintTable.RefreshUI = true;
-                    HintOrganizer.RefreshUI = true;
-                };
+                SetupMultiworld(JsonConvert.DeserializeObject<HydraMultiworld>(File.ReadAllText(file).Replace("\r", "")));
             }
             catch (Exception e)
             {
                 GD.Print($"There was a problem loading a Multiworld: [{file}]\n{e}");
             }
         }
+    }
+
+    public void SetupMultiworld(HydraMultiworld world)
+    {
+        
+        AllWorldsHash[world.Hash] = AllWorlds[world.Name] = world;
+        world.OnHintChanged += (_, _) =>
+        {
+            HintTable.RefreshUI = true;
+            HintOrganizer.RefreshUI = true;
+        };
     }
 
     public void SaveWorlds()
@@ -128,7 +131,7 @@ public partial class MultiworldName : VBoxContainer
     public void SaveWorld(HydraMultiworld world)
     {
         if (!world.Changed) return;
-        File.WriteAllText($"{SaveDir}/Multiworlds/{world.Name}.json", JsonConvert.SerializeObject(world).Replace("\\\"", "'"));
+        File.WriteAllText($"{SaveDir}/Multiworlds/{world.Name}.json", JsonConvert.SerializeObject(world));
         GD.Print($"Saved: [{world.Name}]");   
     }
 }

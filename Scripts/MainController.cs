@@ -77,7 +77,12 @@ public partial class MainController : Control
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
     public delegate void SaveHandler();
+    public delegate void ClientConnectHandler(ApClient client);
+    public delegate void ClientDisconnectHandler(ApClient client);
+
     public static event SaveHandler OnSave;
+    public static event ClientConnectHandler? ClientConnectEvent;
+    public static event ClientDisconnectHandler? ClientDisconnectEvent;
 
     [Export] private string _Version;
     [Export] private Theme _UITheme;
@@ -309,6 +314,7 @@ public partial class MainController : Control
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
+        ClientConnectEvent?.Invoke(client);
         _NameManager.ChangeState(MultiworldState.Load);
 
         RefreshUIColors();
@@ -319,6 +325,7 @@ public partial class MainController : Control
         if (!ActiveClients.Contains(client)) return;
         ActiveClients.Remove(client);
         PlayerSlots.Remove(client.PlayerSlot);
+        ClientDisconnectEvent?.Invoke(client);
 
         if (ChosenTextClient == client)
         {

@@ -1,0 +1,56 @@
+[gd_scene load_steps=7 format=3 uid="uid://dv1anbejmu0kq"]
+
+[ext_resource type="Script" uid="uid://b7ftrwwx2fe4m" path="res://Scripts/PrefabScripts/DragAndDropDataFolder.cs" id="1_74d2p"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_qd6ll"]
+[ext_resource type="Script" uid="uid://dastgbqpob8jl" path="res://Scripts/PrefabScripts/DragAndDropData.cs" id="2_qd6ll"]
+[ext_resource type="Texture2D" uid="uid://d0yq08ujkxpxa" path="res://Assets/Images/UI/MoveHandle.png" id="3_6llw6"]
+[ext_resource type="PackedScene" uid="uid://c18g2nqnmki1o" path="res://Scenes/Prefabs/DragFollower.tscn" id="3_dnrm3"]
+[ext_resource type="Texture2D" uid="uid://dsg775cgh8xl4" path="res://Assets/Images/UI/XMark.png" id="4_wk4et"]
+
+[node name="FoldableContainer" type="FoldableContainer" node_paths=PackedStringArray("_IndexFollower", "_ListContainer", "_MoveHandle", "_NameEdit", "_DeleteButton")]
+theme = ExtResource("1_qd6ll")
+title_alignment = 1
+script = ExtResource("1_74d2p")
+_IndexFollower = NodePath("MarginContainer/VBoxContainer/VBoxContainer2/Follower")
+_ListContainer = NodePath("MarginContainer/VBoxContainer/VBoxContainer2")
+_MoveHandle = NodePath("MarginContainer/VBoxContainer/HBoxContainer/TextureRect")
+_NameEdit = NodePath("MarginContainer/VBoxContainer/HBoxContainer/LineEdit")
+_DeleteButton = NodePath("MarginContainer/VBoxContainer/HBoxContainer/Button")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("3_6llw6")
+
+[node name="LineEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(138.195, 0)
+layout_mode = 2
+placeholder_text = "Name Folder"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Delete Folder"
+icon = ExtResource("4_wk4et")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_qd6ll")
+
+[node name="Follower" parent="MarginContainer/VBoxContainer/VBoxContainer2" instance=ExtResource("3_dnrm3")]
+visible = true
+layout_mode = 2

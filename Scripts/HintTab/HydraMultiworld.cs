@@ -10,7 +10,7 @@ namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 public class HydraMultiworld(string hash)
 {
     public string Hash = hash;
-    public string Name = "None";
+    public string Name = "Temporary (Unnamed) Multiworld";
     [JsonIgnore] public bool Changed;
     [JsonIgnore] public Dictionary<string, HintData> HintDatas = [];
     [JsonIgnore] public IEnumerable<Hint>? RawList = null;
@@ -20,10 +20,10 @@ public class HydraMultiworld(string hash)
 
     public string[] ItemOrder = [];
 
-    public string HintData_RW
+    public Hint[] HintData_RW
     {
-        get => string.Join('\n', HintDatas.Select(data => JsonConvert.SerializeObject(data.Value.RawHint)));
-        set => RawList = value.Split('\n').Select(JsonConvert.DeserializeObject<Hint>);
+        get => HintDatas.Select(data => data.Value.RawHint).ToArray();
+        set => RawList = value;
     }
 
     public void WorldChosen()

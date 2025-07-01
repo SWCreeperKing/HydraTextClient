@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://c18g2nqnmki1o"]
+
+[ext_resource type="Script" uid="uid://dastgbqpob8jl" path="res://Scripts/PrefabScripts/DragAndDropData.cs" id="1_nlvn2"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_5pqk3"]
+[ext_resource type="Texture2D" uid="uid://b3in73ey7sy5r" path="res://Assets/Images/UI/Adder.png" id="3_bd3kw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fq0cl"]
+
+[node name="Follower" type="PanelContainer"]
+visible = false
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fq0cl")
+script = ExtResource("1_nlvn2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 1
+theme = ExtResource("2_5pqk3")
+text = "+
++"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 2
+mouse_filter = 1
+texture = ExtResource("3_bd3kw")
+patch_margin_left = 4
+patch_margin_top = 4
+patch_margin_right = 4
+patch_margin_bottom = 4
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
