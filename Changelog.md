@@ -1,3 +1,9 @@
+# v.0.5.1
+
+- Global font size should now apply on startup
+- Fixed Controller input resetting text in the text client
+
+---
 # v.0.5
 
 - Some UI styling changes

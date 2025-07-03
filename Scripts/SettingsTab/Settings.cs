@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
@@ -7,7 +8,6 @@ public partial class Settings : Control
 {
     public static ItemFilterDialog ItemFilterDialog;
 
-    [Export] private Theme _Theme;
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
@@ -19,21 +19,21 @@ public partial class Settings : Control
 
     public override void _Ready()
     {
-        _ShowFoundHints.ButtonPressed = MainController.Data.ShowFoundHints;
+        _ShowFoundHints.ButtonPressed = Data.ShowFoundHints;
         _ShowFoundHints.Pressed += () =>
         {
-            MainController.Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
+            Data.ShowFoundHints = _ShowFoundHints.ButtonPressed;
             TextClientTab.TextClient.RefreshText = true;
         };
 
-        _AlwaysOnTop.ButtonPressed = MainController.Data.AlwaysOnTop;
-        _AlwaysOnTop.Pressed += () => MainController.SetAlwaysOnTop(_AlwaysOnTop.ButtonPressed);
+        _AlwaysOnTop.ButtonPressed = Data.AlwaysOnTop;
+        _AlwaysOnTop.Pressed += () => SetAlwaysOnTop(_AlwaysOnTop.ButtonPressed);
 
         ItemFilterDialog = _ItemFilter;
         var order = DataConstant.DefaultDict.Keys;
         foreach (var key in order)
         {
-            var setting = MainController.Data[key];
+            var setting = Data[key];
             var box = new HBoxContainer();
             var label = new Label();
             var picker = new ColorPickerButton();
@@ -43,39 +43,40 @@ public partial class Settings : Control
 
             box.AddThemeConstantOverride("separation", 15);
             label.Text = setting.SettingName;
-            label.Theme = _Theme;
+            label.Theme = GlobalTheme;
             picker.Color = setting;
             picker.Text = "Color Picker";
             picker.Name = key;
             var locKey = key;
             picker.PopupClosed += () =>
             {
-                MainController.Data[locKey] =
-                    new ColorSetting(MainController.Data[locKey].SettingName, picker.Color);
-                MainController.RefreshUIColors();
+                Data[locKey] =
+                    new ColorSetting(Data[locKey].SettingName, picker.Color);
+                RefreshUIColors();
             };
             _Buttons.Add(picker);
         }
 
-        _ExportColors.Pressed += () => DisplayServer.ClipboardSet(MainController.Data.Colors);
+        _ExportColors.Pressed += () => DisplayServer.ClipboardSet(Data.Colors);
         _ImportColors.Pressed += () =>
         {
-            MainController.Data.Colors = DisplayServer.ClipboardGet();
-            MainController.RefreshUIColors();
+            Data.Colors = DisplayServer.ClipboardGet();
+            RefreshUIColors();
             RefreshPickers();
         };
 
-        _GlobalUiSize.Value = MainController.Data.GlobalFontSize;
+        _GlobalUiSize.Value = Data.GlobalFontSize;
         _GlobalUiSize.ValueChanged += d => SetThemeFontSize((int)d);
+        SetThemeFontSize(Data.GlobalFontSize);
     }
 
     public void RefreshPickers()
     {
         foreach (var picker in _Buttons)
         {
-            picker.Color = MainController.Data[picker.Name];
+            picker.Color = Data[picker.Name];
         }
     }
 
-    public void SetThemeFontSize(int newSize) => MainController.Data.GlobalFontSize = _Theme.DefaultFontSize = newSize;
+    public void SetThemeFontSize(int newSize) => Data.GlobalFontSize = GlobalTheme.DefaultFontSize = newSize;
 }

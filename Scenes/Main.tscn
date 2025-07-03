@@ -79,9 +79,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 2
+current_tab = 0
 script = ExtResource("4_0sclb")
 Controls = {
+"HintsTab": NodePath("Hints"),
+"Utilities": NodePath("Utilities"),
 "hints/organizer/split": NodePath("Hints/Hint Organizer"),
 "items_and_locations/split": NodePath("Utilities/Items and Locations"),
 "login/foldable/extra": NodePath("Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"),
@@ -91,7 +93,6 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -604,14 +605,14 @@ theme_override_font_sizes/font_size = 12
 text = "Message History:"
 
 [node name="Hints" type="TabContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-current_tab = 1
+current_tab = 0
 metadata/_tab_index = 2
 
 [node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
@@ -682,6 +683,7 @@ _HintChangerWindow = NodePath("../../../../../../Window")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
 [node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" node_paths=PackedStringArray("_InventoryContainer", "_Folder")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

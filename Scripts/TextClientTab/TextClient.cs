@@ -103,6 +103,8 @@ public partial class TextClient : VBoxContainer
         {
             if (_SentMessages.Count == 0 || input is InputEventMouseMotion) return;
             if (input is InputEventMouseButton iemb && GetRect().HasPoint(iemb.Position)) return;
+            if (input is InputEventJoypadMotion) return;
+            if (input is InputEventJoypadButton) return;
             if (input is not InputEventKey key)
             {
                 if (_ScrollBackNum != -1) return;
