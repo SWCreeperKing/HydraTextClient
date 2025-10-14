@@ -1,3 +1,16 @@
+# Where to make a Location Checklist
+
+0. Make a multiworld that has the game you want to make a checklist for
+1. Go to the Utilities -> Location Checklist tab
+2. Make sure the game you want is selected, if not then unselect and change it
+3. Click Create preset
+4. Fill out the info and click Create
+5. Click Edit Preset
+6. When you are done editing click Save & Go back
+7. Finally open preset
+
+Checklist items are turned green when gotten, red if missing
+
 # How to make a Location Checklist
 
 ## Autocomplete
