@@ -4,6 +4,7 @@ using System.Linq;
 using Archipelago.MultiClient.Net.DataPackage;
 using Archipelago.MultiClient.Net.Helpers;
 using CreepyUtil.Archipelago;
+using CreepyUtil.Archipelago.ApClient;
 using Godot;
 
 namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
@@ -24,14 +25,10 @@ public partial class HintManager : SplitContainer
 
     public void RegisterPlayer(ApClient client)
     {
-        var itemReceivedResolver = (ReceivedItemsHelper)client.Session.Items;
-        var itemResolver = (ItemInfoResolver)itemReceivedResolver.itemInfoResolver;
-        var cache = ((DataPackageCache)itemResolver.cache).inMemoryCache.ToDictionary(kv => kv.Key,
-            kv => (GameDataLookup)kv.Value);
-        var largeCache = cache[client.PlayerGames[client.PlayerSlot]];
-        var items = largeCache.Items.Select(kv => kv.Key);
-        var locations = largeCache.Locations
-                                  .Where(kv => client.Session.Locations.AllMissingLocations.Contains(kv.Value));
+        var items = client.Items.Select(kv => kv.Key);
+        var locations = client.Locations
+                                  .Where(kv => client.MissingLocations.Contains(kv.Key));
+        
         SetupBoxes(items, client, _HintSenderBoxes, false, _HintSender);
         SetupBoxes(locations.Select(kv => kv.Key), client, _HintLocationSenderBoxes, true, _HintLocationSender);
     }

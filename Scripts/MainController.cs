@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
+using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
@@ -9,6 +11,7 @@ using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 using CreepyUtil.Archipelago;
+using CreepyUtil.Archipelago.ApClient;
 using CreepyUtil.DiscordRpc;
 using Godot;
 using Newtonsoft.Json;
@@ -45,8 +48,8 @@ public partial class MainController : Control
     public static string LastLocationChecked = null;
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
-    private static readonly Dictionary<string, Dictionary<long, string>> ItemIdToName = [];
-    private static readonly Dictionary<string, Dictionary<long, string>> LocationIdToName = [];
+    private static readonly Dictionary<string, TwoWayLookup<long, string>> ItemIdToName = [];
+    private static readonly Dictionary<string, TwoWayLookup<long, string>> LocationIdToName = [];
     private static bool _UpdateHints;
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
@@ -253,15 +256,10 @@ public partial class MainController : Control
         var game = PlayerGames[playerSlot];
         if (!ItemIdToName.TryGetValue(game, out var itemNameDict))
         {
-            ItemIdToName[game] = itemNameDict = new Dictionary<long, string>();
+            GetLookups(game, out _, out itemNameDict);
         }
 
-        if (!itemNameDict.TryGetValue(id, out var itemName))
-        {
-            itemName = ItemIdToName[game][id] = ActiveClients[0].Session.Items.GetItemName(id, game);
-        }
-
-        return itemName;
+        return itemNameDict[id];
     }
 
     public static string LocationIdToLocationName(long id, int playerSlot)
@@ -269,25 +267,26 @@ public partial class MainController : Control
         var game = PlayerGames[playerSlot];
         if (!LocationIdToName.TryGetValue(game, out var locNameDict))
         {
-            LocationIdToName[game] = locNameDict = new Dictionary<long, string>();
+            GetLookups(game, out locNameDict, out _);
         }
 
-        if (!locNameDict.TryGetValue(id, out var location))
-        {
-            location = locNameDict[id] =
-                ActiveClients[0].Session.Locations.GetLocationNameFromId(id, game);
-        }
+        return locNameDict[id];
+    }
 
-        return location;
+    public static void GetLookups(string game, out TwoWayLookup<long, string> locations, out TwoWayLookup<long, string> items)
+    {
+        ActiveClients[0].GetLookups(game, out locations, out items);
+        LocationIdToName[game] = locations;
+        ItemIdToName[game] = items;
     }
 
     public void ConnectClient(ApClient client)
     {
         if (ActiveClients.Contains(client)) return;
 
-        if (ChosenTextClient is not null && !client.Session.ConnectionInfo.Tags.Contains("NoText"))
+        if (ChosenTextClient is not null && !client.Tags[ArchipelagoTag.NoText])
         {
-            client.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly", "NoText"]);
+            client.Tags.SetTags(ArchipelagoTag.TextOnly, ArchipelagoTag.NoText);
         }
 
         ChosenTextClient ??= client;
@@ -308,7 +307,7 @@ public partial class MainController : Control
             Players = client.PlayerNames;
         }
 
-        client.Session.Locations.CheckedLocationsUpdated += locations
+        client.CheckedLocationsUpdated += locations
             => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
         PlayerSlots.Add(client.PlayerSlot, client.PlayerName);
         ActiveClients.Add(client);
@@ -345,7 +344,7 @@ public partial class MainController : Control
         else if (ChosenTextClient is null)
         {
             ChosenTextClient = ActiveClients[0];
-            ChosenTextClient!.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
+            ChosenTextClient!.Tags.SetTags(ArchipelagoTag.TextOnly);
         }
 
         _HintManager.UnregisterPlayer(client);
@@ -370,7 +369,7 @@ public partial class MainController : Control
 
     public static void SetupPlayerList(ApClient client)
     {
-        client.OnPlayerStateChanged += (_, slot) =>
+        client.OnPlayerStateChanged += slot =>
         {
             Datas[slot].SetPlayerStatus(client.PlayerStates[slot]);
             RefreshUI = true;
@@ -496,7 +495,7 @@ public partial class MainController : Control
     {
         if (ActiveClients.Count == 0) return "Not loaded";
         var name = ActiveClients[0].PlayerNames[slot];
-        var alias = ActiveClients[0].Session.Players.AllPlayers.ElementAt(slot).Alias.Clean().Replace($" ({name})", "");
+        var alias = ActiveClients[0].GetAlias(slot)!.Replace($" ({name})", "").Clean();
         return !additionalInfo
             ? GetAliasFormated(alias, name)
             : $"[hint=\"Name: {name}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";

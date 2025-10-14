@@ -78,9 +78,9 @@ public partial class MultiworldName : VBoxContainer
     public void LoadName()
     {
         if (CurrentWorld is not null) return;
-        var info = ActiveClients[0].Session.RoomState;
+        var info = ActiveClients[0].RoomState;
         var uuid =
-            $"{info.Seed}{string.Join(",", ActiveClients[0].Session.Players.AllPlayers.Select(player => $"{player.Slot}{player.Name}{player.Game}"))}";
+            $"{info.Seed}{string.Join(",", ActiveClients[0].AllPlayers.Select(player => $"{player.Slot}{player.Name}{player.Game}"))}";
         uuid = string.Join(",", SHA256.HashData(Encoding.UTF8.GetBytes(uuid)));
 
         if (AllWorldsHash.TryGetValue(uuid, out CurrentWorld))

@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using CreepyUtil.Archipelago;
+using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.TextClientTab.TextClient;
+using static CreepyUtil.Archipelago.ArchipelagoTag;
 
 namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
@@ -32,7 +34,7 @@ public partial class SlotClient : Control
         if (IsRunning is null) NullTimer += delta;
         else NullTimer = 0;
         
-        if ( NullTimer >= 30 && Client?.Session?.Socket is null)
+        if (NullTimer >= 30 && !Client.IsConnected)
         {
             NullTimer = 0;
             IsRunning = false;
@@ -67,7 +69,7 @@ public partial class SlotClient : Control
         SlotTable.RefreshUI = true;
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
-        string[] tags = ChosenTextClient is null ? ["TextOnly"] : ["TextOnly", "NoText"];
+        ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly] : [TextOnly, NoText];
 
         Task.Run(() =>
         {
@@ -76,7 +78,7 @@ public partial class SlotClient : Control
                 string[] error;
                 lock (Client)
                 {
-                    error = Client.TryConnect(login, 0, "", ItemsHandlingFlags.NoItems, tags: tags);
+                    error = Client.TryConnect(login,  "", ItemsHandlingFlags.NoItems, tags: tags);
                 }
 
                 if (error is not null && error.Length > 0)
@@ -137,16 +139,16 @@ public partial class SlotClient : Control
             GD.Print("============================================================");
         };
 
-        Client.OnHintPrintJsonPacketReceived += (_, packet)
+        Client.OnHintPrintJsonPacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, isHint: true, copyText: packet.GetCopy()));
 
-        Client.OnChatPrintPacketReceived += (_, packet)
+        Client.OnChatPrintPacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, chatPrintJsonPacket: packet));
 
-        Client.OnServerMessagePacketReceived += (_, packet)
+        Client.OnServerMessagePacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, isServer: true));
 
-        Client.OnItemLogPacketReceived += (_, packet) =>
+        Client.OnItemLogPacketReceived += packet =>
         {
             var playerSlot = int.Parse(packet.Data[0].Text);
             if (playerSlot == ChosenTextClient.PlayerSlot)
@@ -159,7 +161,7 @@ public partial class SlotClient : Control
                 copyText: packet.Data.GetItemLogCopy()));
         };
 
-        Client.OnConnectionLost += (_, _) => { ConnectionFailed(["Lost Connection to Server"]); };
+        Client.OnConnectionLost += () => { ConnectionFailed(["Lost Connection to Server"]); };
 
         Main.ConnectClient(Client);
         SlotTable.RefreshUI = true;

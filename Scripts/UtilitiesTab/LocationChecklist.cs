@@ -53,7 +53,7 @@ public partial class LocationChecklist : TabContainer
             if (GameChoices.Length != 0) return;
             GameChoices = client.PlayerGames.Skip(1).ToHashSet().Order().ToArray();
             foreach (var game in GameChoices) _Games.AddItem(game);
-            _Games.Selected = GameChoices.ToList().IndexOf(client.Session.Players.ActivePlayer.Game);
+            _Games.Selected = GameChoices.ToList().IndexOf(client.PlayerGames[client.PlayerSlot]);
             ToggleGame();
         };
 
@@ -129,11 +129,7 @@ public partial class LocationChecklist : TabContainer
             _Button.Text = "Unselect Game";
             _Right.Visible = true;
 
-            var client = ActiveClients[0];
-            var itemReceivedResolver = (ReceivedItemsHelper)client.Session.Items;
-            var itemResolver = (ItemInfoResolver)itemReceivedResolver.itemInfoResolver;
-            var cache = ((DataPackageCache)itemResolver.cache).inMemoryCache[CurrentGame];
-            LocationEdit.GameLocations = cache.Locations.Select(kv => kv.Key).ToArray();
+            LocationEdit.GameLocations = ActiveClients[0].Locations.Select(kv => kv.Key).ToArray();
 
             LoadGame();
         }

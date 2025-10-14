@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using CreepyUtil.Archipelago;
+using CreepyUtil.Archipelago.ApClient;
 using Godot;
 
 namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;

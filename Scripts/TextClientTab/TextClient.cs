@@ -7,6 +7,7 @@ using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using CreepyUtil.Archipelago;
+using CreepyUtil.Archipelago.ApClient;
 using Godot;
 using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
@@ -171,10 +172,10 @@ public partial class TextClient : VBoxContainer
             }
 
             LastLocationChecked = null;
-            ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly", "NoText"]);
+            _ = ChosenTextClient.Tags + ArchipelagoTag.NoText;
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
-            ChosenTextClient.Session.ConnectionInfo.UpdateConnectionOptions(["TextOnly"]);
+            _ = ChosenTextClient.Tags - ArchipelagoTag.NoText;
             SelectedClientChangedEvent?.Invoke(ChosenTextClient);
             _LastSelected = l;
         };

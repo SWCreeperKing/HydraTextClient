@@ -3,7 +3,7 @@
 - Fixed bug preventing hydra from working correctly on:
   - Earlier windows than Windows 11 build 25324
   - Earlier linux than OpenSSL 1.1.1
-  - ALL SAVED MULTIWORLDS WILL BREAK, i very much to apologize 
+  - ALL SAVED MULTIWORLDS WILL BREAK, i very much do apologize 
 
 ---
 # v.0.5.1

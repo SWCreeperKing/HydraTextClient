@@ -97,9 +97,6 @@ public partial class LocationTree : Tree
         var chosen = MainController.ChosenTextClient;
         
         CurrentClient.Text = $"Current Client: [{chosen.PlayerName}]";
-        var missing = chosen.Session.Locations.AllMissingLocations.Select(l => chosen.LocationIdToLocationName(l, chosen.PlayerSlot)).ToArray();
-        // var missingNormal = missing.Select(v => v.LocationName).ToArray();
-        // var missingDisplay = missing.Select(v => v.LocationDisplayName).ToArray();
 
         foreach (var (loc, items) in Locations)
         {
@@ -110,7 +107,7 @@ public partial class LocationTree : Tree
                 // if (newLocations.Contains(loc)) missing = false;
                 // GD.Print($"[{loc}] [{missingNormal.Contains(loc)}] [{missingDisplay.Contains(loc)}] [{newLocations.Contains(loc)}]");
                 // GD.Print($"[{loc}] [{missing.Contains(loc)}] [{newLocations.Contains(loc)}]");
-                item.SetCustomColor(0, missing.Contains(loc) && !newLocations.Contains(loc) ? Colors.Red : Colors.Green);
+                item.SetCustomColor(0, chosen.MissingLocations.Contains(loc) && !newLocations.Contains(loc) ? Colors.Red : Colors.Green);
             }
         }
     }

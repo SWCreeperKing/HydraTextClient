@@ -536,8 +536,7 @@ public static class RichPresenceController
         {
             if (ActiveClients.Count == 0) return "";
             var client = ChosenTextClient;
-            var locations = client.Session.Locations;
-            return $"In the Multiworld ({locations.AllLocationsChecked.Count} / {locations.AllLocations.Count})";
+            return $"In the Multiworld ({client.LocationsCheckedCount} / {client.LocationCount})";
         };
 
         DiscordIntegration.LargeImage = () =>
