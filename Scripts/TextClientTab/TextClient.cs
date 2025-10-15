@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ using Godot;
 using static System.StringComparison;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
+using static ArchipelagoMultiTextClient.Scripts.TextClientTab.MessageSender;
 
 namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 
@@ -55,9 +57,7 @@ public partial class TextClient : VBoxContainer
     private bool _WasLastMessageHintLocation = false;
     private string _HeldText;
 
-    public delegate void SelectedClientChangedHandler(ApClient client);
-
-    public static SelectedClientChangedHandler? SelectedClientChangedEvent;
+    public static event Action<ApClient>? SelectedClientChangedEvent;
 
     public override void _Ready()
     {
@@ -172,10 +172,10 @@ public partial class TextClient : VBoxContainer
             }
 
             LastLocationChecked = null;
-            _ = ChosenTextClient.Tags + ArchipelagoTag.NoText;
+            ChosenTextClient.Tags.SetTags(ArchipelagoTag.TextOnly, ArchipelagoTag.NoText);
             ChosenTextClient = null;
             ChosenTextClient = ActiveClients[(int)l];
-            _ = ChosenTextClient.Tags - ArchipelagoTag.NoText;
+            ChosenTextClient.Tags.SetTags(ArchipelagoTag.TextOnly, ArchipelagoTag.DeathLink, ArchipelagoTag.TrapLink);
             SelectedClientChangedEvent?.Invoke(ChosenTextClient);
             _LastSelected = l;
         };
@@ -271,13 +271,13 @@ public partial class TextClient : VBoxContainer
         {
             Messages.TryDequeue(out var message);
 
-            if (message.IsItemLog) MultiworldName.CurrentWorld.ItemLogItemReceived(message.MessageParts);
+            if (message.Sender == ItemLog) MultiworldName.CurrentWorld.ItemLogItemReceived(message.MessageParts);
             if (!Filter(message, _WasLastMessageHintLocation, out _WasLastMessageHintLocation)) continue;
 
             _ToScroll = _VScrollBar.Value >= _VScrollBar.MaxValue - _ScrollContainer.Size.Y;
             _Both.Enqueue(message);
 
-            if (message.IsItemLog) _ItemLog.Enqueue(message);
+            if (message.Sender == ItemLog) _ItemLog.Enqueue(message);
             else _ChatMessages.Enqueue(message);
 
             if (message.IsHintRequest) HintRequest = true;
@@ -328,9 +328,9 @@ public partial class TextClient : VBoxContainer
             isHintLocation = split[1].StartsWith("!hint_location ", CurrentCultureIgnoreCase);
         }
 
-        if (message.IsHint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
+        if (message.Sender == MessageSender.Hint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
             !Data.ShowFoundHints && !wasHintLocation) return false;
-        if (!message.IsItemLog) return true;
+        if (message.Sender != ItemLog) return true;
 
         if (Data.ItemLogOptions[4] &&
             !message.MessageParts.Any(part => ActiveClients.Any(client => client.PlayerSlot == part.Player)))
@@ -395,20 +395,26 @@ public partial class TextClient : VBoxContainer
     public void MetaClicked(string meta) { }
 }
 
+public enum MessageSender
+{
+    None,
+    ItemLog,
+    Server,
+    Hint,
+    DeathLink,
+    TrapLink
+}
+
 public readonly struct ClientMessage(
-    JsonMessagePart[] messageParts,
-    bool isItemLog = false,
-    bool isServer = false,
+    JsonMessagePart[] messageParts, MessageSender sender = None,
     ChatPrintJsonPacket chatPrintJsonPacket = null,
-    bool isHint = false,
     string copyText = null)
 {
-    public readonly bool IsItemLog = isItemLog;
-    public readonly bool IsServer = isServer;
-    public readonly bool IsHint = isHint;
+    public readonly MessageSender Sender = sender; 
     public readonly JsonMessagePart[] MessageParts = messageParts;
     public readonly ChatPrintJsonPacket ChatPacket = chatPrintJsonPacket;
     public readonly string CopyText = copyText;
+    public readonly string TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
 
     public readonly bool IsHintRequest =
         chatPrintJsonPacket is not null && chatPrintJsonPacket.Message.StartsWith("!hint");
@@ -417,35 +423,47 @@ public readonly struct ClientMessage(
     {
         string color;
         var copyId = TextClient.CopyList.Count;
+        
+        StringBuilder messageBuilder = new();
+        messageBuilder.Append($"[color=darkgray]{TimeStamp}[/color] ");
+        
         if (ChatPacket is not null)
         {
             color = PlayerColor(ChatPacket.Slot);
             TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot)}: {ChatPacket.Message}");
-            return
-                $"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}";
+            messageBuilder.Append($"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}");
+            return messageBuilder.ToString();
         }
 
-        StringBuilder messageBuilder = new();
-
-        if (IsServer)
+        switch (Sender)
         {
-            messageBuilder.Append(
-                $"[color={Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
-        }
-
-        if (IsItemLog)
-        {
-            var fontSize = Data.FontSizes["text_client"];
-            var copyStyle = Data.ItemLogStyle switch
+            case Server:
+                messageBuilder.Append(
+                    $"[color={Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
+                break;
+            case DeathLink:
+                messageBuilder.Append(
+                    $"[color={Data["item_trap"].Hex}][url=\"{copyId}\"]DeathLink[/url][/color]: ");
+                break;
+            case TrapLink:
+                messageBuilder.Append(
+                    $"[color={Data["item_trap"].Hex}][url=\"{copyId}\"]TrapLink[/url][/color]: ");
+                break;
+            case ItemLog:
             {
-                0 => "",
-                1 => $"[img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img]",
-                2 => "[Copy] "
-            };
+                var fontSize = Data.FontSizes["text_client"];
+                var copyStyle = Data.ItemLogStyle switch
+                {
+                    0 => "",
+                    1 => $"[img={fontSize}x{fontSize}]res://Assets/Images/UI/Copy.png[/img]",
+                    2 => "[Copy] "
+                };
 
-            messageBuilder.Append(
-                $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}[/url][/hint] ");
-            TextClient.CopyList.Add(CopyText);
+                messageBuilder.Append(
+                    $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}[/url][/hint] ");
+                TextClient.CopyList.Add(CopyText);
+                break;
+            }
         }
 
         for (var i = 0; i < MessageParts.Length; i++)
@@ -489,7 +507,7 @@ public readonly struct ClientMessage(
                 default:
                     var text = (part.Text ?? "").Clean();
 
-                    if (IsHint && i == 0)
+                    if (Sender is MessageSender.Hint && i == 0)
                     {
                         messageBuilder.Append($"[url=\"{copyId}\"][Hint][/url]: ");
                         TextClient.CopyList.Add(CopyText);
@@ -497,7 +515,7 @@ public readonly struct ClientMessage(
                     }
 
                     messageBuilder.Append(text);
-                    if (IsServer)
+                    if (Sender is Server)
                     {
                         TextClient.CopyList.Add(text);
                     }
@@ -550,7 +568,7 @@ public readonly struct ClientMessage(
                 Type = JsonMessagePartType.HintStatus,
                 HintStatus = hint.Status
             }
-        ], isHint: true, copyText: hint.GetCopy());
+        ], MessageSender.Hint, copyText: hint.GetCopy());
 }
 
 public static class TextHelper

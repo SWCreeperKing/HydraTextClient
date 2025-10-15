@@ -108,29 +108,46 @@ public partial class HintTable : TextTable
 
         var orderedHints =
             MultiworldName.CurrentWorld.HintDatas.Values.Where(hint => hint.HintStatus switch
-                  {
-                      Found => _ShowFound.ButtonPressed,
-                      Unspecified => _ShowUnspecified.ButtonPressed,
-                      NoPriority => _ShowNoPriority.ButtonPressed,
-                      Avoid => _ShowAvoid.ButtonPressed,
-                      Priority => _ShowPriority.ButtonPressed,
-                      _ => false
-                  })
-                 .Where(hint => !Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
-                                filter.ShowInHintsTable)
-                 .OrderBy(hint => hint.LocationId);
+                           {
+                               Found => _ShowFound.ButtonPressed,
+                               Unspecified => _ShowUnspecified.ButtonPressed,
+                               NoPriority => _ShowNoPriority.ButtonPressed,
+                               Avoid => _ShowAvoid.ButtonPressed,
+                               Priority => _ShowPriority.ButtonPressed,
+                               _ => false
+                           })
+                          .Where(hint => !Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
+                                         filter.ShowInHintsTable)
+                          .OrderBy(hint => hint.LocationId);
 
-        orderedHints = SortOrder.Aggregate(orderedHints, (current, option) => option.Name switch
+        if (SortOrder.Count > 0)
         {
-            "Receiving Player" => Order(current, hint => GetOrderSlot(hint.ReceivingPlayerSlot), option.IsDescending),
-            "Item" => Order(current, hint => SortNumber(hint.ItemFlags), option.IsDescending),
-            "Finding Player" => Order(current, hint => GetOrderSlot(hint.FindingPlayerSlot), option.IsDescending),
-            "Priority" => Order(current, hint => HintStatusNumber[hint.HintStatus], option.IsDescending),
-            _ => current
-        });
+            orderedHints = SortingOrder(orderedHints, SortOrder[0], true);
+        }
+        
+        if (SortOrder.Count > 1)
+        {
+            orderedHints = SortOrder.Skip(1)
+                                    .Aggregate(orderedHints, (current, option) => SortingOrder(current, option));
+        }
 
         UpdateData(orderedHints.Select(hint => hint.GetData()).ToList());
         RefreshUI = false;
+        return;
+
+        IOrderedEnumerable<HintData> SortingOrder(IOrderedEnumerable<HintData> current, SortObject option,
+            bool isFirst = false)
+        {
+            return option.Name switch
+            {
+                "Receiving Player" => Order(current, hint => GetOrderSlot(hint.ReceivingPlayerSlot),
+                    option.IsDescending, isFirst),
+                "Item" => Order(current, hint => SortNumber(hint.ItemFlags), option.IsDescending, isFirst),
+                "Finding Player" => Order(current, hint => GetOrderSlot(hint.FindingPlayerSlot), option.IsDescending,
+                    isFirst),
+                "Priority" => Order(current, hint => HintStatusNumber[hint.HintStatus], option.IsDescending, isFirst),
+            };
+        }
     }
 
     public override string GetColumnText(string columnText, int columnNum)
@@ -150,10 +167,17 @@ public partial class HintTable : TextTable
     }
 
     public IOrderedEnumerable<HintData> Order(IOrderedEnumerable<HintData> arr, Func<HintData, int> compare,
-        bool descending)
-        => !descending ? arr.OrderBy(compare) : arr.OrderByDescending(compare);
+        bool descending, bool first)
+    {
+        if (first) return !descending ? arr.OrderBy(compare) : arr.OrderByDescending(compare);
+        return !descending ? arr.ThenBy(compare) : arr.ThenByDescending(compare);
+    }
 
-    public int GetOrderSlot(int slot) => PlayerSlots.ContainsKey(slot) ? Players.Length + slot : slot;
+    public int GetOrderSlot(int slot)
+    {
+        if (ActiveClients.Any(client => client.PlayerSlot == slot)) return 3;
+        return ClientList.ContainsKey(ActiveClients[0].PlayerNames[slot]) ? 2 : 1;
+    }
 
     public static int SortNumber(ItemFlags flags)
     {

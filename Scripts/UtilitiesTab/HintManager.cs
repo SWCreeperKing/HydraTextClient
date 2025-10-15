@@ -11,6 +11,8 @@ namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 
 public partial class HintManager : SplitContainer
 {
+    public static bool RefreshUI;
+    
     [Export] private VBoxContainer _HintSender;
     [Export] private VBoxContainer _HintLocationSender;
     [Export] private PackedScene _PlayerBox;
@@ -54,7 +56,7 @@ public partial class HintManager : SplitContainer
             else hintButton.Pressed += () => HintItem(item, client);
 
             hintButton.Text = item;
-
+            
             playerBox.AddNode(hintButton, true);
             buttons.Add(hintButton);
         }

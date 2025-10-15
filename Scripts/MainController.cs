@@ -80,7 +80,9 @@ public partial class MainController : Control
         HintStatuses.ToDictionary(hs => hs, hs => Enum.GetName(hs)!);
 
     public delegate void SaveHandler();
+
     public delegate void ClientConnectHandler(ApClient client);
+
     public delegate void ClientDisconnectHandler(ApClient client);
 
     public static event SaveHandler OnSave;
@@ -273,7 +275,8 @@ public partial class MainController : Control
         return locNameDict[id];
     }
 
-    public static void GetLookups(string game, out TwoWayLookup<long, string> locations, out TwoWayLookup<long, string> items)
+    public static void GetLookups(string game, out TwoWayLookup<long, string> locations,
+        out TwoWayLookup<long, string> items)
     {
         ActiveClients[0].GetLookups(game, out locations, out items);
         LocationIdToName[game] = locations;
@@ -295,6 +298,7 @@ public partial class MainController : Control
         {
             Clear();
             SetupPlayerList(client);
+            Inventory.RefreshUI = true;
         }
 
         if (PlayerGames.Length == 0)
@@ -309,7 +313,19 @@ public partial class MainController : Control
 
         client.CheckedLocationsUpdated += locations
             => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
-        PlayerSlots.Add(client.PlayerSlot, client.PlayerName);
+
+        client.ExcludeBouncedPacketsFromSelf = false;
+        client.OnDeathLinkPacketReceived += (source, cause) =>
+        {
+            TextClient.Messages.Enqueue(new ClientMessage([new JsonMessagePart{Text = $"[{source}] [{cause}]"}], MessageSender.DeathLink));
+        };
+
+        client.OnUnregisteredTrapLinkReceived += (source, trap) =>
+        {
+            TextClient.Messages.Enqueue(new ClientMessage([new JsonMessagePart{Text = $"[{source}] sent a [{trap}]"}], MessageSender.TrapLink));
+        };
+
+        PlayerSlots[client.PlayerSlot] = client.PlayerName;
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
@@ -344,11 +360,12 @@ public partial class MainController : Control
         else if (ChosenTextClient is null)
         {
             ChosenTextClient = ActiveClients[0];
-            ChosenTextClient!.Tags.SetTags(ArchipelagoTag.TextOnly);
+            ChosenTextClient!.Tags.SetTags(ArchipelagoTag.TextOnly, ArchipelagoTag.DeathLink, ArchipelagoTag.TrapLink);
         }
 
         _HintManager.UnregisterPlayer(client);
         HintsMap.Remove(client);
+        Inventory.ClearItems(client.PlayerName);
         RefreshUIColors();
     }
 
@@ -483,6 +500,7 @@ public partial class MainController : Control
         RefreshUI = true;
         ItemFilterer.RefreshUI = true;
         _UpdateHints = true;
+        Inventory.RefreshUI = true;
     }
 
     public static void Save()

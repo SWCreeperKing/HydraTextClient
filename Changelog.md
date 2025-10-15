@@ -1,3 +1,9 @@
+# v0.5.3
+
+- Fixed sorting hints
+- Added an inventory tab in Utilities
+
+---
 # v.0.5.2
 
 - Fixed bug preventing hydra from working correctly on:

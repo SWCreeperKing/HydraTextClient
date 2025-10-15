@@ -1,4 +1,5 @@
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using Godot;
 
 namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
@@ -32,6 +33,9 @@ public partial class ItemFilterDialog : ConfirmationDialog
 
     public string GetMetaString(string itemName, string gameName, long itemId, ItemFlags flags)
         => $"itemdialog{itemName}&-&{gameName}&-&{itemId}&-&{(int)flags}".Replace("\"", "'");
+    
+    public string GetMetaString(ItemInfo info)
+        => $"itemdialog{info.ItemName}&-&{info.ItemGame}&-&{info.ItemId}&-&{(int)info.Flags}".Replace("\"", "'");
 
     public void SetItem(string meta)
     {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
 [ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/SettingsTab/ItemFilterer.cs" id="14_346fj"]
 [ext_resource type="PackedScene" uid="uid://dv1anbejmu0kq" path="res://Scenes/Prefabs/DragFollowerFolder.tscn" id="14_c4ay3"]
+[ext_resource type="Script" uid="uid://b66qk4ty0f4ya" path="res://Scripts/UtilitiesTab/Inventory.cs" id="15_kpo4j"]
 [ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/SettingsTab/ItemFilterDialog.cs" id="16_2w5on"]
 [ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintTab/HintChangerWindow.cs" id="16_erwvk"]
 [ext_resource type="Script" uid="uid://c1cij5n7j52qj" path="res://Scripts/UtilitiesTab/LocationChecklist.cs" id="17_3tgeq"]
@@ -51,7 +52,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "v.0.5.2"
+_Version = "v.0.5.3"
 _UITheme = ExtResource("4_erwvk")
 _AddressField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
@@ -79,7 +80,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 0
+current_tab = 3
 script = ExtResource("4_0sclb")
 Controls = {
 "HintsTab": NodePath("Hints"),
@@ -93,6 +94,7 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -743,12 +745,27 @@ mouse_filter = 1
 title = "No Multiworld Selected"
 
 [node name="Utilities" type="TabContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 3
 
+[node name="Inventory" type="MarginContainer" parent="TabContainer/Utilities"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+metadata/_tab_index = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Utilities/Inventory"]
+layout_mode = 2
+bbcode_enabled = true
+script = ExtResource("15_kpo4j")
+_Columns = Array[String](["Count", "Item"])
+
 [node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -758,7 +775,7 @@ _HintSender = NodePath("MarginContainer/ScrollContainer/VBoxContainer")
 _HintLocationSender = NodePath("MarginContainer2/ScrollContainer2/VBoxContainer2")
 _PlayerBox = ExtResource("7_grg3l")
 _SendHintConfirmation = NodePath("../../../Hint")
-metadata/_tab_index = 0
+metadata/_tab_index = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations"]
 layout_mode = 2
@@ -812,7 +829,7 @@ theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
-metadata/_tab_index = 1
+metadata/_tab_index = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Location Checklist"]
 layout_mode = 2
