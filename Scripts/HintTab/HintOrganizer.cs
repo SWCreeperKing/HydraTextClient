@@ -92,22 +92,20 @@ public partial class HintOrganizer : HSplitContainer
     public void GenerateNames(HintData data, out string normalName, out string squareName)
     {
         var receivingPlayerColor = PlayerColor(data.ReceivingPlayerSlot).Hex;
-        var metaString = ItemFilterDialog.GetMetaString(data.Item, PlayerGames[data.ReceivingPlayerSlot], data.ItemId,
-            data.ItemFlags);
-        var itemColor = GetItemHexColor(data.ItemFlags, metaString);
-        var itemBgColor = GetItemHexBgColor(data.ItemFlags, metaString);
+        var item = FormatItemColor(data.Item, PlayerGames[data.ReceivingPlayerSlot], data.ItemId, data.ItemFlags,
+            false);
         var locationColor = Data["location"].Hex;
         var entranceColor = Data[data.Entrance == "Vanilla" ? "entrance_vanilla" : "entrance"].Hex;
 
         squareName = $"""
                       [color={receivingPlayerColor}]{data.ReceivingPlayer}[/color]'s
 
-                      [bgcolor={itemBgColor}][color={itemColor}]{data.Item}[/color][/bgcolor]
+                      {item}
                       """;
 
         normalName =
             $"""
-             [color={receivingPlayerColor}]{data.ReceivingPlayer}[/color]'s [bgcolor={itemBgColor}][color={itemColor}]{data.Item}[/color][/bgcolor] is at [color={locationColor}]{data.Location}[/color]
+             [color={receivingPlayerColor}]{data.ReceivingPlayer}[/color]'s {item} is at [color={locationColor}]{data.Location}[/color]
                - [color={entranceColor}]{data.Entrance}[/color]
              """;
     }

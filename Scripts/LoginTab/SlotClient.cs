@@ -255,7 +255,7 @@ public partial class SlotClient : Control
                 : source;
             var playerId = Array.IndexOf(ChosenTextClient.PlayerNames, player);
             JsonMessagePart playerPart = new() { Text = playerId == -1 ? source : $"{playerId}" };
-            if (playerId == -1)
+            if (playerId != -1)
             {
                 playerPart.Type = JsonMessagePartType.PlayerId;
             }

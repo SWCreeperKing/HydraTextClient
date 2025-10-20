@@ -185,7 +185,7 @@ public partial class TextClient : VBoxContainer
             var s = (string)meta;
             if (s.StartsWith("itemdialog"))
             {
-                ItemFilterDialog.SetItem(s);
+                SetAndShowItemFilterDialogue(s);
                 return;
             }
 
@@ -409,11 +409,12 @@ public enum MessageSender
 }
 
 public readonly struct ClientMessage(
-    JsonMessagePart[] messageParts, MessageSender sender = None,
+    JsonMessagePart[] messageParts,
+    MessageSender sender = None,
     ChatPrintJsonPacket chatPrintJsonPacket = null,
     string copyText = null)
 {
-    public readonly MessageSender Sender = sender; 
+    public readonly MessageSender Sender = sender;
     public readonly JsonMessagePart[] MessageParts = messageParts;
     public readonly ChatPrintJsonPacket ChatPacket = chatPrintJsonPacket;
     public readonly string CopyText = copyText;
@@ -426,15 +427,16 @@ public readonly struct ClientMessage(
     {
         string color;
         var copyId = TextClient.CopyList.Count;
-        
+
         StringBuilder messageBuilder = new();
         messageBuilder.Append($"[color=darkgray]{TimeStamp}[/color] ");
-        
+
         if (ChatPacket is not null)
         {
             color = PlayerColor(ChatPacket.Slot);
             TextClient.CopyList.Add($"{GetAlias(ChatPacket.Slot)}: {ChatPacket.Message}");
-            messageBuilder.Append($"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}");
+            messageBuilder.Append(
+                $"[color={color}][url=\"{copyId}\"]{GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}");
             return messageBuilder.ToString();
         }
 
@@ -504,13 +506,8 @@ public readonly struct ClientMessage(
                     var itemId = long.Parse(part.Text);
                     var game = PlayerGames is null ? "Unknown" :
                         PlayerGames.Length <= part.Player!.Value ? "Unknown" : PlayerGames[part.Player!.Value];
-                    var item = ItemIdToItemName(itemId, part.Player!.Value);
-                    var flags = part.Flags!.Value;
-                    var metaString = ItemFilterDialog.GetMetaString(item, game, itemId, flags);
-                    color = GetItemHexColor(flags, metaString);
-                    var bgColor = GetItemHexBgColor(flags, metaString);
-                    messageBuilder.Append(
-                        $"[bgcolor={bgColor}][color={color}][url=\"{metaString}\"]{item.Clean()}[/url][/color][/bgcolor]");
+                    messageBuilder.Append(FormatItemColor(ItemIdToItemName(itemId, part.Player!.Value), game, itemId,
+                        part.Flags!.Value, true));
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);

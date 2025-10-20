@@ -64,7 +64,7 @@ public partial class HintTable : TextTable
             var s = (string)raw;
             if (s.StartsWith("itemdialog"))
             {
-                ItemFilterDialog.SetItem(s);
+                SetAndShowItemFilterDialogue(s);
                 return;
             }
 

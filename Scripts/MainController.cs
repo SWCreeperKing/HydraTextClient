@@ -8,6 +8,7 @@ using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
+using ArchipelagoMultiTextClient.Scripts.SettingsTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 using CreepyUtil.Archipelago;
@@ -439,6 +440,16 @@ public partial class MainController : Control
     {
         if (Data.ItemFilters.TryGetValue(metaData, out var filter) && filter.IsSpecial) return Data["item_bg_special"];
         return Data[GetItemBgColorString(flags)].Hex;
+    }
+
+    public static string FormatItemColor(string itemName, string gameName, long itemId, ItemFlags flags, bool withMetaString)
+    {
+        var metaString = Settings.GetMetaString(itemName, gameName, itemId, flags);
+        var color = GetItemHexColor(flags, metaString);
+        var bgColor = GetItemHexBgColor(flags, metaString);
+        return withMetaString
+            ? $"[bgcolor={bgColor}][color={color}][url=\"{metaString}\"]{itemName.Clean()}[/url][/color][/bgcolor]"
+            : $"[bgcolor={bgColor}][color={color}]{itemName.Clean()}[/color][/bgcolor]";
     }
 
     private static string GetItemColorString(ItemFlags flags)

@@ -30,9 +30,8 @@ public readonly struct HintData(Hint hint)
     public string[] GetData()
     {
         var receivingPlayerColor = PlayerColor(ReceivingPlayerSlot).Hex;
-        var metaString = SettingsTab.Settings.ItemFilterDialog.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
+        var metaString = SettingsTab.Settings.GetMetaString(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags);
         var itemColor = GetItemHexColor(ItemFlags, metaString);
-        var itemBgColor = GetItemHexBgColor(ItemFlags, metaString);
         var findingPlayerColor = PlayerColor(FindingPlayerSlot).Hex;
         var hintColor = Data[HintStatusColor[HintStatus]].Hex;
         var locationColor = Data["location"].Hex;
@@ -49,7 +48,7 @@ public readonly struct HintData(Hint hint)
         [
             $"[url=\"{GetCopy}\"]Copy[/url]",
             $"[color={receivingPlayerColor}]{ReceivingPlayer.Clean()}[/color]",
-            $"[bgcolor={itemBgColor}][color={itemColor}][url=\"{metaString}\"]{Item.Clean()}[/url][/color][/bgcolor]",
+            FormatItemColor(Item, PlayerGames[ReceivingPlayerSlot], ItemId, ItemFlags, true),
             $"[color={findingPlayerColor}]{FindingPlayer.Clean()}[/color]",
             $"[color={hintColor}]{hintStatus}[/color]",
             $"[color={locationColor}]{Location.Clean()}[/color]",

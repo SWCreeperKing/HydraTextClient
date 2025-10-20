@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
+using ArchipelagoMultiTextClient.Scripts.SettingsTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
@@ -32,7 +33,7 @@ public partial class Inventory : TextTable
                         .Select(infoGrouping =>
                          {
                              var item = infoGrouping.First();
-                             var metaString = ItemFilterDialog.GetMetaString(item);
+                             var metaString = GetMetaString(item);
                              var itemColor = GetItemHexColor(item.Flags, metaString);
                              var itemBgColor = GetItemHexBgColor(item.Flags, metaString);
 

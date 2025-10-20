@@ -122,7 +122,6 @@ public readonly struct ColorSetting(string settingName, Color color)
 
 public class ItemFilter(long id, string name, string game, ItemFlags flags)
 {
-    public readonly long Id = id;
     public readonly string Name = name;
     public readonly string Game = game;
     public readonly ItemFlags Flags = flags;

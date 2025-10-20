@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.DataPackage;
 using Archipelago.MultiClient.Net.Helpers;
+using ArchipelagoMultiTextClient.Scripts.Extra;
 using CreepyUtil.Archipelago;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
@@ -16,7 +18,7 @@ public partial class HintManager : SplitContainer
     [Export] private VBoxContainer _HintSender;
     [Export] private VBoxContainer _HintLocationSender;
     [Export] private PackedScene _PlayerBox;
-    [Export] private HintDialog _SendHintConfirmation;
+    [Export] private ConfirmationWindow _SendHintConfirmation;
     private Dictionary<ApClient, PlayerBox> _HintSenderBoxes = [];
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
     private Dictionary<int, Dictionary<string, Button>> _LocationButtons = [];
@@ -107,16 +109,22 @@ public partial class HintManager : SplitContainer
 
     public void HintLocation(string location, ApClient client)
     {
-        _SendHintConfirmation.Client = client;
-        _SendHintConfirmation.Location = location;
-        _SendHintConfirmation.Show();
+        _SendHintConfirmation.SetAndShow("Request a Hint?", $"Hint to see what item is at:\n[{location}]?", () =>
+        {
+            Task.Delay(300).GetAwaiter().GetResult();
+            client.Say($"!hint_location {location}");
+            MainController.MoveToTab = 1;
+        });
     }
 
     public void HintItem(string item, ApClient client)
     {
-        _SendHintConfirmation.Client = client;
-        _SendHintConfirmation.Item = item;
-        _SendHintConfirmation.Show();
+        _SendHintConfirmation.SetAndShow("Request a Hint?", $"Hint to see where the following item is?\n[{item}]", () =>
+        {
+            Task.Delay(300).GetAwaiter().GetResult();
+            client.Say($"!hint {item}");
+            MainController.MoveToTab = 1;
+        });
     }
 
     public void LocationCheck(long[] newLocations, int playerSlot)
