@@ -2,6 +2,7 @@
 
 - Fixed sorting hints
 - Added an inventory tab in Utilities
+- Background color now applies properly to `Hints` and `Utilities` tabs
 
 ---
 # v.0.5.2

@@ -1,7 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 using CreepyUtil.Archipelago;
@@ -28,26 +32,27 @@ public partial class SlotClient : Control
     private string DeleteForeground = "orangered";
     private string DeleteBackground = "#570000";
     private double NullTimer;
+        
 
     public string PlayerName { get; set; }
-    
+
     public override void _Process(double delta)
     {
         if (IsRunning is null) NullTimer += delta;
         else NullTimer = 0;
-        
+
         if (NullTimer >= 30 && !Client.IsConnected)
         {
             NullTimer = 0;
             IsRunning = false;
             SlotTable.RefreshUI = true;
         }
-        
+
         if (IsRunning is null or false) return;
         Client?.UpdateConnection();
 
         var items = Client?.GetOutstandingItems();
-        Inventory.AddItems(Client?.PlayerName, items);
+        InventoryManager.AddItems(Client?.PlayerName, items, false);
     }
 
     public void TryConnection()
@@ -59,7 +64,7 @@ public partial class SlotClient : Control
                 ConnectionFailed(["Can only have 7 slots connected"], false);
                 return;
             }
-            
+
             if (ConnectionCooldown > 0)
             {
                 ConnectionFailed(["Please wait after connecting/changing slots to do so again"], false);
@@ -83,7 +88,7 @@ public partial class SlotClient : Control
                 string[] error;
                 lock (Client)
                 {
-                    error = Client.TryConnect(login,  "", ItemsHandlingFlags.AllItems, tags: tags);
+                    error = Client.TryConnect(login, "", ItemsHandlingFlags.AllItems, tags: tags);
                 }
 
                 if (error is not null && error.Length > 0)
@@ -113,6 +118,7 @@ public partial class SlotClient : Control
 
     public void ConnectionFailed() => ConnectionFailed(["No Error Given"], true);
     public void ConnectionFailed(string[] error) => ConnectionFailed(error, true);
+
     public void ConnectionFailed(string[] error, bool disconnect)
     {
         IsRunning = false;
@@ -122,12 +128,18 @@ public partial class SlotClient : Control
         TryDisconnection();
     }
 
+    public static readonly Regex ServerJoinLeaveMessageRegex =
+        new(
+            @"(.+) \(Team #\d+\) (has stopped (?:tracking|viewing) the game\.|has left the game\.|playing .+ has joined\.|(?:tracking|viewing) .+ has joined\.) Client\(.+\), (.+)\.",
+            RegexOptions.Compiled);
+
+    public static readonly Regex RemoveNickName = new(@".+ \((.+)\)");
+
     public void HasConnected()
     {
         IsRunning = true;
         var playerName = Client.PlayerName;
-        Client.OnConnectionErrorReceived += (err, _)
-            =>
+        Client.OnConnectionErrorReceived += (err, _) =>
         {
             switch (err)
             {
@@ -150,8 +162,109 @@ public partial class SlotClient : Control
         Client.OnChatPrintPacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, chatPrintJsonPacket: packet));
 
-        Client.OnServerMessagePacketReceived += packet
-            => Messages.Enqueue(new ClientMessage(packet.Data, MessageSender.Server));
+        Client.OnServerMessagePacketReceived += packet =>
+        {
+            var text = packet.Data[0].Text;
+            if (text.Contains(" has changed tags from ["))
+            {
+                var mainSplit = text.Split(" has changed tags from ");
+                var secondSplit = mainSplit[1].Split(" to ");
+                var player = mainSplit[0].Split(" (Team ")[0];
+                player = RemoveNickName.IsMatch(player) ? RemoveNickName.Match(player).Groups[1].Value : player;
+                Messages.Enqueue(new ClientMessage(
+                    [
+                        new JsonMessagePart
+                        {
+                            Text = $"{Array.IndexOf(ChosenTextClient.PlayerNames, player)}",
+                            Type = JsonMessagePartType.PlayerId
+                        },
+                        new JsonMessagePart { Text = $" {secondSplit[0]} → {secondSplit[1]}" }
+                    ],
+                    MessageSender.TagsChanged));
+                return;
+            }
+
+            if (ServerJoinLeaveMessageRegex.IsMatch(text))
+            {
+                var match = ServerJoinLeaveMessageRegex.Match(text);
+                var groups = match.Groups.Values.Skip(1).Select(g => g.Value).ToArray();
+                var player = RemoveNickName.IsMatch(groups[0])
+                    ? RemoveNickName.Match(groups[0]).Groups[1].Value
+                    : groups[0];
+                var status = groups[1];
+                var tags = groups[2];
+                var leftJoin = status.Contains("stopped") || status.Contains("left")
+                    ? MessageSender.Left
+                    : MessageSender.Joined;
+                Messages.Enqueue(new ClientMessage(
+                [
+                    new JsonMessagePart
+                    {
+                        Text = $"{Array.IndexOf(ChosenTextClient.PlayerNames, player)}",
+                        Type = JsonMessagePartType.PlayerId
+                    },
+                    new JsonMessagePart { Text = $" {tags}" }
+                ], leftJoin));
+                return;
+            }
+
+            Messages.Enqueue(new ClientMessage(packet.Data, MessageSender.Server));
+        };
+
+        Client.OnDeathLinkPacketReceived += (source, cause) =>
+        {
+            var player = RemoveNickName.IsMatch(source)
+                ? RemoveNickName.Match(source).Groups[1].Value
+                : source;
+            var playerId = Array.IndexOf(ChosenTextClient.PlayerNames, player);
+            JsonMessagePart playerPart = new() { Text = playerId == -1 ? source : $"{playerId}" };
+            if (playerId != -1)
+            {
+                playerPart.Type = JsonMessagePartType.PlayerId;
+            }
+
+            if (!cause.Contains(source))
+            {
+                Messages.Enqueue(new ClientMessage(
+                [
+                    playerPart,
+                    new JsonMessagePart { Text = $" {cause}" }
+                ], MessageSender.DeathLink));
+                return;
+            }
+
+            var split = cause.Split(source);
+            List<JsonMessagePart> list = [];
+            for (var i = 0; i < split.Length; i++)
+            {
+                if (i != 0)
+                {
+                    list.Add(playerPart);
+                }
+
+                list.Add(new JsonMessagePart { Text = split[i] });
+            }
+
+            Messages.Enqueue(new ClientMessage(list.ToArray(), MessageSender.DeathLink));
+        };
+
+        Client.OnUnregisteredTrapLinkReceived += (source, trap) =>
+        {
+            var player = RemoveNickName.IsMatch(source)
+                ? RemoveNickName.Match(source).Groups[1].Value
+                : source;
+            var playerId = Array.IndexOf(ChosenTextClient.PlayerNames, player);
+            JsonMessagePart playerPart = new() { Text = playerId == -1 ? source : $"{playerId}" };
+            if (playerId == -1)
+            {
+                playerPart.Type = JsonMessagePartType.PlayerId;
+            }
+
+            Messages.Enqueue(new ClientMessage([
+                playerPart,
+                new JsonMessagePart { Text = $" sent a [{trap}]" }
+            ], MessageSender.TrapLink));
+        };
 
         Client.OnItemLogPacketReceived += packet =>
         {
@@ -167,6 +280,11 @@ public partial class SlotClient : Control
         };
 
         Client.OnConnectionLost += () => { ConnectionFailed(["Lost Connection to Server"]); };
+
+        InventoryManager.AddInventory(Client.PlayerName);
+        InventoryManager.AddItems(Client?.PlayerName, Client!.GetOutstandingItems(), true);
+
+        Client.ExcludeBouncedPacketsFromSelf = false;
         
         Main.ConnectClient(Client);
         SlotTable.RefreshUI = true;
@@ -186,8 +304,10 @@ public partial class SlotClient : Control
     {
         var connectText = IsRunning switch
         {
-            false => $"[url=\"connect {PlayerName}\"][color={ConnectForeground}][bgcolor={ConnectBackground}]  Connect   [/bgcolor][/color][/url]",
-            true => $"[url=\"disconnect {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] Disconnect [/bgcolor][/color][/url]",
+            false =>
+                $"[url=\"connect {PlayerName}\"][color={ConnectForeground}][bgcolor={ConnectBackground}]  Connect   [/bgcolor][/color][/url]",
+            true =>
+                $"[url=\"disconnect {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] Disconnect [/bgcolor][/color][/url]",
             null => "Connecting. . ."
         };
 
@@ -198,7 +318,7 @@ public partial class SlotClient : Control
         var errorText = _Error is not null && _Error.Length > 0
             ? $"\n[color=red]{string.Join('\n', _Error)}[/color]"
             : "";
-        
+
         return [connectText, $"   {PlayerName}   {errorText}", deleteText];
     }
 }

@@ -21,7 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
 [ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/SettingsTab/ItemFilterer.cs" id="14_346fj"]
 [ext_resource type="PackedScene" uid="uid://dv1anbejmu0kq" path="res://Scenes/Prefabs/DragFollowerFolder.tscn" id="14_c4ay3"]
-[ext_resource type="Script" uid="uid://b66qk4ty0f4ya" path="res://Scripts/UtilitiesTab/Inventory.cs" id="15_kpo4j"]
+[ext_resource type="Script" uid="uid://crvs83lm5p3t4" path="res://Scripts/UtilitiesTab/InventoryManager.cs" id="15_kpo4j"]
 [ext_resource type="Script" uid="uid://d4igolytvwtxg" path="res://Scripts/SettingsTab/ItemFilterDialog.cs" id="16_2w5on"]
 [ext_resource type="Script" uid="uid://ba38b6bo62ilq" path="res://Scripts/HintTab/HintChangerWindow.cs" id="16_erwvk"]
 [ext_resource type="Script" uid="uid://c1cij5n7j52qj" path="res://Scripts/UtilitiesTab/LocationChecklist.cs" id="17_3tgeq"]
@@ -44,7 +44,7 @@ keyword_colors = {
 "openfolder": Color(0, 0.6117647, 0, 1)
 }
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager", "_BackgroundOverrides")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -71,6 +71,7 @@ _VersionLabel = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContain
 _SaveButton = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button2")
 _SlotTable = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/RichTextLabel")
 _NameManager = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient")
+_BackgroundOverrides = [NodePath("TabContainer"), NodePath("TabContainer/Hints"), NodePath("TabContainer/Utilities"), NodePath("TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist")]
 
 [node name="TabContainer" type="TabContainer" parent="." node_paths=PackedStringArray("Controls")]
 layout_mode = 1
@@ -611,11 +612,13 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("4_erwvk")
 current_tab = 0
 metadata/_tab_index = 2
 
 [node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints"]
 layout_mode = 2
+theme = ExtResource("4_erwvk")
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
@@ -681,7 +684,7 @@ _ShowPriority = NodePath("../FlowContainer/CheckBox5")
 _ShowUnspecified = NodePath("../FlowContainer/CheckBox2")
 _ShowNoPriority = NodePath("../FlowContainer/CheckBox3")
 _ShowAvoid = NodePath("../FlowContainer/CheckBox4")
-_HintChangerWindow = NodePath("../../../../../../Window")
+_HintChangerWindow = NodePath("../../../../../../HintPriority")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
 [node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" node_paths=PackedStringArray("_InventoryContainer", "_Folder")]
@@ -758,11 +761,12 @@ theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 metadata/_tab_index = 0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Utilities/Inventory"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Inventory"]
 layout_mode = 2
-bbcode_enabled = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Inventory/ScrollContainer"]
+layout_mode = 2
 script = ExtResource("15_kpo4j")
-_Columns = Array[String](["Count", "Item"])
 
 [node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
 visible = false
@@ -1433,10 +1437,9 @@ _Link = "https://linktr.ee/raphael2512"
 
 [node name="Hint" type="ConfirmationDialog" parent="."]
 transparent_bg = true
-mode = 2
+oversampling_override = 1.0
 title = "Hint Item?"
 initial_position = 2
-always_on_top = true
 transparent = true
 theme = ExtResource("4_erwvk")
 ok_button_text = "Yes"
@@ -1445,19 +1448,18 @@ script = ExtResource("12_grg3l")
 
 [node name="ItemFilter" type="ConfirmationDialog" parent="."]
 transparent_bg = true
-mode = 2
+oversampling_override = 1.0
 title = "Add Item to the Item Filter?"
 initial_position = 2
-always_on_top = true
 transparent = true
 theme = ExtResource("4_erwvk")
 ok_button_text = "Add"
 dialog_text = "Add "
 script = ExtResource("16_2w5on")
 
-[node name="Window" type="Window" parent="." node_paths=PackedStringArray("_Label", "_Options", "_Apply", "_Cancel")]
+[node name="HintPriority" type="Window" parent="." node_paths=PackedStringArray("_Label", "_Options", "_Apply", "_Cancel")]
 transparent_bg = true
-mode = 2
+oversampling_override = 1.0
 title = "Change Hint Status"
 initial_position = 2
 size = Vector2i(400, 200)
@@ -1465,7 +1467,6 @@ visible = false
 wrap_controls = true
 transient = true
 exclusive = true
-borderless = true
 transparent = true
 theme = ExtResource("4_erwvk")
 script = ExtResource("16_erwvk")
@@ -1474,7 +1475,7 @@ _Options = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/Opt
 _Apply = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button")
 _Cancel = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button2")
 
-[node name="ColorRect" type="ColorRect" parent="Window"]
+[node name="ColorRect" type="ColorRect" parent="HintPriority"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1484,10 +1485,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0.109804, 0.121569, 0.129412, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Window/ColorRect"]
-layout_mode = 0
-offset_right = 400.0
-offset_bottom = 200.0
+[node name="MarginContainer" type="MarginContainer" parent="HintPriority/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 15
@@ -1495,18 +1499,18 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Window/ColorRect/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HintPriority/ColorRect/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Window/ColorRect/MarginContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 bbcode_enabled = true
@@ -1514,7 +1518,7 @@ text = "Change hint status for [bgcolor=00000066][color=green]Item[/color][/bgco
 fit_content = true
 horizontal_alignment = 1
 
-[node name="OptionButton" type="OptionButton" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="OptionButton" type="OptionButton" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 selected = 0
@@ -1526,44 +1530,135 @@ popup/item_1/id = 10
 popup/item_2/text = "Avoid"
 popup/item_2/id = 20
 
-[node name="HSeparator" type="HSeparator" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="VSeparator2" type="VSeparator" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(0.815686, 1, 0.768627, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Change"
 
-[node name="VSeparator" type="VSeparator" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button2" type="Button" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(1, 0.784314, 0.847059, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Cancel"
 
-[node name="VSeparator3" type="VSeparator" parent="Window/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="HintPriority/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 30.0
+
+[node name="ItemsPopup" type="Window" parent="."]
+transparent_bg = true
+oversampling_override = 1.0
+title = "Change Hint Status"
+initial_position = 2
+size = Vector2i(600, 400)
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+transparent = true
+theme = ExtResource("4_erwvk")
+
+[node name="ColorRect" type="ColorRect" parent="ItemsPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.109804, 0.121569, 0.129412, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ItemsPopup/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ItemsPopup/ColorRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+bbcode_enabled = true
+text = "a
+a
+a
+a
+a
+
+a
+a
+a
+a
+a"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(0.815686, 1, 0.768627, 1)
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Ok"
+
+[node name="VSeparator" type="VSeparator" parent="ItemsPopup/ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
 [connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]

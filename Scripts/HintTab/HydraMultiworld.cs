@@ -14,6 +14,7 @@ public class HydraMultiworld(string hash)
     [JsonIgnore] public bool Changed;
     [JsonIgnore] public Dictionary<string, HintData> HintDatas = [];
     [JsonIgnore] public IEnumerable<Hint>? RawList = null;
+    public Dictionary<string, int> PreviousInventoryCount = [];
 
     public delegate void HintChangedHandler(HintData old, HintData @new);
     public event HintChangedHandler? OnHintChanged;

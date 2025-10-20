@@ -27,7 +27,7 @@ public partial class UiSaver : TabContainer
                     Save(id, sc.SplitOffset);
                     break;
                 default:
-                    GD.Print($"{control.GetType()} is not configured to save in UiSaver");
+                    GD.Print($"{control.GetType()} is not configured to save in UiSaver (can ignore if not dev)");
                     break;
             }
         }
@@ -46,7 +46,7 @@ public partial class UiSaver : TabContainer
                     sc.SplitOffset = (int)Load(id, sc.SplitOffset);
                     break;
                 default:
-                    GD.Print($"{control.GetType()} is not configured to save in UiSaver");
+                    GD.Print($"{control.GetType()} is not configured to save in UiSaver (can ignore if not dev)");
                     break;
             }
         }

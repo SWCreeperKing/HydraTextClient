@@ -108,6 +108,7 @@ public partial class MainController : Control
     [Export] private Button _SaveButton;
     [Export] private SlotTable _SlotTable;
     [Export] private MultiworldName _NameManager;
+    [Export] private TabContainer[] _BackgroundOverrides = [];
 
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -157,7 +158,12 @@ public partial class MainController : Control
         }
 
         Background.BgColor = Data["background_color"];
-        _TabContainer.AddThemeStyleboxOverride("panel", Background);
+
+        foreach (var container in _BackgroundOverrides)
+        {
+            container.AddThemeStyleboxOverride("panel", Background);
+        }
+        
         OnSave += () => Data.WindowSize = GetWindow().Size;
         OnSave += () => Data.WindowPosition = GetWindow().Position;
 
@@ -298,7 +304,6 @@ public partial class MainController : Control
         {
             Clear();
             SetupPlayerList(client);
-            Inventory.RefreshUI = true;
         }
 
         if (PlayerGames.Length == 0)
@@ -310,21 +315,10 @@ public partial class MainController : Control
         {
             Players = client.PlayerNames;
         }
-
+        
         client.CheckedLocationsUpdated += locations
             => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
-
-        client.ExcludeBouncedPacketsFromSelf = false;
-        client.OnDeathLinkPacketReceived += (source, cause) =>
-        {
-            TextClient.Messages.Enqueue(new ClientMessage([new JsonMessagePart{Text = $"[{source}] [{cause}]"}], MessageSender.DeathLink));
-        };
-
-        client.OnUnregisteredTrapLinkReceived += (source, trap) =>
-        {
-            TextClient.Messages.Enqueue(new ClientMessage([new JsonMessagePart{Text = $"[{source}] sent a [{trap}]"}], MessageSender.TrapLink));
-        };
-
+        
         PlayerSlots[client.PlayerSlot] = client.PlayerName;
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
@@ -365,7 +359,7 @@ public partial class MainController : Control
 
         _HintManager.UnregisterPlayer(client);
         HintsMap.Remove(client);
-        Inventory.ClearItems(client.PlayerName);
+        InventoryManager.RemoveInventory(client.PlayerName);
         RefreshUIColors();
     }
 
@@ -497,10 +491,10 @@ public partial class MainController : Control
     {
         Background.BgColor = Data["background_color"];
         TextClient.RefreshText = true;
-        RefreshUI = true;
         ItemFilterer.RefreshUI = true;
+        InventoryManager.RefreshUI = true;
+        PlayerTable.RefreshUI = true;
         _UpdateHints = true;
-        Inventory.RefreshUI = true;
     }
 
     public static void Save()
@@ -512,11 +506,18 @@ public partial class MainController : Control
     public static string GetAlias(int slot, bool additionalInfo = false)
     {
         if (ActiveClients.Count == 0) return "Not loaded";
-        var name = ActiveClients[0].PlayerNames[slot];
-        var alias = ActiveClients[0].GetAlias(slot)!.Replace($" ({name})", "").Clean();
-        return !additionalInfo
-            ? GetAliasFormated(alias, name)
-            : $"[hint=\"Name: {name}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
+        try
+        {
+            var name = ActiveClients[0].PlayerNames[slot];
+            var alias = ActiveClients[0].GetAlias(slot)!.Replace($" ({name})", "").Clean();
+            return !additionalInfo
+                ? GetAliasFormated(alias, name)
+                : $"[hint=\"Name: {name}\nGame: {PlayerGames[slot]}\"]{alias}[/hint]";
+        }
+        catch (IndexOutOfRangeException)
+        {
+            return $"{slot}";
+        }
     }
 
     private static string GetAliasFormated(string alias, string name)

@@ -402,7 +402,10 @@ public enum MessageSender
     Server,
     Hint,
     DeathLink,
-    TrapLink
+    TrapLink,
+    Joined,
+    Left,
+    TagsChanged
 }
 
 public readonly struct ClientMessage(
@@ -443,11 +446,23 @@ public readonly struct ClientMessage(
                 break;
             case DeathLink:
                 messageBuilder.Append(
-                    $"[color={Data["item_trap"].Hex}][url=\"{copyId}\"]DeathLink[/url][/color]: ");
+                    $"[color={Data["item_trap"].Hex}]💀[/color]  ");
                 break;
             case TrapLink:
                 messageBuilder.Append(
-                    $"[color={Data["item_trap"].Hex}][url=\"{copyId}\"]TrapLink[/url][/color]: ");
+                    $"[color={Data["item_trap"].Hex}]🪤[/color]  ");
+                break;
+            case Joined:
+                messageBuilder.Append(
+                    $"[color={Data["item_progressive"].Hex}] →[/color] ");
+                break;
+            case Left:
+                messageBuilder.Append(
+                    $"[color={Data["item_trap"].Hex}]← [/color] ");
+                break;
+            case TagsChanged:
+                messageBuilder.Append(
+                    $"[color={Data["item_useful"].Hex}]←→[/color] ");
                 break;
             case ItemLog:
             {
@@ -472,9 +487,18 @@ public readonly struct ClientMessage(
             switch (part.Type)
             {
                 case JsonMessagePartType.PlayerId:
-                    var slot = int.Parse(part.Text);
-                    color = PlayerColor(slot);
-                    messageBuilder.Append($"[color={color}]{GetAlias(slot, true)}[/color]");
+                    try
+                    {
+                        var slot = int.Parse(part.Text);
+                        color = PlayerColor(slot);
+                        messageBuilder.Append($"[color={color}]{GetAlias(slot, true)}[/color]");
+                    }
+                    catch
+                    {
+                        messageBuilder.Append($"[Unknown: [{part.Text}]]");
+                        GD.Print(CopyText);
+                    }
+
                     break;
                 case JsonMessagePartType.ItemId:
                     var itemId = long.Parse(part.Text);
@@ -515,7 +539,7 @@ public readonly struct ClientMessage(
                     }
 
                     messageBuilder.Append(text);
-                    if (Sender is Server)
+                    if (Sender is Server or Joined or Left or TagsChanged or DeathLink or TrapLink)
                     {
                         TextClient.CopyList.Add(text);
                     }

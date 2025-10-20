@@ -7,7 +7,7 @@ namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 
 public abstract partial class TextTable : RichTextLabel
 {
-    [Export] private Array<string> _Columns = [];
+    [Export] public Array<string> _Columns = [];
     public int Padding = 0;
 
     public void UpdateData(List<string[]> data)
