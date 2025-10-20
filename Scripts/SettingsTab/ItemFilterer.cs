@@ -1,8 +1,8 @@
 using System.Linq;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
-using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using TextTable = ArchipelagoMultiTextClient.Scripts.Extra.TextTable;
 
 namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 

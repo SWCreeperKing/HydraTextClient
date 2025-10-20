@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
-using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static Archipelago.MultiClient.Net.Enums.HintStatus;
 using static Archipelago.MultiClient.Net.Enums.ItemFlags;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
 using MultiworldName = ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
+using TextTable = ArchipelagoMultiTextClient.Scripts.Extra.TextTable;
 
 namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 

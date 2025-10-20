@@ -1,7 +1,6 @@
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
-using Newtonsoft.Json;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 namespace ArchipelagoMultiTextClient.Scripts.HintTab;

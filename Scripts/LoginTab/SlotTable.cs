@@ -1,6 +1,6 @@
 using System.Linq;
-using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
+using TextTable = ArchipelagoMultiTextClient.Scripts.Extra.TextTable;
 
 namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 

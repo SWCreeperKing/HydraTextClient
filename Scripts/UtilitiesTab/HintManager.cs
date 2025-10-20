@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Archipelago.MultiClient.Net.DataPackage;
-using Archipelago.MultiClient.Net.Helpers;
-using ArchipelagoMultiTextClient.Scripts.Extra;
-using CreepyUtil.Archipelago;
 using CreepyUtil.Archipelago.ApClient;
 using Godot;
 
@@ -18,7 +14,7 @@ public partial class HintManager : SplitContainer
     [Export] private VBoxContainer _HintSender;
     [Export] private VBoxContainer _HintLocationSender;
     [Export] private PackedScene _PlayerBox;
-    [Export] private ConfirmationWindow _SendHintConfirmation;
+    [Export] private Extra.ConfirmationWindow _SendHintConfirmation;
     private Dictionary<ApClient, PlayerBox> _HintSenderBoxes = [];
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
     private Dictionary<int, Dictionary<string, Button>> _LocationButtons = [];

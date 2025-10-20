@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
-using ArchipelagoMultiTextClient.Scripts.Extra;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 
@@ -9,14 +8,15 @@ namespace ArchipelagoMultiTextClient.Scripts.SettingsTab;
 
 public partial class Settings : Control
 {
-    public static ConfirmationWindow ItemFilterDialog;
+    public static Extra.ConfirmationWindow ItemFilterDialog;
 
     [Export] private VBoxContainer _ColorContainer;
     [Export] private Button _ExportColors;
     [Export] private Button _ImportColors;
     [Export] private CheckBox _ShowFoundHints;
     [Export] private CheckBox _AlwaysOnTop;
-    [Export] private ConfirmationWindow _ItemFilter;
+    [Export] private CheckBox _ShowNewItems;
+    [Export] private Extra.ConfirmationWindow _ItemFilter;
     [Export] private SpinBox _GlobalUiSize;
     private List<ColorPickerButton> _Buttons = [];
 
@@ -31,6 +31,9 @@ public partial class Settings : Control
 
         _AlwaysOnTop.ButtonPressed = Data.AlwaysOnTop;
         _AlwaysOnTop.Pressed += () => SetAlwaysOnTop(_AlwaysOnTop.ButtonPressed);
+        
+        _ShowNewItems.ButtonPressed = Data.ShowNewItems;
+        _ShowNewItems.Pressed += () => Data.ShowNewItems = _ShowNewItems.ButtonPressed;
 
         ItemFilterDialog = _ItemFilter;
         var order = DataConstant.DefaultDict.Keys;

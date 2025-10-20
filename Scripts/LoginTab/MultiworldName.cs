@@ -73,6 +73,7 @@ public partial class MultiworldName : VBoxContainer
         CurrentWorld.Changed = true;
         SetupMultiworld(CurrentWorld);
         ChangeState(MultiworldState.Loaded);
+        SaveWorld(CurrentWorld);
     }
 
     public void LoadName()
@@ -114,7 +115,6 @@ public partial class MultiworldName : VBoxContainer
 
     public void SetupMultiworld(HydraMultiworld world)
     {
-        
         AllWorldsHash[world.Hash] = AllWorlds[world.Name] = world;
         world.OnHintChanged += (_, _) =>
         {

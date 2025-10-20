@@ -60,6 +60,7 @@ public class UserData
     public bool ShowFoundHints = false;
     public bool AlwaysOnTop = false;
     public bool ClearTextWhenDisconnect = true;
+    public bool ShowNewItems = true;
     public long WordWrap = 3;
     public long AliasDisplay = 0;
     public long Content = 2;

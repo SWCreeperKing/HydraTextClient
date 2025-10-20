@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Archipelago.MultiClient.Net.DataPackage;
-using Archipelago.MultiClient.Net.Helpers;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
 

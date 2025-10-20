@@ -1,8 +1,20 @@
 # v0.5.3
 
-- Fixed sorting hints
+- Updated Godot to `4.6 dev 1`
+- Fixed sorting for hints
 - Added an inventory tab in Utilities
+  - You can click on an item to see how much of that item others have sent you
 - Background color now applies properly to `Hints` and `Utilities` tabs
+- Changed popups from being in-app to os native
+- Updated some popups
+- MultiWorlds will also be saved when you name them instead of __just__ when the app saves
+- Added popups that inform you of items you have gained when not connected
+- Added specially formatted messages for when someone:
+  -  →  = Joins (color tied to progressive items)
+  - ←   = Leaves (color tied to trap items)
+  - ←→  = Changed Tags (color tied to normal items)
+  - 💀  = Sent a DeathLink
+  - 🪤  = Sent a TrapLink
 
 ---
 # v.0.5.2

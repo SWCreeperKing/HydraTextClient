@@ -3,7 +3,7 @@ using System.Text;
 using Godot;
 using Godot.Collections;
 
-namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
+namespace ArchipelagoMultiTextClient.Scripts.Extra;
 
 public abstract partial class TextTable : RichTextLabel
 {

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
@@ -164,7 +163,7 @@ public partial class MainController : Control
         {
             container.AddThemeStyleboxOverride("panel", Background);
         }
-        
+
         OnSave += () => Data.WindowSize = GetWindow().Size;
         OnSave += () => Data.WindowPosition = GetWindow().Position;
 
@@ -316,10 +315,10 @@ public partial class MainController : Control
         {
             Players = client.PlayerNames;
         }
-        
+
         client.CheckedLocationsUpdated += locations
             => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
-        
+
         PlayerSlots[client.PlayerSlot] = client.PlayerName;
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
@@ -442,7 +441,11 @@ public partial class MainController : Control
         return Data[GetItemBgColorString(flags)].Hex;
     }
 
-    public static string FormatItemColor(string itemName, string gameName, long itemId, ItemFlags flags, bool withMetaString)
+    public static string FormatItemColor(ItemInfo info, bool withMetaString)
+        => FormatItemColor(info.ItemName, info.ItemGame, info.ItemId, info.Flags, withMetaString);
+
+    public static string FormatItemColor(string itemName, string gameName, long itemId, ItemFlags flags,
+        bool withMetaString)
     {
         var metaString = Settings.GetMetaString(itemName, gameName, itemId, flags);
         var color = GetItemHexColor(flags, metaString);

@@ -81,7 +81,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 3
+current_tab = 5
 script = ExtResource("4_0sclb")
 Controls = {
 "HintsTab": NodePath("Hints"),
@@ -748,6 +748,7 @@ mouse_filter = 1
 title = "No Multiworld Selected"
 
 [node name="Utilities" type="TabContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 3
@@ -764,9 +765,10 @@ metadata/_tab_index = 0
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Inventory"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Inventory/ScrollContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Inventory/ScrollContainer" node_paths=PackedStringArray("_ItemWindow")]
 layout_mode = 2
 script = ExtResource("15_kpo4j")
+_ItemWindow = NodePath("../../../../../ItemsPopup")
 
 [node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
 visible = false
@@ -1121,8 +1123,7 @@ autowrap_mode = 0
 script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
-[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ItemFilter", "_GlobalUiSize")]
-visible = false
+[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1136,6 +1137,7 @@ _ExportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button2")
 _ImportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button")
 _ShowFoundHints = NodePath("../Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox5")
 _AlwaysOnTop = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox")
+_ShowNewItems = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox2")
 _ItemFilter = NodePath("../../ConfirmWindow")
 _GlobalUiSize = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4/SpinBox")
 metadata/_tab_index = 5
@@ -1204,6 +1206,11 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Always on top"
+
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Show New Items on Connect"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2

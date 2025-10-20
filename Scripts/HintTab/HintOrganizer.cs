@@ -6,7 +6,6 @@ using ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
 
 namespace ArchipelagoMultiTextClient.Scripts.HintTab;
 

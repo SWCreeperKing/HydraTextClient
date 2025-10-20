@@ -17,6 +17,7 @@ public class HydraMultiworld(string hash)
     public Dictionary<string, int> PreviousInventoryCount = [];
 
     public delegate void HintChangedHandler(HintData old, HintData @new);
+
     public event HintChangedHandler? OnHintChanged;
 
     public string[] ItemOrder = [];
@@ -47,11 +48,16 @@ public class HydraMultiworld(string hash)
     public void ItemLogItemReceived(JsonMessagePart[] parts)
     {
         var id = parts.GetItemLogToHintId();
-        
+
         if (!HintDatas.TryGetValue(id, out var hintData)) return;
         var hint = hintData.RawHint;
         hint.Status = HintStatus.Found;
         HintDatas[id] = new HintData(hint);
         OnHintChanged?.Invoke(hintData, HintDatas[id]);
     }
+
+    public int GetLastItemCount(string playerName)
+        => !PreviousInventoryCount.TryGetValue(playerName, out var count)
+            ? PreviousInventoryCount[playerName] = 0
+            : count;
 }

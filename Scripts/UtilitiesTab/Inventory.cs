@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
-using ArchipelagoMultiTextClient.Scripts.SettingsTab;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
-using static ArchipelagoMultiTextClient.Scripts.SettingsTab.Settings;
+using TextTable = ArchipelagoMultiTextClient.Scripts.Extra.TextTable;
 
 namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 
@@ -21,6 +20,13 @@ public partial class Inventory : TextTable
         AutowrapMode = TextServer.AutowrapMode.Off;
         FitContent = true;
         TextClient.SelectedClientChangedEvent += _ => RefreshUI = true;
+
+        MetaClicked += v =>
+        {
+            if (!long.TryParse((string)v, out var hashcode)) return;
+            var item = Items.Find(item => item.GetHashCode() == hashcode);
+            InventoryManager.ItemWindow.SetAndShowItemsForSpecificItem($"Showing Details for item: [{item.ItemName}]", Items.ToArray(), item);
+        };
     }
 
     public override void _Process(double delta)
@@ -30,24 +36,16 @@ public partial class Inventory : TextTable
         UpdateData(Items.GroupBy(info => info.ItemName)
                         .OrderBy(group => HintTable.SortNumber(group.First().Flags))
                         .ThenByDescending(group => group.Count())
-                        .Select(infoGrouping =>
-                         {
-                             var item = infoGrouping.First();
-                             var metaString = GetMetaString(item);
-                             var itemColor = GetItemHexColor(item.Flags, metaString);
-                             var itemBgColor = GetItemHexBgColor(item.Flags, metaString);
-
-                             return (string[])
-                             [
-                                 $"{infoGrouping.Count():###,###}",
-                                 $"[bgcolor={itemBgColor}][color={itemColor}]{item.ItemName.Clean()}[/color][/bgcolor]"
-                             ];
-                         })
+                        .Select(infoGrouping => (string[])
+                         [
+                             $"{infoGrouping.Count():###,###}",
+                             $"[url=\"{infoGrouping.First().GetHashCode()}\"]{FormatItemColor(infoGrouping.First(), false)}[/url]"
+                         ])
                         .ToList());
         RefreshUI = false;
     }
 
-    public void AddItems(ItemInfo[] items, bool firstSend)
+    public void AddItems(ItemInfo[] items)
     {
         Items.AddRange(items);
         RefreshUI = true;
