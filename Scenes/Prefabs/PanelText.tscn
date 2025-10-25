@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckdnrlxfssxb7"]
+
+[ext_resource type="Script" uid="uid://bp6wguv13hhgq" path="res://Scripts/PrefabScripts/PanelText.cs" id="1_hnqa7"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_kxtvx"]
+
+[node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("Label", "MarginContainer")]
+script = ExtResource("1_hnqa7")
+Label = NodePath("MarginContainer/RichTextLabel")
+MarginContainer = NodePath("MarginContainer")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 1
+theme = ExtResource("2_kxtvx")
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1

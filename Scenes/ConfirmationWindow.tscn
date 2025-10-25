@@ -1,0 +1,101 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsow4duwjud02"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_x6kst"]
+[ext_resource type="Script" uid="uid://bkhd2w16lwtnq" path="res://Scripts/Extra/ConfirmationWindow.cs" id="2_jy02r"]
+
+[node name="ConfirmationWindow" type="Window" node_paths=PackedStringArray("_Label", "_Confirm", "_Decline")]
+transparent_bg = true
+oversampling_override = 1.0
+title = "Confirm?"
+initial_position = 2
+size = Vector2i(400, 200)
+wrap_controls = true
+transient = true
+exclusive = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
+theme = ExtResource("1_x6kst")
+script = ExtResource("2_jy02r")
+_Label = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/RichTextLabel")
+_Confirm = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button")
+_Decline = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button2")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.109804, 0.121569, 0.129412, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_x6kst")
+bbcode_enabled = true
+text = "are you sure?"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(0.815686, 1, 0.768627, 1)
+layout_mode = 2
+theme = ExtResource("1_x6kst")
+text = "Yes"
+
+[node name="VSeparator" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 0.784314, 0.847059, 1)
+layout_mode = 2
+theme = ExtResource("1_x6kst")
+text = "No"
+
+[node name="VSeparator3" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3

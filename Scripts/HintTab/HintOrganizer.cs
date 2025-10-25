@@ -70,6 +70,17 @@ public partial class HintOrganizer : HSplitContainer
 
     public void AddHintTile(HintData data, bool addToInventory = true)
     {
+        if (_HintTiles.TryGetValue(data.Id, out var original))
+        {
+            GenerateNames(data, out original.NormalText, out original.SquareText);
+            if (original.IsSquarePanel) _InventoryContainer.RemoveChild(original);
+            original.IsSquarePanel = addToInventory;
+            
+            if (addToInventory) _InventoryContainer.AddChild(original);
+            else _Folder.AddChildToList(original);
+            return;
+        }
+        
         var flowText = _PanelTextScene.Instantiate<PanelText>();
         GenerateNames(data, out flowText.NormalText, out flowText.SquareText);
         flowText.SetScript("HintTab/HintDragable");
@@ -77,7 +88,7 @@ public partial class HintOrganizer : HSplitContainer
         flowText.Id = data.Id;
         if (addToInventory) _InventoryContainer.AddChild(flowText);
         else _Folder.AddChildToList(flowText);
-        _HintTiles.Add(data.Id, flowText);
+        _HintTiles[data.Id] = flowText;
     }
 
     public void RemoveHintTile(string id)

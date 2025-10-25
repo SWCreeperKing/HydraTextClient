@@ -51,6 +51,7 @@ public partial class SlotClient : Control
         if (IsRunning is null or false) return;
         Client?.UpdateConnection();
 
+        if (!(bool)Client?.IsConnected!) return;
         var items = Client?.GetOutstandingItems();
         InventoryManager.AddItems(Client?.PlayerName, items, false);
     }
@@ -128,6 +129,8 @@ public partial class SlotClient : Control
         TryDisconnection();
     }
 
+    //todo: Claíomh Mór [LG] (Claiomh [PK]) (Team #1) hinting Pokemon FireRed and LeafGreen has joined. Client(0.5.0), ['HintGame', 'APSudoku'].
+    // doesn't match
     public static readonly Regex ServerJoinLeaveMessageRegex =
         new(
             @"(.+) \(Team #\d+\) (has stopped (?:tracking|viewing) the game\.|has left the game\.|playing .+ has joined\.|(?:tracking|viewing) .+ has joined\.) Client\(.+\), (.+)\.",

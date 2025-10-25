@@ -1,3 +1,11 @@
+# v0.5.4
+
+- Can now view the history of received items
+- Fixed change hint priority not working for users with a nickname
+- Fixed hint table not showing nickname for finding player
+- Added a toggle for showing timestamps in the text client
+
+---
 # v0.5.3
 
 - Updated Godot to `4.6 dev 1`

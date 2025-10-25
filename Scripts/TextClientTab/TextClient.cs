@@ -36,6 +36,7 @@ public partial class TextClient : VBoxContainer
     [Export] private Button _SendMessageButton;
     [Export] private Button _ScrollToBottom;
     [Export] private ScrollContainer _ScrollContainer;
+    [Export] private CheckBox _ShowTimestamp;
     [Export] private CheckBox _ShowProgressive;
     [Export] private CheckBox _ShowUseful;
     [Export] private CheckBox _ShowNormal;
@@ -203,6 +204,11 @@ public partial class TextClient : VBoxContainer
             Data.ItemLogOptions = corrected;
         }
 
+        _ShowTimestamp.Pressed += () =>
+        {
+            Data.ShowTimestamp = _ShowTimestamp.ButtonPressed;
+            RefreshText = true;
+        };
         _ShowProgressive.Pressed += () =>
         {
             Data.ItemLogOptions[0] = _ShowProgressive.ButtonPressed;
@@ -234,6 +240,7 @@ public partial class TextClient : VBoxContainer
             Data.ClearTextWhenDisconnect = _ClearTextOnDisconnect.ButtonPressed;
             RefreshText = true;
         };
+        _ShowTimestamp.ButtonPressed = Data.ShowTimestamp;
         _ShowProgressive.ButtonPressed = Data.ItemLogOptions[0];
         _ShowUseful.ButtonPressed = Data.ItemLogOptions[1];
         _ShowNormal.ButtonPressed = Data.ItemLogOptions[2];
@@ -429,7 +436,10 @@ public readonly struct ClientMessage(
         var copyId = TextClient.CopyList.Count;
 
         StringBuilder messageBuilder = new();
-        messageBuilder.Append($"[color=darkgray]{TimeStamp}[/color] ");
+        if (Data.ShowTimestamp)
+        {
+            messageBuilder.Append($"[color=darkgray]{TimeStamp}[/color] ");
+        }
 
         if (ChatPacket is not null)
         {

@@ -19,4 +19,10 @@ public partial class ItemWindow : AcceptWindow
         SetAndShow(title, "");
         _ItemTable.UpdateListItemSpecific(items, info);
     }
+    
+    public void SetAndShowItemHistory(string title, ItemInfo[] items)
+    {
+        SetAndShow(title, "");
+        _ItemTable.UpdateListItemHistory(items);
+    }
 }

@@ -32,11 +32,25 @@ public partial class InventoryManager : Control
             Inventory inventory = new();
             inventory._Columns = ["Count", "Items"];
             inventory.Theme = MainController.GlobalTheme;
+            
+            Button button = new();
+            button.Text = "View History";
+            button.Theme = MainController.GlobalTheme;
+            button.Pressed += () => ItemWindow.SetAndShowItemHistory($"Item history for [{playerName}]", inventory.Items.ToArray());
+
+            Label label = new();
+            label.Theme = MainController.GlobalTheme;
+            inventory.CheatedLabel = label;
+            
+            VBoxContainer vBox = new();
+            vBox.AddChild(button);
+            vBox.AddChild(label);
+            vBox.AddChild(inventory);
 
             FoldableContainer foldContainer = new();
             foldContainer.Theme = MainController.GlobalTheme;
             foldContainer.Title = playerName;
-            foldContainer.AddChild(inventory);
+            foldContainer.AddChild(vBox);
 
             Inventories[playerName] = inventory;
             AddChild(foldContainer);
@@ -45,7 +59,7 @@ public partial class InventoryManager : Control
         while (!RemovingInventories.IsEmpty)
         {
             RemovingInventories.TryDequeue(out var playerName);
-            RemoveChild(Inventories[playerName].GetParent());
+            RemoveChild(Inventories[playerName].GetParent().GetParent());
             Inventories.Remove(playerName);
         }
 

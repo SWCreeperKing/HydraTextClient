@@ -12,7 +12,7 @@ public readonly struct HintData(Hint hint)
     public readonly long ItemId = hint.ItemId;
     public readonly string Item = ItemIdToItemName(hint.ItemId, hint.ReceivingPlayer);
     public readonly ItemFlags ItemFlags = hint.ItemFlags;
-    public readonly string FindingPlayer = Players[hint.FindingPlayer];
+    public readonly string FindingPlayer = GetAlias(hint.FindingPlayer);
     public readonly int FindingPlayerSlot = hint.FindingPlayer;
     public readonly HintStatus HintStatus = hint.Status;
     public readonly string Location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
@@ -40,7 +40,7 @@ public readonly struct HintData(Hint hint)
         if (PlayerSlots.ContainsKey(ReceivingPlayerSlot) && HintStatus is not HintStatus.Found)
         {
             hintStatus =
-                $"[url=\"change&{ReceivingPlayer}&_&{FindingPlayerSlot}&_&{Item}&_&{itemColor}&_&{LocationId}\"]{hintStatus}[/url]";
+                $"[url=\"change&{ReceivingPlayerSlot}&_&{FindingPlayerSlot}&_&{Item}&_&{itemColor}&_&{LocationId}\"]{hintStatus}[/url]";
         }
 
         return

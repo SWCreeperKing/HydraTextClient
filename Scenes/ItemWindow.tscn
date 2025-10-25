@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://b38sox3j6yruf"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_y06ya"]
+[ext_resource type="Script" uid="uid://cxryalfje7385" path="res://Scripts/Extra/ItemWindow.cs" id="2_n1dl1"]
+[ext_resource type="Script" uid="uid://bnevppd5xmugv" path="res://Scripts/UtilitiesTab/ItemTable.cs" id="3_ceyta"]
+
+[node name="ItemsPopup" type="Window" node_paths=PackedStringArray("_ItemTable", "_Confirm")]
+transparent_bg = true
+oversampling_override = 1.0
+title = "Change Hint Status"
+initial_position = 2
+size = Vector2i(600, 400)
+wrap_controls = true
+transient = true
+exclusive = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
+theme = ExtResource("1_y06ya")
+script = ExtResource("2_n1dl1")
+_ItemTable = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/RichTextLabel")
+_Confirm = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.109804, 0.121569, 0.129412, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+theme = ExtResource("1_y06ya")
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+script = ExtResource("3_ceyta")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(0.815686, 1, 0.768627, 1)
+layout_mode = 2
+theme = ExtResource("1_y06ya")
+text = "Ok"
+
+[node name="VSeparator" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3

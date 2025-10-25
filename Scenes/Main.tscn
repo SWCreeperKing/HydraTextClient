@@ -52,7 +52,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "v.0.5.3"
+_Version = "v.0.5.4"
 _UITheme = ExtResource("4_erwvk")
 _AddressField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
@@ -81,7 +81,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 5
+current_tab = 0
 script = ExtResource("4_0sclb")
 Controls = {
 "HintsTab": NodePath("Hints"),
@@ -95,7 +95,6 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -341,7 +340,7 @@ metadata/_tab_index = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client"]
 layout_mode = 2
 
-[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation", "_History")]
+[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowTimestamp", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation", "_History")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -358,11 +357,12 @@ _SendMessage = NodePath("Send/LineEdit")
 _SendMessageButton = NodePath("Send/Button")
 _ScrollToBottom = NodePath("Send/Button2")
 _ScrollContainer = NodePath("MessagesScroll")
+_ShowTimestamp = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox7")
 _ShowProgressive = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer/CheckBox5")
 _ShowUseful = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer/CheckBox2")
 _ShowNormal = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer/CheckBox3")
 _ShowTraps = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer/CheckBox4")
-_ShowOnlyYou = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer/CheckBox6")
+_ShowOnlyYou = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox8")
 _ClearTextOnDisconnect = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox6")
 _LineSeparation = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3/SpinBox")
 _History = NodePath("Label")
@@ -512,6 +512,18 @@ layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Clear Text when all slots disconnect"
 
+[node name="CheckBox8" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+button_pressed = true
+text = "Show Related to you only"
+
+[node name="CheckBox7" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+button_pressed = true
+text = "Show Timestamps"
+
 [node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -544,12 +556,6 @@ layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Traps"
-
-[node name="CheckBox6" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-button_pressed = true
-text = "Show Related to you only"
 
 [node name="MessagesScroll" type="ScrollContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
 layout_mode = 2
@@ -1124,6 +1130,7 @@ script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
 [node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3

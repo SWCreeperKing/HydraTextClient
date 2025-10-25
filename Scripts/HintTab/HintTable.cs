@@ -93,7 +93,7 @@ public partial class HintTable : TextTable
             else if (s.StartsWith("change&"))
             {
                 var split = s[7..].Split("&_&");
-                _HintChangerWindow.ShowWindow(int.Parse(split[1]), split[0], split[2], split[3], long.Parse(split[4]));
+                _HintChangerWindow.ShowWindow(int.Parse(split[1]), int.Parse(split[0]), split[2], split[3], long.Parse(split[4]));
             }
             else
             {
@@ -107,7 +107,13 @@ public partial class HintTable : TextTable
         if (!RefreshUI) return;
 
         var orderedHints =
-            MultiworldName.CurrentWorld.HintDatas.Values.Where(hint => hint.HintStatus switch
+            MultiworldName.CurrentWorld.HintDatas.Values
+                          .Where(hint =>
+                           {
+                               var order1 = GetOrderSlot(hint.FindingPlayerSlot);
+                               return !(GetOrderSlot(hint.ReceivingPlayerSlot) == order1 && order1 == 1);
+                           })
+                          .Where(hint => hint.HintStatus switch
                            {
                                Found => _ShowFound.ButtonPressed,
                                Unspecified => _ShowUnspecified.ButtonPressed,
@@ -124,11 +130,12 @@ public partial class HintTable : TextTable
         {
             orderedHints = SortingOrder(orderedHints, SortOrder[0], true);
         }
-        
+
         if (SortOrder.Count > 1)
         {
             orderedHints = SortOrder.Skip(1)
-                                    .Aggregate(orderedHints, (current, option) => SortingOrder(current, option));
+                                    .Aggregate(orderedHints, (current, option)
+                                         => SortingOrder(current, option));
         }
 
         UpdateData(orderedHints.Select(hint => hint.GetData()).ToList());

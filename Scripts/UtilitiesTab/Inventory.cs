@@ -13,6 +13,7 @@ public partial class Inventory : TextTable
 {
     public bool RefreshUI = true;
     public List<ItemInfo> Items = [];
+    public Label CheatedLabel;
 
     public override void _Ready()
     {
@@ -42,6 +43,8 @@ public partial class Inventory : TextTable
                              $"[url=\"{infoGrouping.First().GetHashCode()}\"]{FormatItemColor(infoGrouping.First(), false)}[/url]"
                          ])
                         .ToList());
+        var cheatedItems = Items.Count(item => item.LocationName == "Cheat Console");
+        CheatedLabel.Text = cheatedItems == 0 ? "" : $"Cheated Items: [{cheatedItems:###,###}]"; 
         RefreshUI = false;
     }
 
