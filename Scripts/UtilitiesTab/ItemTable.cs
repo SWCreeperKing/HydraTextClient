@@ -67,7 +67,8 @@ public partial class ItemTable : TextTable
             var current = itemHistoryRaw[index];
             var last = itemHistory[^1];
 
-            if (last.Flags != ItemFlags.None || current.Flags != ItemFlags.None || last.From != current.From)
+            if (last.Flags is not (ItemFlags.None or ItemFlags.Trap) ||
+                current.Flags is not (ItemFlags.None or ItemFlags.Trap) || last.From != current.From)
             {
                 itemHistory.Add(current);
                 continue;

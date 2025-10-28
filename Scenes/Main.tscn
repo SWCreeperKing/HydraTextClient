@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=30 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
@@ -26,7 +26,6 @@
 [ext_resource type="Script" uid="uid://pa631jj77egh" path="res://Scripts/UtilitiesTab/LocationEdit.cs" id="18_c4ay3"]
 [ext_resource type="Script" uid="uid://b77ex1bruqikn" path="res://Scripts/UtilitiesTab/LocationTree.cs" id="20_5jffn"]
 [ext_resource type="PackedScene" uid="uid://bsow4duwjud02" path="res://Scenes/ConfirmationWindow.tscn" id="26_4n42c"]
-[ext_resource type="PackedScene" uid="uid://dlvg4s3mubqwj" path="res://Scenes/HintPriorityWindow.tscn" id="28_4n42c"]
 [ext_resource type="PackedScene" uid="uid://b38sox3j6yruf" path="res://Scenes/ItemWindow.tscn" id="29_c5snn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
@@ -673,7 +672,7 @@ theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Avoid"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangerWindow")]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangePopup")]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/normal_font_size = 20
@@ -690,7 +689,7 @@ _ShowPriority = NodePath("../FlowContainer/CheckBox5")
 _ShowUnspecified = NodePath("../FlowContainer/CheckBox2")
 _ShowNoPriority = NodePath("../FlowContainer/CheckBox3")
 _ShowAvoid = NodePath("../FlowContainer/CheckBox4")
-_HintChangerWindow = NodePath("../../../../../../HintPriority")
+_HintChangePopup = NodePath("../../../../../../PopupMenu")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
 [node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" node_paths=PackedStringArray("_InventoryContainer", "_Folder")]
@@ -1452,14 +1451,24 @@ _Link = "https://linktr.ee/raphael2512"
 [node name="ConfirmWindow" parent="." instance=ExtResource("26_4n42c")]
 visible = false
 
-[node name="HintPriority" parent="." instance=ExtResource("28_4n42c")]
-visible = false
-
 [node name="Timer" type="Timer" parent="."]
 wait_time = 30.0
 
 [node name="ItemsPopup" parent="." instance=ExtResource("29_c5snn")]
 visible = false
+
+[node name="PopupMenu" type="PopupMenu" parent="."]
+oversampling_override = 1.0
+size = Vector2i(149, 100)
+theme = ExtResource("4_erwvk")
+allow_search = false
+item_count = 3
+item_0/text = "Priority"
+item_0/id = 0
+item_1/text = "No Priority"
+item_1/id = 1
+item_2/text = "Avoid"
+item_2/id = 2
 
 [connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
 [connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]

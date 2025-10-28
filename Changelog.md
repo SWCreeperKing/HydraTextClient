@@ -4,6 +4,8 @@
 - Fixed change hint priority not working for users with a nickname
 - Fixed hint table not showing nickname for finding player
 - Added a toggle for showing timestamps in the text client
+- Made join/leave/tags changed messages more resistant to nicknames
+- Moved the change priority popup from a window to a popup menu
 
 ---
 # v0.5.3

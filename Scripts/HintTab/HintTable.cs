@@ -22,7 +22,8 @@ public partial class HintTable : TextTable
     [Export] private CheckBox _ShowUnspecified;
     [Export] private CheckBox _ShowNoPriority;
     [Export] private CheckBox _ShowAvoid;
-    [Export] private HintChangerWindow _HintChangerWindow;
+    [Export] private PopupMenu _HintChangePopup;
+    private string[] _CurrentItemSelected;
 
     public List<SortObject> SortOrder => Data.HintSortOrder;
 
@@ -92,13 +93,25 @@ public partial class HintTable : TextTable
             }
             else if (s.StartsWith("change&"))
             {
-                var split = s[7..].Split("&_&");
-                _HintChangerWindow.ShowWindow(int.Parse(split[1]), int.Parse(split[0]), split[2], split[3], long.Parse(split[4]));
+                _CurrentItemSelected = s[7..].Split("&_&");
+                _HintChangePopup.Position = Vector2I.Zero;
+                _HintChangePopup.Popup(new Rect2I((Vector2I)_HintChangePopup.GetMousePosition(),
+                    _HintChangePopup.Size));
             }
             else
             {
                 DisplayServer.ClipboardSet(s);
             }
+        };
+        _HintChangePopup.IndexPressed += l =>
+        {
+            var client = ClientList[PlayerSlots[int.Parse(_CurrentItemSelected[0])]].Client;
+            client.UpdateHint(int.Parse(_CurrentItemSelected[1]), long.Parse(_CurrentItemSelected[4]), l switch
+            {
+                0 => Priority,
+                1 => NoPriority,
+                2 => Avoid
+            });
         };
     }
 

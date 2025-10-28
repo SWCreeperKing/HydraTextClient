@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Packets;
 using ArchipelagoMultiTextClient.Scripts.TextClientTab;
 using ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 using CreepyUtil.Archipelago;
@@ -32,7 +33,7 @@ public partial class SlotClient : Control
     private string DeleteForeground = "orangered";
     private string DeleteBackground = "#570000";
     private double NullTimer;
-        
+
 
     public string PlayerName { get; set; }
 
@@ -129,13 +130,6 @@ public partial class SlotClient : Control
         TryDisconnection();
     }
 
-    //todo: Claíomh Mór [LG] (Claiomh [PK]) (Team #1) hinting Pokemon FireRed and LeafGreen has joined. Client(0.5.0), ['HintGame', 'APSudoku'].
-    // doesn't match
-    public static readonly Regex ServerJoinLeaveMessageRegex =
-        new(
-            @"(.+) \(Team #\d+\) (has stopped (?:tracking|viewing) the game\.|has left the game\.|playing .+ has joined\.|(?:tracking|viewing) .+ has joined\.) Client\(.+\), (.+)\.",
-            RegexOptions.Compiled);
-
     public static readonly Regex RemoveNickName = new(@".+ \((.+)\)");
 
     public void HasConnected()
@@ -168,50 +162,48 @@ public partial class SlotClient : Control
         Client.OnServerMessagePacketReceived += packet =>
         {
             var text = packet.Data[0].Text;
-            if (text.Contains(" has changed tags from ["))
+            switch (packet)
             {
-                var mainSplit = text.Split(" has changed tags from ");
-                var secondSplit = mainSplit[1].Split(" to ");
-                var player = mainSplit[0].Split(" (Team ")[0];
-                player = RemoveNickName.IsMatch(player) ? RemoveNickName.Match(player).Groups[1].Value : player;
-                Messages.Enqueue(new ClientMessage(
-                    [
-                        new JsonMessagePart
-                        {
-                            Text = $"{Array.IndexOf(ChosenTextClient.PlayerNames, player)}",
-                            Type = JsonMessagePartType.PlayerId
-                        },
-                        new JsonMessagePart { Text = $" {secondSplit[0]} → {secondSplit[1]}" }
-                    ],
-                    MessageSender.TagsChanged));
-                return;
+                case JoinPrintJsonPacket join:
+                    EnqueueJoinLeaveMessage(join.Slot, MessageSender.Joined);
+                    return;
+                case LeavePrintJsonPacket leave:
+                    EnqueueJoinLeaveMessage(leave.Slot, MessageSender.Left);
+                    return;
+                case TagsChangedPrintJsonPacket tagsChanged:
+                {
+                    var secondSplit = text.Split(" has changed tags from ")[1].Split(" to ");
+                    Messages.Enqueue(new ClientMessage(
+                        [
+                            new JsonMessagePart
+                            {
+                                Text = $"{tagsChanged.Slot}",
+                                Type = JsonMessagePartType.PlayerId
+                            },
+                            new JsonMessagePart { Text = $" {secondSplit[0]} → {secondSplit[1]}" }
+                        ],
+                        MessageSender.TagsChanged));
+                    return;
+                }
             }
 
-            if (ServerJoinLeaveMessageRegex.IsMatch(text))
+            Messages.Enqueue(new ClientMessage(packet.Data, MessageSender.Server));
+            return;
+
+            void EnqueueJoinLeaveMessage(int player, MessageSender sender)
             {
-                var match = ServerJoinLeaveMessageRegex.Match(text);
-                var groups = match.Groups.Values.Skip(1).Select(g => g.Value).ToArray();
-                var player = RemoveNickName.IsMatch(groups[0])
-                    ? RemoveNickName.Match(groups[0]).Groups[1].Value
-                    : groups[0];
-                var status = groups[1];
-                var tags = groups[2];
-                var leftJoin = status.Contains("stopped") || status.Contains("left")
-                    ? MessageSender.Left
-                    : MessageSender.Joined;
+                var tagsStart = text.LastIndexOf('[') + 1;
+                var tagsEnd = text.LastIndexOf(']');
                 Messages.Enqueue(new ClientMessage(
                 [
                     new JsonMessagePart
                     {
-                        Text = $"{Array.IndexOf(ChosenTextClient.PlayerNames, player)}",
+                        Text = $"{player}",
                         Type = JsonMessagePartType.PlayerId
                     },
-                    new JsonMessagePart { Text = $" {tags}" }
-                ], leftJoin));
-                return;
+                    new JsonMessagePart { Text = $" [{text[tagsStart..tagsEnd]}]" }
+                ], sender));
             }
-
-            Messages.Enqueue(new ClientMessage(packet.Data, MessageSender.Server));
         };
 
         Client.OnDeathLinkPacketReceived += (source, cause) =>
@@ -288,7 +280,7 @@ public partial class SlotClient : Control
         InventoryManager.AddItems(Client?.PlayerName, Client!.GetOutstandingItems(), true);
 
         Client.ExcludeBouncedPacketsFromSelf = false;
-        
+
         Main.ConnectClient(Client);
         SlotTable.RefreshUI = true;
     }
