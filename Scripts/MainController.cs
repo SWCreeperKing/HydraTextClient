@@ -5,6 +5,7 @@ using System.Linq;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
+using ArchipelagoMultiTextClient.Scripts.Console;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using ArchipelagoMultiTextClient.Scripts.SettingsTab;
@@ -91,6 +92,7 @@ public partial class MainController : Control
 
     [Export] private string _Version;
     [Export] private Theme _UITheme;
+    [Export] private LoggerLabel _AppLogger;
     [Export] private LineEdit _AddressField;
     [Export] private LineEdit _PasswordField;
     [Export] private LineEdit _PortField;
@@ -118,6 +120,9 @@ public partial class MainController : Control
     public override void _EnterTree()
     {
         Main = this;
+        _AppLogger.Init();
+        OS.AddLogger(_AppLogger.Logger);
+        GD.Print("Godot Logger Added");
         GetViewport().TransparentBg = true;
         _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;

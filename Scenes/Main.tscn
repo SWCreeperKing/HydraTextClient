@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
@@ -26,6 +26,7 @@
 [ext_resource type="Script" uid="uid://pa631jj77egh" path="res://Scripts/UtilitiesTab/LocationEdit.cs" id="18_c4ay3"]
 [ext_resource type="Script" uid="uid://b77ex1bruqikn" path="res://Scripts/UtilitiesTab/LocationTree.cs" id="20_5jffn"]
 [ext_resource type="PackedScene" uid="uid://bsow4duwjud02" path="res://Scenes/ConfirmationWindow.tscn" id="26_4n42c"]
+[ext_resource type="Script" uid="uid://doipjirqpi3cy" path="res://Scripts/Console/LoggerLabel.cs" id="26_kpo4j"]
 [ext_resource type="PackedScene" uid="uid://b38sox3j6yruf" path="res://Scenes/ItemWindow.tscn" id="29_c5snn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
@@ -43,7 +44,7 @@ keyword_colors = {
 "openfolder": Color(0, 0.6117647, 0, 1)
 }
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager", "_BackgroundOverrides")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager", "_BackgroundOverrides")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,6 +54,7 @@ grow_vertical = 2
 script = ExtResource("1_rgh2o")
 _Version = "v.0.5.4"
 _UITheme = ExtResource("4_erwvk")
+_AppLogger = NodePath("TabContainer/Consoles/Godot/Godot/Panel/RichTextLabel")
 _AddressField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
 _PortField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit")
@@ -80,7 +82,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 0
+current_tab = 5
 script = ExtResource("4_0sclb")
 Controls = {
 "HintsTab": NodePath("Hints"),
@@ -94,6 +96,7 @@ Controls = {
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -1129,7 +1132,6 @@ script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
 [node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1348,6 +1350,42 @@ autowrap_mode = 0
 script = ExtResource("14_346fj")
 _Columns = Array[String](["Item", "Game", "Item Log", "Hint Table", "Mark as Special", "        "])
 
+[node name="Consoles" type="TabContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+current_tab = 0
+metadata/_tab_index = 6
+
+[node name="Godot" type="MarginContainer" parent="TabContainer/Consoles"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+metadata/_tab_index = 0
+
+[node name="Godot" type="ScrollContainer" parent="TabContainer/Consoles/Godot"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="TabContainer/Consoles/Godot/Godot"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("4_erwvk")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Consoles/Godot/Godot/Panel"]
+layout_mode = 0
+offset_right = 1138.0
+offset_bottom = 606.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("4_erwvk")
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
+script = ExtResource("26_kpo4j")
+
 [node name="Credits" type="MarginContainer" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -1355,7 +1393,7 @@ theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
-metadata/_tab_index = 6
+metadata/_tab_index = 7
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Credits"]
 layout_mode = 2

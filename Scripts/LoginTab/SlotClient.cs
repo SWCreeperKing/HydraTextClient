@@ -95,10 +95,12 @@ public partial class SlotClient : Control
 
                 if (error is not null && error.Length > 0)
                 {
+                    GD.PrintErr($"Connection [For;{login.Slot}] Failed:\n{string.Join("\n", error)}");
                     CallDeferred("ConnectionFailed", error);
                 }
                 else
                 {
+                    GD.Print($"Connection [For;{login.Slot}] Succeeded");
                     CallDeferred("HasConnected");
                 }
             }
@@ -115,6 +117,7 @@ public partial class SlotClient : Control
         {
             Client?.TryDisconnect();
             CallDeferred("HasDisconnected");
+            GD.Print($"Connection [For;{PlayerName}] Ended");
         });
     }
 
