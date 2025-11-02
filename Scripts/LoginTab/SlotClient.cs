@@ -33,9 +33,14 @@ public partial class SlotClient : Control
     private string DeleteForeground = "orangered";
     private string DeleteBackground = "#570000";
     private double NullTimer;
-
-
+    
     public string PlayerName { get; set; }
+
+    public override void _EnterTree()
+    {
+        Client.OnConnectionEvent += _ => IsRunning = SlotTable.RefreshUI = true;
+        Client.OnConnectionLost += () => IsRunning = !(SlotTable.RefreshUI = true);
+    }
 
     public override void _Process(double delta)
     {
@@ -82,7 +87,7 @@ public partial class SlotClient : Control
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly, DeathLink, TrapLink] : [TextOnly, NoText];
-
+        
         Task.Run(() =>
         {
             try

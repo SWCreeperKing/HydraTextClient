@@ -513,6 +513,7 @@ public partial class MainController : Control
         ItemFilterer.RefreshUI = true;
         InventoryManager.RefreshUI = true;
         PlayerTable.RefreshUI = true;
+        SlotTable.RefreshUI = true;
         _UpdateHints = true;
     }
 

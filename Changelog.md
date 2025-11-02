@@ -1,3 +1,8 @@
+# v0.6
+
+- Attached a custom logger to Godot (print out in Consoles -> Godot)
+
+---
 # v0.5.4
 
 - Can now view the history of received items
