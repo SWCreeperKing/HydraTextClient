@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=32 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/PlayerTable.cs" id="7_50glp"]
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
 [ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTab/HintTable.cs" id="7_vy5pj"]
+[ext_resource type="PackedScene" uid="uid://bp1og2ro2rini" path="res://Scenes/Prefabs/GamePortrait.tscn" id="9_4n42c"]
 [ext_resource type="Script" uid="uid://bpycgg2m3u8wr" path="res://Scripts/HintTab/HintOrganizer.cs" id="11_hwpts"]
 [ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/SettingsTab/SizeManager.cs" id="12_h1m7h"]
 [ext_resource type="PackedScene" uid="uid://ckdnrlxfssxb7" path="res://Scenes/Prefabs/PanelText.tscn" id="13_3tgeq"]
@@ -54,7 +55,7 @@ grow_vertical = 2
 script = ExtResource("1_rgh2o")
 _Version = "v.0.6-pre"
 _UITheme = ExtResource("4_erwvk")
-_AppLogger = NodePath("TabContainer/Consoles/Godot/Godot/Panel/RichTextLabel")
+_AppLogger = NodePath("TabContainer/Consoles/Godot/ScrollContainer/PanelContainer/RichTextLabel")
 _AddressField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
 _PasswordField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
 _PortField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit")
@@ -82,7 +83,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 5
+current_tab = 0
 script = ExtResource("4_0sclb")
 Controls = {
 "HintsTab": NodePath("Hints"),
@@ -91,12 +92,11 @@ Controls = {
 "items_and_locations/split": NodePath("Utilities/Items and Locations"),
 "login/foldable/extra": NodePath("Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"),
 "login/split_container": NodePath("Login/Login"),
-"settings/split_container/settings_split": NodePath("Settings/ScrollContainer/VBoxContainer/SettingSplit"),
+"settings/split_container/settings_split": NodePath("Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"),
 "text_client/foldable_container/settings_container": NodePath("Text Client/ScrollContainer/TextClientContainer/SettingsContainer")
 }
 
 [node name="Login" type="ScrollContainer" parent="TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -300,6 +300,7 @@ text = "Please limit or disconnect from slots you don't need open, it causes unn
 fit_content = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 15
 
@@ -317,6 +318,7 @@ max_length = 16
 keep_editing_on_text_submit = true
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -327,6 +329,67 @@ meta_underlined = false
 hint_underlined = false
 script = ExtResource("7_0sclb")
 _Columns = Array[String](["Connect", "   Slot", "Delete"])
+
+[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+
+[node name="GamePortrait" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait2" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait3" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait4" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait5" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait6" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait7" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait8" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait9" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait10" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait11" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait12" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait13" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait14" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait15" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait16" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait17" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+
+[node name="GamePortrait18" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
+layout_mode = 2
+_ConnectedTint = Color(0, 0.85, 0.3683334, 0.29803923)
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -1131,7 +1194,13 @@ autowrap_mode = 0
 script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
-[node name="Settings" type="MarginContainer" parent="TabContainer" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
+[node name="Settings" type="TabContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+current_tab = 0
+metadata/_tab_index = 5
+
+[node name="Main" type="MarginContainer" parent="TabContainer/Settings" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1143,98 +1212,98 @@ script = ExtResource("6_v1gob")
 _ColorContainer = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings/ColorContainer")
 _ExportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button2")
 _ImportColors = NodePath("ScrollContainer/VBoxContainer/HBoxContainer4/Button")
-_ShowFoundHints = NodePath("../Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox5")
+_ShowFoundHints = NodePath("../../Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/CheckBox5")
 _AlwaysOnTop = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox")
 _ShowNewItems = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox2")
-_ItemFilter = NodePath("../../ConfirmWindow")
+_ItemFilter = NodePath("../../../ConfirmWindow")
 _GlobalUiSize = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4/SpinBox")
-metadata/_tab_index = 5
+metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Main"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 50
 
-[node name="Button2" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Export Colors to Clipboard"
 
-[node name="Button3" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Open Save Dir"
 
-[node name="Button" type="Button" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Import Colors from Clipboard"
 
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 35
 
-[node name="SettingSplit" type="HSplitContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer"]
+[node name="SettingSplit" type="HSplitContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
 metadata/_tab_index = 0
 
-[node name="Settings" type="ScrollContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit"]
+[node name="Settings" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 6
-
-[node name="Settings2" type="ScrollContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="UiSettingContainer" type="VBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2"]
+[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="Settings2" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UiSettingContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Always on top"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Show New Items on Connect"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Text Client Font Size:  "
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1243,21 +1312,21 @@ script = ExtResource("12_h1m7h")
 Id = "text_client"
 DefaultSize = 20
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Hints Table Font Size:  "
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1266,21 +1335,21 @@ script = ExtResource("12_h1m7h")
 Id = "hint_table"
 DefaultSize = 20
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Players Table Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1289,21 +1358,21 @@ script = ExtResource("12_h1m7h")
 Id = "player_table"
 DefaultSize = 24
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Item Filter Table Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1312,37 +1381,44 @@ script = ExtResource("12_h1m7h")
 Id = "item_filter_table"
 DefaultSize = 16
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Global UI Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
 alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="Item Filter" type="MarginContainer" parent="TabContainer/Settings"]
+visible = false
 layout_mode = 2
-theme_override_constants/separation = 5
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+metadata/_tab_index = 1
 
-[node name="Label" type="Label" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Item Filter"]
 layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "   Item Filters"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Settings/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Settings/Item Filter/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("4_erwvk")
 bbcode_enabled = true
 fit_content = true
@@ -1365,19 +1441,17 @@ theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 metadata/_tab_index = 0
 
-[node name="Godot" type="ScrollContainer" parent="TabContainer/Consoles/Godot"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Consoles/Godot"]
 layout_mode = 2
+theme = ExtResource("4_erwvk")
 
-[node name="Panel" type="Panel" parent="TabContainer/Consoles/Godot/Godot"]
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Consoles/Godot/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme = ExtResource("4_erwvk")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Consoles/Godot/Godot/Panel"]
-layout_mode = 0
-offset_right = 1138.0
-offset_bottom = 606.0
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Consoles/Godot/ScrollContainer/PanelContainer"]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("4_erwvk")
@@ -1513,5 +1587,5 @@ item_2/id = 2
 [connection signal="pressed" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button2" to="." method="Save"]
 [connection signal="pressed" from="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer/Button" to="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/CodeEdit" method="Save"]
 [connection signal="pressed" from="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer/Button3" to="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/CodeEdit" method="SaveAndExit"]
-[connection signal="pressed" from="TabContainer/Settings/ScrollContainer/VBoxContainer/HBoxContainer4/Button3" to="." method="OpenSaveDir"]
+[connection signal="pressed" from="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4/Button3" to="." method="OpenSaveDir"]
 [connection signal="timeout" from="Timer" to="." method="UpdateDiscord"]

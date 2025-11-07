@@ -26,6 +26,9 @@ public partial class UiSaver : TabContainer
                 case SplitContainer sc:
                     Save(id, sc.SplitOffset);
                     break;
+                case TabContainer:
+                    GD.Print("Haven't added tab container to uisaver yet, todo: eventually (not an error)");
+                    break;
                 default:
                     GD.Print($"{control.GetType()} is not configured to save in UiSaver (can ignore if not dev)");
                     break;

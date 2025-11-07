@@ -128,6 +128,7 @@ bg_color = Color(0.27451, 0.27451, 0.27451, 1)
 default_font = ExtResource("1_7h0ys")
 default_font_size = 20
 AcceptDialog/styles/panel = SubResource("StyleBoxFlat_pmxma")
+Button/fonts/font = ExtResource("1_7h0ys")
 CheckBox/icons/checked = ExtResource("2_70gmd")
 CheckBox/icons/unchecked = ExtResource("3_8clno")
 CodeEdit/font_sizes/font_size = 18

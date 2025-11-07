@@ -1,6 +1,24 @@
 # v0.6
 
+todo:
+- a way to remove items from hint organizer
+- poptracker pack support
+- redo login UI
+  - multiworld connection
+    - list of saved multiworlds
+    - enable normal input if on temporary
+    - select slots for multiworld
+  - slot connection (stolen from Serpent.AI)
+    - grid of games sorted a-z
+    - name of slot on top
+    - cached checks done/total and gear for settings on the bottom
+- split settings into tabs
+- auto updater?
+
+done:
 - Attached a custom logger to Godot (print out in Consoles -> Godot)
+- Fixed a bug with games that have a `:` in them causing file problems
+- Seeing who sent you how many items will also show locations (it will say various locations if there are over 10 to reduce lag)
 
 ---
 # v0.5.4

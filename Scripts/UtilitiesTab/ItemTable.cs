@@ -28,7 +28,7 @@ public partial class ItemTable : TextTable
     public void UpdateListItemSpecific(ItemInfo[] items, ItemInfo specificItem)
     {
         if (ChosenTextClient is null) return;
-        _Columns = ["Count", "Player"];
+        _Columns = ["Count", "Player", "Locations"];
         UpdateData(items.Where(item => item.ItemId == specificItem.ItemId)
                         .GroupBy(info => info.Player.Name)
                         .OrderBy(group => HintTable.SortNumber(group.First().Flags))
@@ -36,11 +36,16 @@ public partial class ItemTable : TextTable
                         .Select(infoGrouping =>
                          {
                              var item = infoGrouping.First();
+                             var locations = infoGrouping
+                                            .Select(info
+                                                 => $"[color={Data["location"].Hex}]{info.LocationName}[/color]")
+                                            .ToArray();
                              var from = item.LocationName == "Cheat Console" ? 0 : item.Player.Slot;
                              return (string[])
                              [
                                  $"{infoGrouping.Count():###,###}",
-                                 $"[color={PlayerColor(from).Hex}]{GetAlias(from, true)}[/color]"
+                                 $"[color={PlayerColor(from).Hex}]{GetAlias(from, true)}[/color]",
+                                 locations.Length <= 10 ? string.Join(",\n ", locations) : "Various Locations"
                              ];
                          })
                         .ToList());

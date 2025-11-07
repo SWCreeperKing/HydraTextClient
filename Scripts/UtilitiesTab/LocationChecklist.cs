@@ -39,7 +39,7 @@ public partial class LocationChecklist : TabContainer
         {
             foreach (var folder in Directory.GetDirectories($"{SaveDir}/Checklists"))
             {
-                GamePresets[folder.Replace(@"\", "/").Split('/')[^1]] =
+                GamePresets[folder.Replace("_col.char_", ":").Replace(@"\", "/").Split('/')[^1]] =
                     Directory.GetFiles(folder).Select(s => s.Replace(@"\", "/")).ToArray();
             }
         }
@@ -94,7 +94,7 @@ public partial class LocationChecklist : TabContainer
                 return;
             }
 
-            var file = $"{SaveDir}/Checklists/{CurrentGame}/{name}";
+            var file = $"{SaveDir}/Checklists/{CurrentGame.Replace(":", "_col.char_")}/{name}";
             File.Create(file).Dispose();
             GamePresets[CurrentGame] = GamePresets.TryGetValue(CurrentGame, out var value) ? [.. value, file] : [file];
             LoadGame();
@@ -148,8 +148,8 @@ public partial class LocationChecklist : TabContainer
         _EditPreset.Visible = false;
         PresetNames = [];
         _Presets.Clear();
-        if (!Directory.Exists($"{SaveDir}/Checklists/{CurrentGame}"))
-            Directory.CreateDirectory($"{SaveDir}/Checklists/{CurrentGame}");
+        if (!Directory.Exists($"{SaveDir}/Checklists/{CurrentGame.Replace(":", "_col.char_")}"))
+            Directory.CreateDirectory($"{SaveDir}/Checklists/{CurrentGame.Replace(":", "_col.char_")}");
         else if (GamePresets[CurrentGame].Length > 0)
         {
             _OpenPreset.Visible = true;
