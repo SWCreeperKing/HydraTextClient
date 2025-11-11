@@ -1,24 +1,19 @@
-[gd_scene load_steps=32 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=28 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
-[ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="2_idj7w"]
-[ext_resource type="PackedScene" uid="uid://djs7npjk4pm4c" path="res://Scenes/Prefabs/PlayerSlotPrefab.tscn" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/PrefabScripts/UiSaver.cs" id="4_0sclb"]
+[ext_resource type="PackedScene" uid="uid://b1xdqj0npcrqr" path="res://Scenes/MainUi/LoginTab.tscn" id="4_c4ay3"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
-[ext_resource type="Script" uid="uid://2gbkqdcf4uh8" path="res://Scripts/LoginTab/MultiworldName.cs" id="5_jyqft"]
 [ext_resource type="Script" uid="uid://bc2fu6tsjpptx" path="res://Scripts/TextClientTab/TextClient.cs" id="5_pbw6q"]
 [ext_resource type="Script" uid="uid://yftj8mwqd7sw" path="res://Scripts/UtilitiesTab/HintManager.cs" id="6_4kpch"]
 [ext_resource type="Script" uid="uid://dlfak8565fsnj" path="res://Scripts/TextClientTab/RichToolTip.cs" id="6_h1m7h"]
 [ext_resource type="Script" uid="uid://bfy3oqqc5b38c" path="res://Scripts/SettingsTab/Settings.cs" id="6_v1gob"]
-[ext_resource type="Script" uid="uid://bko8pgi5olqc6" path="res://Scripts/LoginTab/SlotTable.cs" id="7_0sclb"]
 [ext_resource type="Script" uid="uid://duj1i66hr32s5" path="res://Scripts/PlayerTable.cs" id="7_50glp"]
 [ext_resource type="PackedScene" uid="uid://bq2qnb4mebhir" path="res://Scenes/Prefabs/PlayerBox.tscn" id="7_grg3l"]
 [ext_resource type="Script" uid="uid://d1yxcfqe81w0o" path="res://Scripts/HintTab/HintTable.cs" id="7_vy5pj"]
-[ext_resource type="PackedScene" uid="uid://bp1og2ro2rini" path="res://Scenes/Prefabs/GamePortrait.tscn" id="9_4n42c"]
 [ext_resource type="Script" uid="uid://bpycgg2m3u8wr" path="res://Scripts/HintTab/HintOrganizer.cs" id="11_hwpts"]
 [ext_resource type="Script" uid="uid://6luhemtwosxf" path="res://Scripts/SettingsTab/SizeManager.cs" id="12_h1m7h"]
 [ext_resource type="PackedScene" uid="uid://ckdnrlxfssxb7" path="res://Scenes/Prefabs/PanelText.tscn" id="13_3tgeq"]
-[ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="13_h1m7h"]
 [ext_resource type="Script" uid="uid://cav10x07vujdd" path="res://Scripts/SettingsTab/ItemFilterer.cs" id="14_346fj"]
 [ext_resource type="PackedScene" uid="uid://dv1anbejmu0kq" path="res://Scenes/Prefabs/DragFollowerFolder.tscn" id="14_c4ay3"]
 [ext_resource type="Script" uid="uid://crvs83lm5p3t4" path="res://Scripts/UtilitiesTab/InventoryManager.cs" id="15_kpo4j"]
@@ -26,9 +21,10 @@
 [ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="18_aht7i"]
 [ext_resource type="Script" uid="uid://pa631jj77egh" path="res://Scripts/UtilitiesTab/LocationEdit.cs" id="18_c4ay3"]
 [ext_resource type="Script" uid="uid://b77ex1bruqikn" path="res://Scripts/UtilitiesTab/LocationTree.cs" id="20_5jffn"]
-[ext_resource type="PackedScene" uid="uid://bsow4duwjud02" path="res://Scenes/ConfirmationWindow.tscn" id="26_4n42c"]
+[ext_resource type="PackedScene" uid="uid://bqueb3rb7cuna" path="res://Scenes/MainUi/Credits.tscn" id="22_c4ay3"]
+[ext_resource type="PackedScene" uid="uid://bsow4duwjud02" path="res://Scenes/Windows/ConfirmationWindow.tscn" id="26_4n42c"]
 [ext_resource type="Script" uid="uid://doipjirqpi3cy" path="res://Scripts/Console/LoggerLabel.cs" id="26_kpo4j"]
-[ext_resource type="PackedScene" uid="uid://b38sox3j6yruf" path="res://Scenes/ItemWindow.tscn" id="29_c5snn"]
+[ext_resource type="PackedScene" uid="uid://b38sox3j6yruf" path="res://Scenes/Windows/ItemWindow.tscn" id="29_c5snn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r150o"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 1)
@@ -45,7 +41,7 @@ keyword_colors = {
 "openfolder": Color(0, 0.6117647, 0, 1)
 }
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "_AddressField", "_PasswordField", "_PortField", "_SlotField", "_SlotAddButton", "_HintManager", "_TabContainer", "_ConnectionTimer", "_TextClient", "_DiscordTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_SlotTable", "_NameManager", "_BackgroundOverrides")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "_HintManager", "_TabContainer", "_TextClient", "_LoginTab", "_BackgroundOverrides")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -53,29 +49,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_rgh2o")
-_Version = "v.0.6-pre"
+Version = "v0.6-pre"
 _UITheme = ExtResource("4_erwvk")
 _AppLogger = NodePath("TabContainer/Consoles/Godot/ScrollContainer/PanelContainer/RichTextLabel")
-_AddressField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
-_PasswordField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
-_PortField = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit")
-_SlotField = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer/LineEdit")
-_SlotAddButton = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer/Button")
-_SlotPackedScene = ExtResource("3_kln2b")
 _HintManager = NodePath("TabContainer/Utilities/Items and Locations")
 _TabContainer = NodePath("TabContainer")
-_ConnectionTimer = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/Label3")
 _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/TextClientContainer")
-_DiscordTimer = NodePath("Timer")
-_DiscordText = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Label")
-_DiscordReconnect = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button")
-_VersionLabel = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4/Label2")
-_SaveButton = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button2")
-_SlotTable = NodePath("TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/RichTextLabel")
-_NameManager = NodePath("TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient")
+_LoginTab = NodePath("TabContainer/Login")
 _BackgroundOverrides = [NodePath("TabContainer"), NodePath("TabContainer/Hints"), NodePath("TabContainer/Utilities"), NodePath("TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist")]
 
-[node name="TabContainer" type="TabContainer" parent="." node_paths=PackedStringArray("Controls")]
+[node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -84,312 +67,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
 current_tab = 0
-script = ExtResource("4_0sclb")
-Controls = {
-"HintsTab": NodePath("Hints"),
-"Utilities": NodePath("Utilities"),
-"hints/organizer/split": NodePath("Hints/Hint Organizer"),
-"items_and_locations/split": NodePath("Utilities/Items and Locations"),
-"login/foldable/extra": NodePath("Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"),
-"login/split_container": NodePath("Login/Login"),
-"settings/split_container/settings_split": NodePath("Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"),
-"text_client/foldable_container/settings_container": NodePath("Text Client/ScrollContainer/TextClientContainer/SettingsContainer")
-}
 
-[node name="Login" type="ScrollContainer" parent="TabContainer"]
+[node name="Login" parent="TabContainer" node_paths=PackedStringArray("_MainController", "_DiscordTimer") instance=ExtResource("4_c4ay3")]
 layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="Login" type="HSplitContainer" parent="TabContainer/Login"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("4_erwvk")
-split_offset = 500
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Login/Login"]
-layout_mode = 2
-
-[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login/Login/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="MultiTextClient" type="VBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2" node_paths=PackedStringArray("InfoLabel", "NameEdit", "SaveButton", "NameLabel")]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 7
-script = ExtResource("5_jyqft")
-InfoLabel = NodePath("Label")
-NameEdit = NodePath("LineEdit2")
-SaveButton = NodePath("Button")
-NameLabel = NodePath("Label2")
-
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("4_erwvk")
-text = "archipelago.gg"
-placeholder_text = "Address"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("4_erwvk")
-placeholder_text = "Password"
-secret = true
-script = ExtResource("2_idj7w")
-
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-theme_override_constants/h_separation = 10
-button_pressed = true
-text = "Hide"
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("4_erwvk")
-placeholder_text = "Port"
-virtual_keyboard_type = 2
-script = ExtResource("2_idj7w")
-NumberOnly = true
-IsPort = true
-
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-theme_override_constants/h_separation = 10
-text = "Hide"
-
-[node name="Label3" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-custom_minimum_size = Vector2(1, 1)
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Timer"
-autowrap_mode = 3
-
-[node name="HSeparator2" type="HSeparator" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-custom_minimum_size = Vector2(1, 1)
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Name the Multiworld
-In doing so information in the hints tab will be saved."
-autowrap_mode = 2
-
-[node name="LineEdit2" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("4_erwvk")
-placeholder_text = "Temporary"
-emoji_menu_enabled = false
-
-[node name="Button" type="Button" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-text = "Save"
-
-[node name="Label2" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-custom_minimum_size = Vector2(1, 1)
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Current Multiworld:
-<insert name>"
-autowrap_mode = 3
-
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="FoldableContainer" type="FoldableContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-title = "Extra"
-title_alignment = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 7
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 7
-theme_override_constants/margin_bottom = 7
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-
-[node name="Button2" type="Button" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Safety Save"
-
-[node name="Button" type="Button" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Retry Rich Presence Connection"
-
-[node name="Label" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
-modulate = Color(0.784314, 1, 0.784314, 1)
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Rich Presence Connected!"
-horizontal_alignment = 1
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "HydraTextClient "
-
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Button5" parent="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-theme_override_font_sizes/font_size = 10
-text = "Donate ❤️ :3"
-_Link = "https://www.patreon.com/c/SW_CreeperKing"
-
-[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Login/Login"]
-layout_mode = 2
-
-[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Login/Login/ScrollContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="Messages" type="RichTextLabel" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
-modulate = Color(1, 0.580562, 0.563035, 1)
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-bbcode_enabled = true
-text = "Please limit or disconnect from slots you don't need open, it causes unneeded stress on the AP servers"
-fit_content = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Button" type="Button" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Add"
-
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("4_erwvk")
-placeholder_text = "Slot Name"
-max_length = 16
-keep_editing_on_text_submit = true
-
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-fit_content = true
-autowrap_mode = 0
-meta_underlined = false
-hint_underlined = false
-script = ExtResource("7_0sclb")
-_Columns = Array[String](["Connect", "   Slot", "Delete"])
-
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/h_separation = 7
-theme_override_constants/v_separation = 7
-
-[node name="GamePortrait" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait2" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait3" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait4" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait5" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait6" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait7" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait8" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait9" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait10" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait11" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait12" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait13" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait14" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait15" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait16" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait17" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-
-[node name="GamePortrait18" parent="TabContainer/Login/Login/ScrollContainer2/MarginContainer2/VBoxContainer/HFlowContainer" instance=ExtResource("9_4n42c")]
-layout_mode = 2
-_ConnectedTint = Color(0, 0.85, 0.3683334, 0.29803923)
+_MainController = NodePath("../..")
+_DiscordTimer = NodePath("../../Timer")
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -1460,105 +1142,9 @@ fit_content = true
 autowrap_mode = 0
 script = ExtResource("26_kpo4j")
 
-[node name="Credits" type="MarginContainer" parent="TabContainer"]
+[node name="Credits" parent="TabContainer" instance=ExtResource("22_c4ay3")]
 visible = false
 layout_mode = 2
-theme_override_constants/margin_left = 7
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 7
-theme_override_constants/margin_bottom = 7
-metadata/_tab_index = 7
-
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Credits"]
-layout_mode = 2
-
-[node name="Credits" type="VBoxContainer" parent="TabContainer/Credits/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HSeparator3" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-
-[node name="Button" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Archipelago"
-_Link = "https://archipelago.gg/"
-
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Label" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Tools"
-horizontal_alignment = 1
-
-[node name="Button2" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Godot 4.5 (Beta 1)"
-_Link = "https://godotengine.org/"
-
-[node name="Button3" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "C# MultiClient"
-_Link = "https://github.com/ArchipelagoMW/Archipelago.MultiClient.Net"
-
-[node name="Button6" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Discord Rich Presence"
-_Link = "https://github.com/Lachee/discord-rpc-csharp"
-
-[node name="Button4" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Rider IDE"
-_Link = "https://www.jetbrains.com/rider/"
-
-[node name="HSeparator2" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Label2" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Developer"
-horizontal_alignment = 1
-
-[node name="Button5" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "SW_CreeperKing"
-_Link = "https://linktr.ee/swcreeperking"
-
-[node name="HSeparator4" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Label3" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Archipelago Rich Presence Developer"
-horizontal_alignment = 1
-
-[node name="Button7" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Serpent.AI"
-_Link = "https://github.com/SerpentAI/Archipelago/releases"
-
-[node name="HSeparator5" type="HSeparator" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="Label4" type="Label" parent="TabContainer/Credits/ScrollContainer/Credits"]
-layout_mode = 2
-theme = ExtResource("4_erwvk")
-text = "Icon Artist"
-horizontal_alignment = 1
-
-[node name="Button8" parent="TabContainer/Credits/ScrollContainer/Credits" instance=ExtResource("13_h1m7h")]
-layout_mode = 2
-text = "Raphael2512"
-_Link = "https://linktr.ee/raphael2512"
 
 [node name="ConfirmWindow" parent="." instance=ExtResource("26_4n42c")]
 visible = false
@@ -1582,9 +1168,20 @@ item_1/id = 1
 item_2/text = "Avoid"
 item_2/id = 2
 
-[connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
-[connection signal="toggled" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/CheckBox" to="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]
-[connection signal="pressed" from="TabContainer/Login/Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button2" to="." method="Save"]
+[node name="UiSaver" type="Control" parent="." node_paths=PackedStringArray("Controls")]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_0sclb")
+Controls = {
+"HintsTab": NodePath("../TabContainer/Hints"),
+"Utilities": NodePath("../TabContainer/Utilities"),
+"hints/organizer/split": NodePath("../TabContainer/Hints/Hint Organizer"),
+"items_and_locations/split": NodePath("../TabContainer/Utilities/Items and Locations"),
+"settings/split_container/settings_split": NodePath("../TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"),
+"text_client/foldable_container/settings_container": NodePath("../TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer")
+}
+
 [connection signal="pressed" from="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer/Button" to="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/CodeEdit" method="Save"]
 [connection signal="pressed" from="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer/Button3" to="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/CodeEdit" method="SaveAndExit"]
 [connection signal="pressed" from="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4/Button3" to="." method="OpenSaveDir"]

@@ -1,0 +1,271 @@
+[gd_scene load_steps=9 format=3 uid="uid://b1xdqj0npcrqr"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_2i7gx"]
+[ext_resource type="Script" uid="uid://dhl3ytghjsgxc" path="res://Scripts/LoginTab/LoginTab.cs" id="1_xlanu"]
+[ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/PrefabScripts/UiSaver.cs" id="2_xlanu"]
+[ext_resource type="Script" uid="uid://2gbkqdcf4uh8" path="res://Scripts/LoginTab/MultiworldName.cs" id="3_swpnp"]
+[ext_resource type="Script" uid="uid://c3pmmh8pce2xn" path="res://Scripts/LoginTab/LineEditHide.cs" id="4_wt0de"]
+[ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="5_mcild"]
+[ext_resource type="Script" uid="uid://cbrmkvk3ms60p" path="res://Scripts/LoginTab/SlotView.cs" id="6_688ap"]
+[ext_resource type="PackedScene" uid="uid://bp1og2ro2rini" path="res://Scenes/Prefabs/GamePortrait.tscn" id="7_1yxpi"]
+
+[node name="Login" type="ScrollContainer" node_paths=PackedStringArray("_AddressField", "_PasswordField", "_PortField", "_SlotAddButton", "_ConnectionTimer", "_DiscordText", "_DiscordReconnect", "_VersionLabel", "_SaveButton", "_NameManager", "_SlotView")]
+offset_right = 1200.0
+offset_bottom = 600.0
+script = ExtResource("1_xlanu")
+_AddressField = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/LineEdit")
+_PasswordField = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit")
+_PortField = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit")
+_SlotAddButton = NodePath("Login/MarginContainer2/VBoxContainer/HBoxContainer/Button")
+_ConnectionTimer = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/Label3")
+_DiscordText = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Label")
+_DiscordReconnect = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button")
+_VersionLabel = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4/Label2")
+_SaveButton = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/Button2")
+_NameManager = NodePath("Login/ScrollContainer/MarginContainer2/MultiTextClient")
+_SlotView = NodePath("Login/MarginContainer2/VBoxContainer/ScrollContainer2/HFlowContainer")
+metadata/_tab_index = 0
+
+[node name="Login" type="HSplitContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_2i7gx")
+split_offset = 500
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Login"]
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="Login/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="MultiTextClient" type="VBoxContainer" parent="Login/ScrollContainer/MarginContainer2" node_paths=PackedStringArray("InfoLabel", "NameEdit", "SaveButton", "NameLabel")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 7
+script = ExtResource("3_swpnp")
+InfoLabel = NodePath("Label")
+NameEdit = NodePath("LineEdit2")
+SaveButton = NodePath("Button")
+NameLabel = NodePath("Label2")
+
+[node name="UiSaver" type="Control" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient" node_paths=PackedStringArray("Controls")]
+layout_mode = 2
+script = ExtResource("2_xlanu")
+Controls = {
+"login/foldable/extra": NodePath("../FoldableContainer"),
+"login/item_scale": NodePath("../../../../MarginContainer2/VBoxContainer/HBoxContainer/SpinBox"),
+"login/split_container": NodePath("../../../..")
+}
+
+[node name="LineEdit" type="LineEdit" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_2i7gx")
+text = "archipelago.gg"
+placeholder_text = "Address"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LineEdit" type="LineEdit" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_2i7gx")
+placeholder_text = "Password"
+secret = true
+script = ExtResource("4_wt0de")
+
+[node name="CheckBox" type="CheckBox" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+theme_override_constants/h_separation = 10
+button_pressed = true
+text = "Hide"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="LineEdit" type="LineEdit" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_2i7gx")
+placeholder_text = "Port"
+virtual_keyboard_type = 2
+script = ExtResource("4_wt0de")
+NumberOnly = true
+IsPort = true
+
+[node name="CheckBox" type="CheckBox" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+theme_override_constants/h_separation = 10
+text = "Hide"
+
+[node name="Label3" type="Label" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Timer"
+autowrap_mode = 3
+
+[node name="HSeparator2" type="HSeparator" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Name the Multiworld
+In doing so information in the hints tab will be saved."
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+text = "Save"
+
+[node name="LineEdit2" type="LineEdit" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_2i7gx")
+placeholder_text = "Temporary"
+emoji_menu_enabled = false
+
+[node name="Label2" type="Label" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+custom_minimum_size = Vector2(1, 1)
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Current Multiworld:
+<insert name>"
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FoldableContainer" type="FoldableContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+title = "Extra"
+title_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+
+[node name="Button2" type="Button" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Safety Save"
+
+[node name="Button" type="Button" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Retry Rich Presence Connection"
+
+[node name="Label" type="Label" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
+modulate = Color(0.784314, 1, 0.784314, 1)
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "Rich Presence Connected!"
+horizontal_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "HydraTextClient "
+
+[node name="VSeparator" type="VSeparator" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button5" parent="Login/ScrollContainer/MarginContainer2/MultiTextClient/FoldableContainer/MarginContainer/VBoxContainer/HBoxContainer4" instance=ExtResource("5_mcild")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Donate ❤️ :3"
+_Link = "https://www.patreon.com/c/SW_CreeperKing"
+
+[node name="MarginContainer2" type="MarginContainer" parent="Login"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Login/MarginContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="Messages" type="RichTextLabel" parent="Login/MarginContainer2/VBoxContainer"]
+modulate = Color(1, 0.580562, 0.563035, 1)
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+bbcode_enabled = true
+text = "Please limit or disconnect from slots you don't need open, it causes unneeded stress on the AP servers"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Login/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_2i7gx")
+text = "Add New Slot"
+
+[node name="Label" type="Label" parent="Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_2i7gx")
+text = "  Scale:"
+
+[node name="SpinBox" type="SpinBox" parent="Login/MarginContainer2/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+min_value = 0.05
+max_value = 10.0
+step = 0.01
+value = 0.39999999999999997
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="Login/MarginContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Login/MarginContainer2/VBoxContainer/ScrollContainer2" node_paths=PackedStringArray("_ScaleBox")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 7
+theme_override_constants/v_separation = 7
+script = ExtResource("6_688ap")
+_GamePortraitScene = ExtResource("7_1yxpi")
+_ScaleBox = NodePath("../../HBoxContainer/SpinBox")
+
+[connection signal="toggled" from="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/CheckBox" to="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer2/LineEdit" method="TogglePassword"]
+[connection signal="toggled" from="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/CheckBox" to="Login/ScrollContainer/MarginContainer2/MultiTextClient/HBoxContainer3/LineEdit" method="TogglePassword"]

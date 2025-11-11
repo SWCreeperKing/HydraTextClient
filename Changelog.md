@@ -1,6 +1,7 @@
-# v0.6
+# v0.7 todo:
+- discord bot?
 
-todo:
+# v0.6 todo:
 - a way to remove items from hint organizer
 - poptracker pack support
 - redo login UI
@@ -13,7 +14,10 @@ todo:
     - name of slot on top
     - cached checks done/total and gear for settings on the bottom
 - split settings into tabs
-- auto updater?
+- autosave
+  - only save if needed
+  - default: 5min
+- auto updater? (unlikely)
 
 done:
 - Attached a custom logger to Godot (print out in Consoles -> Godot)

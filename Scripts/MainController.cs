@@ -24,7 +24,6 @@ using HintTable = ArchipelagoMultiTextClient.Scripts.HintTab.HintTable;
 using ItemFilterer = ArchipelagoMultiTextClient.Scripts.SettingsTab.ItemFilterer;
 using MultiworldName = ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
 using SlotClient = ArchipelagoMultiTextClient.Scripts.LoginTab.SlotClient;
-using SlotTable = ArchipelagoMultiTextClient.Scripts.LoginTab.SlotTable;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -90,32 +89,18 @@ public partial class MainController : Control
     public static event ClientConnectHandler? ClientConnectEvent;
     public static event ClientDisconnectHandler? ClientDisconnectEvent;
 
-    [Export] private string _Version;
+    [Export] public string Version;
     [Export] private Theme _UITheme;
     [Export] private LoggerLabel _AppLogger;
-    [Export] private LineEdit _AddressField;
-    [Export] private LineEdit _PasswordField;
-    [Export] private LineEdit _PortField;
-    [Export] private LineEdit _SlotField;
-    [Export] private Button _SlotAddButton;
-    [Export] private PackedScene _SlotPackedScene;
     [Export] private HintManager _HintManager;
     [Export] private TabContainer _TabContainer;
-    [Export] private Label _ConnectionTimer;
     [Export] private TextClient _TextClient;
-    [Export] private Timer _DiscordTimer;
-    [Export] private Label _DiscordText;
-    [Export] private Button _DiscordReconnect;
-    [Export] private Label _VersionLabel;
-    [Export] private Button _SaveButton;
-    [Export] private SlotTable _SlotTable;
-    [Export] private MultiworldName _NameManager;
+    [Export] private global::LoginTab _LoginTab;
     [Export] private TabContainer[] _BackgroundOverrides = [];
 
     public string Address => Data.Address;
     public string Password => Data.Password;
     public int Port => Data.Port;
-    public string Slot => _SlotField.Text;
 
     public override void _EnterTree()
     {
@@ -124,7 +109,6 @@ public partial class MainController : Control
         OS.AddLogger(_AppLogger.Logger);
         GD.Print("Godot Logger Added");
         GetViewport().TransparentBg = true;
-        _VersionLabel.Text += _Version;
         GlobalTheme = _UITheme;
         Data = new UserData();
         if (!Directory.Exists(SaveDir))
@@ -140,27 +124,18 @@ public partial class MainController : Control
             if (Data.WindowPosition is null) return;
             GetWindow().Position = Data.WindowPosition!.Value;
         }
+
+        if (!Directory.Exists($"{SaveDir}/Game Portraits"))
+        {
+            Directory.CreateDirectory($"{SaveDir}/Game Portraits");
+        }
     }
 
     public override void _Ready()
     {
-        _NameManager.ChangeState(MultiworldState.None);
         Data.NullCheck();
         RichPresenceController.Init();
-        _DiscordTimer.Start();
-        _SlotField.TextSubmitted += TryAddSlot;
-        _SlotAddButton.Pressed += () => TryAddSlot(Slot);
-        _AddressField.TextChanged += s => Data.Address = s;
-        _PasswordField.TextChanged += s => Data.Password = s;
-        _AddressField.Text = Data.Address;
-        _PasswordField.Text = Data.Password;
-        _PortField.Text = $"{Data.Port}";
         SetAlwaysOnTop(Data.AlwaysOnTop);
-
-        foreach (var player in Data.SlotNames)
-        {
-            AddSlot(player);
-        }
 
         Background.BgColor = Data["background_color"];
 
@@ -173,21 +148,10 @@ public partial class MainController : Control
         OnSave += () => Data.WindowPosition = GetWindow().Position;
 
         if (new Random().Next(100) != 1) return;
-        _SaveButton.Text = "Safty Save";
     }
 
     public override void _Process(double delta)
     {
-        _DiscordText.Visible = DiscordIntegration.DiscordAlive;
-        _DiscordReconnect.Visible = !DiscordIntegration.DiscordAlive;
-
-        // ReSharper disable once AssignmentInConditionalExpression
-        if (_ConnectionTimer.Visible = ConnectionCooldown > 0) // intentional (because funny)
-        {
-            _ConnectionTimer.Text = $"Connection Cooldown: {ConnectionCooldown:0.00}s (as to not spam the server)";
-            ConnectionCooldown -= delta;
-        }
-
         if (MoveToTab != -1)
         {
             _TabContainer.CurrentTab = MoveToTab;
@@ -231,37 +195,6 @@ public partial class MainController : Control
             HintTable.RefreshUI = true;
             _UpdateHints = false;
         }
-
-        var anyRunning = ClientList.Values.Any(client => client.IsRunning is not null && client.IsRunning!.Value);
-        ToggleLockInput(!anyRunning);
-    }
-
-    public void TryAddSlot(string slot)
-    {
-        if (slot.Trim() == "" || ClientList.ContainsKey(slot.Trim())) return;
-        AddSlot(slot.Trim());
-        Data.SlotNames.Add(slot.Trim());
-        _SlotField.Text = "";
-    }
-
-    public void AddSlot(string playerName)
-    {
-        var client = new SlotClient();
-        client.PlayerName = playerName;
-        client.Main = this;
-        ClientList.Add(playerName, client);
-        _SlotTable.AddChild(client);
-        SlotTable.RefreshUI = true;
-    }
-
-    public void RemoveSlot(string playerName)
-    {
-        var client = ClientList[playerName];
-        _SlotTable.RemoveChild(client);
-        SlotTable.RefreshUI = true;
-        ClientList.Remove(playerName);
-        Data.SlotNames.Remove(playerName);
-        client.QueueFree();
     }
 
     public static string ItemIdToItemName(long id, int playerSlot)
@@ -329,7 +262,7 @@ public partial class MainController : Control
         HintsMap.Add(client, null);
         _HintManager.RegisterPlayer(client);
         ClientConnectEvent?.Invoke(client);
-        _NameManager.ChangeState(MultiworldState.Load);
+        _LoginTab.ChangeMultiworldState(MultiworldState.Load);
 
         RefreshUIColors();
     }
@@ -353,7 +286,7 @@ public partial class MainController : Control
 
         if (ActiveClients.Count == 0)
         {
-            _NameManager.ChangeState(MultiworldState.None);
+            _LoginTab.ChangeMultiworldState(MultiworldState.None);
             Clear();
         }
         else if (ChosenTextClient is null)
@@ -366,13 +299,6 @@ public partial class MainController : Control
         HintsMap.Remove(client);
         InventoryManager.RemoveInventory(client.PlayerName);
         RefreshUIColors();
-    }
-
-    public void ToggleLockInput(bool toggle)
-    {
-        _AddressField.Editable = toggle;
-        _PasswordField.Editable = toggle;
-        _PortField.Editable = toggle;
     }
 
     public static void Clear()
@@ -513,7 +439,6 @@ public partial class MainController : Control
         ItemFilterer.RefreshUI = true;
         InventoryManager.RefreshUI = true;
         PlayerTable.RefreshUI = true;
-        SlotTable.RefreshUI = true;
         _UpdateHints = true;
     }
 

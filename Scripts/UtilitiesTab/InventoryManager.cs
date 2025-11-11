@@ -29,6 +29,8 @@ public partial class InventoryManager : Control
         while (!AwaitingInventories.IsEmpty)
         {
             AwaitingInventories.TryDequeue(out var playerName);
+            if (Inventories.ContainsKey(playerName!)) return;
+            
             Inventory inventory = new();
             inventory._Columns = ["Count", "Items"];
             inventory.Theme = MainController.GlobalTheme;
@@ -65,8 +67,18 @@ public partial class InventoryManager : Control
 
         while (!AwaitingItems.IsEmpty)
         {
-            AwaitingItems.TryDequeue(out var tuple);
+            AwaitingItems.TryPeek(out var tuple);
             var (playerName, items, firstSend) = tuple;
+            if (!Inventories.TryGetValue(playerName, out var inventory))
+            {
+                if (!AwaitingInventories.Contains(playerName))
+                {
+                    AwaitingInventories.Enqueue(playerName);
+                }
+                return;
+            }
+
+            AwaitingItems.TryDequeue(out _);
             if (MultiworldName.CurrentWorld is not null)
             {
                 if (firstSend)
@@ -88,7 +100,7 @@ public partial class InventoryManager : Control
                 }
             }
 
-            Inventories[playerName].AddItems(items);
+            inventory.AddItems(items);
         }
 
         if (!RefreshUI) return;

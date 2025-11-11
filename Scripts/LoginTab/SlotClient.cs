@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -28,18 +27,27 @@ public partial class SlotClient : Control
     public ApClient Client = new();
     public bool IsTextClient = false;
     private string[]? _Error;
-    private string ConnectForeground = "#00ae00";
-    private string ConnectBackground = "#003000";
-    private string DeleteForeground = "orangered";
-    private string DeleteBackground = "#570000";
     private double NullTimer;
-    
+
     public string PlayerName { get; set; }
+
+    public event Action<ConnectionStatus, string[]?>? ConnectionStatusChanged;
 
     public override void _EnterTree()
     {
-        Client.OnConnectionEvent += _ => IsRunning = SlotTable.RefreshUI = true;
-        Client.OnConnectionLost += () => IsRunning = !(SlotTable.RefreshUI = true);
+        ConnectionStatusChanged += (status, _) =>
+        {
+            IsRunning = status switch
+            {
+                ConnectionStatus.NotConnected => false,
+                ConnectionStatus.Connecting => null,
+                ConnectionStatus.Connected => true,
+                ConnectionStatus.Error => false,
+            };
+        };
+
+        Client.OnConnectionEvent += _ => ConnectionStatusChanged?.Invoke(ConnectionStatus.Connected, _Error);
+        Client.OnConnectionLost += () => ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected, _Error);
     }
 
     public override void _Process(double delta)
@@ -50,8 +58,7 @@ public partial class SlotClient : Control
         if (NullTimer >= 30 && !Client.IsConnected)
         {
             NullTimer = 0;
-            IsRunning = false;
-            SlotTable.RefreshUI = true;
+            ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected, _Error);
         }
 
         if (IsRunning is null or false) return;
@@ -81,13 +88,12 @@ public partial class SlotClient : Control
             ConnectionCooldown = 4;
         }
 
-        IsRunning = null;
         _Error = null;
-        SlotTable.RefreshUI = true;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Connecting, _Error);
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly, DeathLink, TrapLink] : [TextOnly, NoText];
-        
+
         Task.Run(() =>
         {
             try
@@ -131,8 +137,7 @@ public partial class SlotClient : Control
 
     public void ConnectionFailed(string[] error, bool disconnect)
     {
-        IsRunning = false;
-        _Error = error;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Error, _Error = error);
         if (!disconnect) return;
         ConnectionCooldown = 0;
         TryDisconnection();
@@ -142,7 +147,6 @@ public partial class SlotClient : Control
 
     public void HasConnected()
     {
-        IsRunning = true;
         var playerName = Client.PlayerName;
         Client.OnConnectionErrorReceived += (err, _) =>
         {
@@ -290,38 +294,15 @@ public partial class SlotClient : Control
         Client.ExcludeBouncedPacketsFromSelf = false;
 
         Main.ConnectClient(Client);
-        SlotTable.RefreshUI = true;
     }
 
     public void HasDisconnected()
     {
-        IsRunning = false;
         Main.DisconnectClient(Client);
+        ConnectionStatusChanged?.Invoke(_Error is null ? ConnectionStatus.NotConnected : ConnectionStatus.Error,
+            _Error);
         Client = new ApClient();
-        SlotTable.RefreshUI = true;
     }
 
     public void Say(string message) => Client.Say(message);
-
-    public string[] GrabUI()
-    {
-        var connectText = IsRunning switch
-        {
-            false =>
-                $"[url=\"connect {PlayerName}\"][color={ConnectForeground}][bgcolor={ConnectBackground}]  Connect   [/bgcolor][/color][/url]",
-            true =>
-                $"[url=\"disconnect {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] Disconnect [/bgcolor][/color][/url]",
-            null => "Connecting. . ."
-        };
-
-        var deleteText = IsRunning is not null && !IsRunning!.Value
-            ? $"[url=\"delete {PlayerName}\"][color={DeleteForeground}][bgcolor={DeleteBackground}] X [/bgcolor][/color][/url]"
-            : "   ";
-
-        var errorText = _Error is not null && _Error.Length > 0
-            ? $"\n[color=red]{string.Join('\n', _Error)}[/color]"
-            : "";
-
-        return [connectText, $"   {PlayerName}   {errorText}", deleteText];
-    }
 }

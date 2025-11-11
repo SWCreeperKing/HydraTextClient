@@ -65,6 +65,7 @@ public partial class ItemTable : TextTable
                                  ))
                             .ToArray();
 
+        if (itemHistoryRaw.Length == 0) return;
         List<ItemEntry> itemHistory = [itemHistoryRaw[0]];
 
         for (var index = 1; index < itemHistoryRaw.Length; index++)
@@ -82,7 +83,6 @@ public partial class ItemTable : TextTable
             itemHistory[^1] = new ItemEntry(last.IndexStart, current.IndexStart, [..last.Items, ..current.Items],
                 ItemFlags.None, last.From, [..last.Locations, ..current.Locations]);
         }
-
 
         UpdateData(itemHistory.Select(item => item.GetData()).ToList());
     }

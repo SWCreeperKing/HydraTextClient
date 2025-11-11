@@ -4,7 +4,7 @@ using Godot.Collections;
 
 namespace ArchipelagoMultiTextClient.Scripts.PrefabScripts;
 
-public partial class UiSaver : TabContainer
+public partial class UiSaver : Control
 {
     [Export] private Dictionary<string, Control> Controls = [];
 
@@ -26,8 +26,11 @@ public partial class UiSaver : TabContainer
                 case SplitContainer sc:
                     Save(id, sc.SplitOffset);
                     break;
-                case TabContainer:
-                    GD.Print("Haven't added tab container to uisaver yet, todo: eventually (not an error)");
+                case TabContainer tc:
+                    Save(id, tc.CurrentTab);
+                    break;
+                case SpinBox sb:
+                    Save(id, (float)sb.Value);
                     break;
                 default:
                     GD.Print($"{control.GetType()} is not configured to save in UiSaver (can ignore if not dev)");
@@ -47,6 +50,19 @@ public partial class UiSaver : TabContainer
                     break;
                 case SplitContainer sc:
                     sc.SplitOffset = (int)Load(id, sc.SplitOffset);
+                    break;
+                case SpinBox sb:
+                    sb.Value = Load(id, (float)sb.Value);
+                    break;
+                case TabContainer tc:
+                    try
+                    {
+                        tc.CurrentTab = (int)Load(id, 0);
+                    }
+                    catch
+                    {
+                        tc.CurrentTab = 0;
+                    }
                     break;
                 default:
                     GD.Print($"{control.GetType()} is not configured to save in UiSaver (can ignore if not dev)");

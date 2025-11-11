@@ -3,9 +3,11 @@ using System;
 
 public partial class GamePortrait : Control
 {
+    [Export] private Vector2 _ImageSize = new(300, 450);
     [Export] private TextureRect _Image;
     [Export] private Label _SlotName;
     [Export] private Label _CheckCount;
+    [Export] private Label _ErrorText;
     [Export] private ColorRect _ConnectionTint;
     [Export] private ColorRect _MainTint;
     [Export] private Color _HoverTint;
@@ -16,26 +18,19 @@ public partial class GamePortrait : Control
     private double _Timer;
     private double _ConnectionTimer;
     private bool _IsConnecting;
-    private string[]? _ErrorText = null;
     private ConnectionStatus _Status = ConnectionStatus.NotConnected;
 
-    public event Action? OnTileClicked;
+    public event Action? OnTileLeftClicked;
+    public event Action? OnTileRightClicked;
+    public ConnectionStatus Status => _Status;
 
-    public override void _Ready()
+    public string SlotName
     {
-        // for testing
-        OnTileClicked += () =>
-        {
-            if (_Status is not ConnectionStatus.Connecting)
-            {
-                SetStatus(ConnectionStatus.Connecting);
-            }
-            else
-            {
-                SetStatus(ConnectionStatus.NotConnected);
-            }
-        };
+        get => _SlotName.Text;
+        set => _SlotName.Text = value;
     }
+
+    public override void _Ready() => SetErrorText("");
 
     public override void _Process(double delta)
     {
@@ -47,7 +42,7 @@ public partial class GamePortrait : Control
 
         if (_Image.GetGlobalRect().HasPoint(GetGlobalMousePosition()))
         {
-            _Timer += delta * 2;
+            _Timer += delta * 2.3;
         }
         else _Timer -= delta * 1.3f;
 
@@ -55,11 +50,36 @@ public partial class GamePortrait : Control
         _MainTint.Color = _IdleTint.Lerp(_HoverTint, (float)_Timer);
     }
 
+    public override void _GuiInput(InputEvent @event)
+    {
+        if (@event is not InputEventMouseButton button) return;
+        if (!button.Pressed) return;
+        if (button.ButtonIndex is MouseButton.Left)
+        {
+            OnTileLeftClicked?.Invoke();
+        }
+        else if (button.ButtonIndex is MouseButton.Right)
+        {
+            OnTileRightClicked?.Invoke();
+        }
+    }
+
+    public void SetImageScale(float scale)
+    {
+        CustomMinimumSize = _ImageSize * scale;
+        _Image.SetScale(new Vector2(scale, scale));
+    }
+
     public void SetStatus(ConnectionStatus status, string[]? error = null)
     {
         _ConnectionTimer = 0;
-        _ErrorText = error;
+        CallDeferred("SetErrorText", error is null ? "" : string.Join($"ERROR:\n{string.Join("\n", error)}"));
         _Status = status;
+        CallDeferred("SetConnectionColor");
+    }
+
+    private void SetConnectionColor()
+    {
         switch (_Status)
         {
             case ConnectionStatus.Error:
@@ -73,33 +93,19 @@ public partial class GamePortrait : Control
                 break;
         }
     }
+    
+    public void SetErrorText(string text)
+    {
+        GD.Print($"Set [{SlotName}] text: [{text}]");
+        _ErrorText.Visible = text != "";
+        _ErrorText.Text = text;
+    }
 
     public double WaveWeight(double x, double scale)
     {
         var correction = 1.6f / scale;
         var sin = Mathf.Sin((x - correction) * scale);
         return Math.Min(sin + 1, 1);
-    }
-
-    public override void _GuiInput(InputEvent @event)
-    {
-        if (@event is not InputEventMouseButton button) return;
-        if (!button.Pressed) return;
-        if (button.ButtonIndex is MouseButton.Left)
-        {
-            OnTileClicked?.Invoke();
-        }
-        else if (button.ButtonIndex is MouseButton.Right) // only for testing
-        {
-            if (_Status is ConnectionStatus.Connecting)
-            {
-                SetStatus(ConnectionStatus.Connected);
-            }
-            else
-            {
-                SetStatus(ConnectionStatus.Error, ["Test Error"]);
-            }
-        }
     }
 }
 

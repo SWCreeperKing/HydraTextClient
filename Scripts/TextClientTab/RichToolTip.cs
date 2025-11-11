@@ -4,7 +4,6 @@ namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 
 public partial class RichToolTip : RichTextLabel
 {
-    
     public override GodotObject _MakeCustomTooltip(string forText)
     {
         if (forText == "") return null;

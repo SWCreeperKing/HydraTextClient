@@ -1,0 +1,104 @@
+[gd_scene load_steps=3 format=3 uid="uid://bqueb3rb7cuna"]
+
+[ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="1_8ckuf"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_s1qlg"]
+
+[node name="Credits" type="MarginContainer"]
+offset_right = 1200.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+metadata/_tab_index = 7
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="Credits" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+
+[node name="Button" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Archipelago"
+_Link = "https://archipelago.gg/"
+
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label" type="Label" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("2_s1qlg")
+text = "Tools"
+horizontal_alignment = 1
+
+[node name="Button2" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Godot 4.5 (Beta 1)"
+_Link = "https://godotengine.org/"
+
+[node name="Button3" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "C# MultiClient"
+_Link = "https://github.com/ArchipelagoMW/Archipelago.MultiClient.Net"
+
+[node name="Button6" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Discord Rich Presence"
+_Link = "https://github.com/Lachee/discord-rpc-csharp"
+
+[node name="Button4" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Rider IDE"
+_Link = "https://www.jetbrains.com/rider/"
+
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label2" type="Label" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("2_s1qlg")
+text = "Developer"
+horizontal_alignment = 1
+
+[node name="Button5" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "SW_CreeperKing"
+_Link = "https://linktr.ee/swcreeperking"
+
+[node name="HSeparator4" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label3" type="Label" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("2_s1qlg")
+text = "Archipelago Rich Presence Developer"
+horizontal_alignment = 1
+
+[node name="Button7" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Serpent.AI"
+_Link = "https://github.com/SerpentAI/Archipelago/releases"
+
+[node name="HSeparator5" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Label4" type="Label" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("2_s1qlg")
+text = "Icon Artist"
+horizontal_alignment = 1
+
+[node name="Button8" parent="ScrollContainer/Credits" instance=ExtResource("1_8ckuf")]
+layout_mode = 2
+text = "Raphael2512"
+_Link = "https://linktr.ee/raphael2512"

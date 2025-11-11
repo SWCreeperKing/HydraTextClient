@@ -1,0 +1,217 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2dyb34qpgw0h"]
+
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_88qu3"]
+[ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="2_8s2fx"]
+
+[node name="GameConfigure" type="Window"]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(510, 500)
+theme = ExtResource("1_88qu3")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_88qu3")
+color = Color(0.109804, 0.121569, 0.129412, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 15
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+placeholder_text = "Slot Name"
+
+[node name="LineEdit3" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+placeholder_text = "Alternate Slot Name for this Multiworld"
+editable = false
+
+[node name="LineEdit4" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+placeholder_text = "Alternate Password for this Multiworld"
+editable = false
+
+[node name="HSeparator2" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+
+[node name="Label" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Game: "
+
+[node name="OptionButton" type="OptionButton" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_88qu3")
+selected = 0
+item_count = 1
+popup/item_0/text = "Unkown"
+popup/item_0/id = 0
+
+[node name="LineEdit2" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+placeholder_text = "Game Name"
+
+[node name="Label" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Game image must be named same as ^
+
+Sites to download game images from"
+autowrap_mode = 3
+
+[node name="Label4" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Game image must be named same as ^
+
+Sites to download game images from"
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_88qu3")
+text = "SteamGridDB.com"
+script = ExtResource("2_8s2fx")
+_Link = "https://www.steamgriddb.com/"
+
+[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_88qu3")
+text = "IGDB.com"
+script = ExtResource("2_8s2fx")
+_Link = "https://www.igdb.com/"
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Open Game Portrait Directory"
+
+[node name="HSeparator3" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Set Poptracker Pack Path"
+
+[node name="Label3" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+modulate = Color(0.48, 0.48, 0.48, 1)
+layout_mode = 2
+text = "Path: /../../../.."
+
+[node name="HSeparator4" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "On connection Commands
+replaces:
+\"[address]\" with the address
+\"[port]\" with the port number
+\"[slot]\" with the slot name
+\"[password]\" with the password
+"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Console Command"
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Add"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VSeparator2" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(0.815686, 1, 0.768627, 1)
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Save/Add"
+
+[node name="VSeparator" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 0.784314, 0.847059, 1)
+layout_mode = 2
+theme = ExtResource("1_88qu3")
+text = "Delete/Cancel"
+
+[node name="VSeparator3" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
