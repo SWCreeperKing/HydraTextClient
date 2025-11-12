@@ -103,9 +103,11 @@ public partial class HintTable : TextTable
                 DisplayServer.ClipboardSet(s);
             }
         };
+
         _HintChangePopup.IndexPressed += l =>
         {
-            var client = ClientList[PlayerSlots[int.Parse(_CurrentItemSelected[0])]].Client;
+            var client = Main.Clients.First(client
+                => client.PlayerName == PlayerSlots[int.Parse(_CurrentItemSelected[0])]);
             client.UpdateHint(int.Parse(_CurrentItemSelected[1]), long.Parse(_CurrentItemSelected[4]), l switch
             {
                 0 => Priority,
@@ -196,7 +198,7 @@ public partial class HintTable : TextTable
     public int GetOrderSlot(int slot)
     {
         if (ActiveClients.Any(client => client.PlayerSlot == slot)) return 3;
-        return ClientList.ContainsKey(ActiveClients[0].PlayerNames[slot]) ? 2 : 1;
+        return Main.HasSlotName(ActiveClients[0].PlayerNames[slot]) ? 2 : 1;
     }
 
     public static int SortNumber(ItemFlags flags)

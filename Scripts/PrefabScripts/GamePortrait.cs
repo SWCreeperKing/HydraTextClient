@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ArchipelagoMultiTextClient.Scripts.LoginTab;
 
 public partial class GamePortrait : Control
 {
@@ -22,12 +23,14 @@ public partial class GamePortrait : Control
 
     public event Action? OnTileLeftClicked;
     public event Action? OnTileRightClicked;
+    
+    public SlotClient Client;
     public ConnectionStatus Status => _Status;
 
     public string SlotName
     {
         get => _SlotName.Text;
-        set => _SlotName.Text = value;
+        set => Client.PlayerName = _SlotName.Text = value;
     }
 
     public override void _Ready() => SetErrorText("");
@@ -48,6 +51,7 @@ public partial class GamePortrait : Control
 
         _Timer = Math.Clamp(_Timer, 0, 1);
         _MainTint.Color = _IdleTint.Lerp(_HoverTint, (float)_Timer);
+        Client.Update(delta);
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -70,12 +74,12 @@ public partial class GamePortrait : Control
         _Image.SetScale(new Vector2(scale, scale));
     }
 
-    public void SetStatus(ConnectionStatus status, string[]? error = null)
+    public void SetStatus(int status) => SetStatus((ConnectionStatus)status);
+    public void SetStatus(ConnectionStatus status)
     {
         _ConnectionTimer = 0;
-        CallDeferred("SetErrorText", error is null ? "" : string.Join($"ERROR:\n{string.Join("\n", error)}"));
         _Status = status;
-        CallDeferred("SetConnectionColor");
+        SetConnectionColor();
     }
 
     private void SetConnectionColor()
@@ -84,6 +88,7 @@ public partial class GamePortrait : Control
         {
             case ConnectionStatus.Error:
                 _ConnectionTint.Color = _ErrorTint;
+                SetErrorText(Client.Error is null ? "" : $"ERROR:\n{string.Join("\n", Client.Error)}");
                 break;
             case ConnectionStatus.Connected:
                 _ConnectionTint.Color = _ConnectedTint;
@@ -96,7 +101,6 @@ public partial class GamePortrait : Control
     
     public void SetErrorText(string text)
     {
-        GD.Print($"Set [{SlotName}] text: [{text}]");
         _ErrorText.Visible = text != "";
         _ErrorText.Text = text;
     }

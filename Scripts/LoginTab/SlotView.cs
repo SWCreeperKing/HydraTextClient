@@ -9,7 +9,10 @@ public partial class SlotView : HFlowContainer
     [Export] private PackedScene _GamePortraitScene;
     [Export] private SpinBox _ScaleBox;
     private Dictionary<string, GamePortrait> _Portraits = [];
+    private Dictionary<string, SlotClient> _Clients = [];
     private List<string> NamesOrder = [];
+
+    public Dictionary<string, SlotClient>.ValueCollection Clients => _Clients.Values;
 
     public override void _EnterTree()
     {
@@ -32,54 +35,37 @@ public partial class SlotView : HFlowContainer
 
     public bool HasSlotName(string name) => _Portraits.Keys.Any(client => client == name);
 
-    public void AddClient(SlotClient client)
+    public void AddClient(string playerName)
     {
-        var name = client.PlayerName;
         var portrait = _GamePortraitScene.Instantiate<GamePortrait>();
-        portrait.SlotName = name;
+        portrait.Client = new SlotClient();
+        portrait.SlotName = playerName;
         portrait.SetImageScale((float)_ScaleBox.Value);
 
-        client.ConnectionStatusChanged += (status, error) =>
-        {
-            switch (status)
-            {
-                case ConnectionStatus.NotConnected:
-                    portrait.SetStatus(ConnectionStatus.NotConnected, error);
-                    break;
-                case ConnectionStatus.Connecting:
-                    portrait.SetStatus(ConnectionStatus.Connecting, error);
-                    break;
-                case ConnectionStatus.Connected:
-                    portrait.SetStatus(ConnectionStatus.Connected, error);
-                    break;
-                case ConnectionStatus.Error:
-                    portrait.SetStatus(ConnectionStatus.Error, error);
-                    break;
-            }
-        };
+        portrait.Client.ConnectionStatusChanged += status => portrait.CallDeferred("SetStatus", (int)status);
 
         portrait.OnTileLeftClicked += () =>
         {
             if (portrait.Status is ConnectionStatus.Connecting) return;
-            if (portrait.Status is ConnectionStatus.NotConnected or ConnectionStatus.Error) client.TryConnection();
-            if (portrait.Status is ConnectionStatus.Connected) client.TryDisconnection();
+            if (portrait.Status is ConnectionStatus.NotConnected or ConnectionStatus.Error)
+                portrait.Client.TryConnection();
+            if (portrait.Status is ConnectionStatus.Connected) portrait.Client.TryDisconnection();
         };
 
-        NamesOrder.Add(name);
+        NamesOrder.Add(playerName);
         AddChild(portrait);
-        GetParent().AddChild(client);
-        _Portraits[name] = portrait;
+        _Portraits[playerName] = portrait;
+        _Clients[playerName] = portrait.Client;
         ReorderChildren();
     }
 
-    public void RemoveClient(SlotClient client)
+    public void RemoveClient(string playerName)
     {
-        var name = client.PlayerName;
-        var portrait = _Portraits[name];
-        NamesOrder.Remove(name);
+        var portrait = _Portraits[playerName];
+        NamesOrder.Remove(playerName);
         RemoveChild(portrait);
-        GetParent().AddChild(client);
-        _Portraits.Remove(name);
+        _Portraits.Remove(playerName);
+        _Clients.Remove(playerName);
         ReorderChildren();
     }
 

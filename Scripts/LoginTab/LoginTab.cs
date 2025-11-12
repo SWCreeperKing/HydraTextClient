@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ArchipelagoMultiTextClient.Scripts;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
@@ -22,6 +23,8 @@ public partial class LoginTab : ScrollContainer
     [Export] private MultiworldName _NameManager;
     [Export] private SlotView _SlotView;
 
+    public Dictionary<string,SlotClient>.ValueCollection Clients => _SlotView.Clients; 
+    
     public override void _EnterTree() { _VersionLabel.Text += _MainController.Version; }
 
     public override void _Ready()
@@ -54,33 +57,28 @@ public partial class LoginTab : ScrollContainer
             ConnectionCooldown -= delta;
         }
 
-        var anyRunning = ClientList.Values.Any(client => client.IsRunning is not null && client.IsRunning!.Value);
+        var anyRunning = _SlotView.Clients.Any(client => client.IsRunning is not null && client.IsRunning!.Value);
         ToggleLockInput(!anyRunning);
     }
 
+    public bool HasSlotName(string slotName) => _SlotView.HasSlotName(slotName);
+    
     public void TryAddSlot(string slot)
     {
-        if (slot.Trim() == "" || ClientList.ContainsKey(slot.Trim())) return;
+        if (slot.Trim() == "" || HasSlotName(slot.Trim())) return;
         AddSlot(slot.Trim());
         Data.SlotNames.Add(slot.Trim());
     }
-
+    
     public void AddSlot(string playerName)
     {
-        var client = new SlotClient();
-        client.PlayerName = playerName;
-        client.Main = _MainController;
-        ClientList.Add(playerName, client);
-        _SlotView.AddClient(client);
+        _SlotView.AddClient(playerName);
     }
 
     public void RemoveSlot(string playerName)
     {
-        var client = ClientList[playerName];
-        _SlotView.RemoveClient(client);
-        ClientList.Remove(playerName);
+        _SlotView.RemoveClient(playerName);
         Data.SlotNames.Remove(playerName);
-        client.QueueFree();
     }
 
     public void ToggleLockInput(bool toggle)

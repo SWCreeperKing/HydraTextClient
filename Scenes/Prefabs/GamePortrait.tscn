@@ -72,6 +72,7 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_hv7kw")
 text = "Error"
+autowrap_mode = 3
 
 [node name="HSeparator" type="HSeparator" parent="GamePortrait/MarginContainer/VBoxContainer"]
 modulate = Color(1, 1, 1, 0)

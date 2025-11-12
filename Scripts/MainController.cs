@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,7 +37,6 @@ public partial class MainController : Control
 
     public static Theme GlobalTheme;
     public static UserData Data;
-    public static Dictionary<string, SlotClient> ClientList = [];
     public static List<ApClient> ActiveClients = [];
     public static Dictionary<int, string> PlayerSlots = [];
     public static string[] Players = [];
@@ -46,6 +46,8 @@ public partial class MainController : Control
     public static double ConnectionCooldown;
     public static Dictionary<ApClient, HashSet<Hint>> HintsMap = [];
     public static string LastLocationChecked = null;
+    public static ConcurrentBag<SlotClient> ClientsToConnect = [];
+    public static ConcurrentBag<SlotClient> ClientsToDisconnect = [];
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
     private static readonly Dictionary<string, TwoWayLookup<long, string>> ItemIdToName = [];
@@ -54,7 +56,7 @@ public partial class MainController : Control
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
     private static StyleBoxFlat Background = new();
-
+    
     public static Dictionary<HintStatus, string> HintStatusColor = new()
     {
         [Found] = "hint_found",
@@ -98,6 +100,8 @@ public partial class MainController : Control
     [Export] private global::LoginTab _LoginTab;
     [Export] private TabContainer[] _BackgroundOverrides = [];
 
+    public Dictionary<string,SlotClient>.ValueCollection Clients => _LoginTab.Clients;
+    public bool HasSlotName(string name) => _LoginTab.HasSlotName(name);
     public string Address => Data.Address;
     public string Password => Data.Password;
     public int Port => Data.Port;
@@ -158,6 +162,18 @@ public partial class MainController : Control
             MoveToTab = -1;
         }
 
+        foreach (var client in ClientsToConnect)
+        {
+            ConnectClient(client);
+        }
+        ClientsToConnect.Clear();
+        
+        foreach (var client in ClientsToDisconnect)
+        {
+            DisconnectClient(client);
+        }
+        ClientsToDisconnect.Clear();
+        
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
         if ((updateRequest || _UpdateHints || TextClient.HintRequest) && MultiworldName.CurrentWorld is not null)
         {
@@ -346,7 +362,7 @@ public partial class MainController : Control
                     ? "player_server"
                     : PlayerSlots.ContainsValue(playerName) // connected slots
                         ? "player_color"
-                        : ClientList.ContainsKey(playerName) // all login slots
+                        : Main._LoginTab.HasSlotName(playerName) // all login slots
                             ? "player_color_offline"
                             : "player_generic"
             ];
@@ -358,7 +374,7 @@ public partial class MainController : Control
     }
 
     public static bool IsPlayerSlotALoginSlot(int playerSlot)
-        => ClientList.ContainsKey(ActiveClients[0].PlayerNames[playerSlot]);
+        => Main._LoginTab.HasSlotName(ActiveClients[0].PlayerNames[playerSlot]);
 
     public static string GetItemHexColor(ItemFlags flags, string metaData)
     {

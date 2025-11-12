@@ -18,24 +18,20 @@ using static CreepyUtil.Archipelago.ArchipelagoTag;
 
 namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
-public partial class SlotClient : Control
+public class SlotClient : ApClient
 {
     // todo: set multiworld.gg's max to 15
     public bool? IsRunning = false;
+    public new string PlayerName;
+    public string[] Error;
 
-    public MainController Main;
-    public ApClient Client = new();
-    public bool IsTextClient = false;
-    private string[]? _Error;
     private double NullTimer;
 
-    public string PlayerName { get; set; }
+    public event Action<ConnectionStatus>? ConnectionStatusChanged;
 
-    public event Action<ConnectionStatus, string[]?>? ConnectionStatusChanged;
-
-    public override void _EnterTree()
+    public SlotClient()
     {
-        ConnectionStatusChanged += (status, _) =>
+        ConnectionStatusChanged += status =>
         {
             IsRunning = status switch
             {
@@ -46,27 +42,27 @@ public partial class SlotClient : Control
             };
         };
 
-        Client.OnConnectionEvent += _ => ConnectionStatusChanged?.Invoke(ConnectionStatus.Connected, _Error);
-        Client.OnConnectionLost += () => ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected, _Error);
+        OnConnectionEvent += _ => ConnectionStatusChanged?.Invoke(ConnectionStatus.Connected);
+        OnConnectionLost += () => ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected);
     }
 
-    public override void _Process(double delta)
+    public void Update(double delta)
     {
         if (IsRunning is null) NullTimer += delta;
         else NullTimer = 0;
 
-        if (NullTimer >= 30 && !Client.IsConnected)
+        if (NullTimer >= 30 && !IsConnected)
         {
             NullTimer = 0;
-            ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected, _Error);
+            ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected);
         }
 
         if (IsRunning is null or false) return;
-        Client?.UpdateConnection();
+        UpdateConnection();
 
-        if (!(bool)Client?.IsConnected!) return;
-        var items = Client?.GetOutstandingItems();
-        InventoryManager.AddItems(Client?.PlayerName, items, false);
+        if (!IsConnected!) return;
+        var items = GetOutstandingItems();
+        InventoryManager.AddItems(PlayerName, items, false);
     }
 
     public void TryConnection()
@@ -88,8 +84,8 @@ public partial class SlotClient : Control
             ConnectionCooldown = 4;
         }
 
-        _Error = null;
-        ConnectionStatusChanged?.Invoke(ConnectionStatus.Connecting, _Error);
+        Error = null;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Connecting);
         LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
 
         ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly, DeathLink, TrapLink] : [TextOnly, NoText];
@@ -99,25 +95,25 @@ public partial class SlotClient : Control
             try
             {
                 string[] error;
-                lock (Client)
+                lock (this)
                 {
-                    error = Client.TryConnect(login, "", ItemsHandlingFlags.AllItems, tags: tags);
+                    error = TryConnect(login, "", ItemsHandlingFlags.AllItems, tags: tags);
                 }
 
                 if (error is not null && error.Length > 0)
                 {
                     GD.PrintErr($"Connection [For;{login.Slot}] Failed:\n{string.Join("\n", error)}");
-                    CallDeferred("ConnectionFailed", error);
+                    ConnectionFailed(error);
                 }
                 else
                 {
                     GD.Print($"Connection [For;{login.Slot}] Succeeded");
-                    CallDeferred("HasConnected");
+                    HasConnected();
                 }
             }
             catch (Exception e)
             {
-                CallDeferred("ConnectionFailed", [e.Message, e.StackTrace]);
+                ConnectionFailed([e.Message, e.StackTrace]);
             }
         });
     }
@@ -126,8 +122,8 @@ public partial class SlotClient : Control
     {
         Task.Run(() =>
         {
-            Client?.TryDisconnect();
-            CallDeferred("HasDisconnected");
+            TryDisconnect();
+            HasDisconnected();
             GD.Print($"Connection [For;{PlayerName}] Ended");
         });
     }
@@ -137,7 +133,8 @@ public partial class SlotClient : Control
 
     public void ConnectionFailed(string[] error, bool disconnect)
     {
-        ConnectionStatusChanged?.Invoke(ConnectionStatus.Error, _Error = error);
+        Error = error;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Error);
         if (!disconnect) return;
         ConnectionCooldown = 0;
         TryDisconnection();
@@ -147,31 +144,30 @@ public partial class SlotClient : Control
 
     public void HasConnected()
     {
-        var playerName = Client.PlayerName;
-        Client.OnConnectionErrorReceived += (err, _) =>
+        OnConnectionErrorReceived += (err, _) =>
         {
             switch (err)
             {
                 case WebSocketException { WebSocketErrorCode: WebSocketError.ConnectionClosedPrematurely }:
-                    GD.PrintErr($"From [{playerName}] Archipelago connection closed (should be handled, ignore)");
+                    GD.PrintErr($"From [{PlayerName}] Archipelago connection closed (should be handled, ignore)");
                     return;
                 case JsonSerializationException:
                     return;
             }
 
             GD.Print("=== THE FOLLOWING IS A CONNECTION ERROR =====================");
-            GD.Print($"Error from: [{playerName}]");
+            GD.Print($"Error from: [{PlayerName}]");
             GD.PrintErr(err);
             GD.Print("============================================================");
         };
 
-        Client.OnHintPrintJsonPacketReceived += packet
+        OnHintPrintJsonPacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, MessageSender.Hint, copyText: packet.GetCopy()));
 
-        Client.OnChatPrintPacketReceived += packet
+        OnChatPrintPacketReceived += packet
             => Messages.Enqueue(new ClientMessage(packet.Data, chatPrintJsonPacket: packet));
 
-        Client.OnServerMessagePacketReceived += packet =>
+        OnServerMessagePacketReceived += packet =>
         {
             var text = packet.Data[0].Text;
             switch (packet)
@@ -218,7 +214,7 @@ public partial class SlotClient : Control
             }
         };
 
-        Client.OnDeathLinkPacketReceived += (source, cause) =>
+        OnDeathLinkPacketReceived += (source, cause) =>
         {
             var player = RemoveNickName.IsMatch(source)
                 ? RemoveNickName.Match(source).Groups[1].Value
@@ -255,7 +251,7 @@ public partial class SlotClient : Control
             Messages.Enqueue(new ClientMessage(list.ToArray(), MessageSender.DeathLink));
         };
 
-        Client.OnUnregisteredTrapLinkReceived += (source, trap) =>
+        OnUnregisteredTrapLinkReceived += (source, trap) =>
         {
             var player = RemoveNickName.IsMatch(source)
                 ? RemoveNickName.Match(source).Groups[1].Value
@@ -273,7 +269,7 @@ public partial class SlotClient : Control
             ], MessageSender.TrapLink));
         };
 
-        Client.OnItemLogPacketReceived += packet =>
+        OnItemLogPacketReceived += packet =>
         {
             var playerSlot = int.Parse(packet.Data[0].Text);
             if (playerSlot == ChosenTextClient.PlayerSlot)
@@ -286,23 +282,19 @@ public partial class SlotClient : Control
                 copyText: packet.Data.GetItemLogCopy()));
         };
 
-        Client.OnConnectionLost += () => { ConnectionFailed(["Lost Connection to Server"]); };
+        OnConnectionLost += () => ConnectionFailed(["Lost Connection to Server"]);
 
-        InventoryManager.AddInventory(Client.PlayerName);
-        InventoryManager.AddItems(Client?.PlayerName, Client!.GetOutstandingItems(), true);
+        InventoryManager.AddInventory(PlayerName);
+        InventoryManager.AddItems(PlayerName, GetOutstandingItems(), true);
 
-        Client.ExcludeBouncedPacketsFromSelf = false;
+        ExcludeBouncedPacketsFromSelf = false;
 
-        Main.ConnectClient(Client);
+        ClientsToConnect.Add(this);
     }
 
     public void HasDisconnected()
     {
-        Main.DisconnectClient(Client);
-        ConnectionStatusChanged?.Invoke(_Error is null ? ConnectionStatus.NotConnected : ConnectionStatus.Error,
-            _Error);
-        Client = new ApClient();
+        ClientsToDisconnect.Add(this);
+        ConnectionStatusChanged?.Invoke(Error is null ? ConnectionStatus.NotConnected : ConnectionStatus.Error);
     }
-
-    public void Say(string message) => Client.Say(message);
 }
