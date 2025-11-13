@@ -1,13 +1,27 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2dyb34qpgw0h"]
 
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_88qu3"]
-[ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="2_8s2fx"]
+[ext_resource type="Script" uid="uid://cpdn4pq2f7pcn" path="res://Scripts/Extra/GameConfigWindow.cs" id="2_brm7k"]
 
-[node name="GameConfigure" type="Window"]
+[node name="GameConfigure" type="Window" node_paths=PackedStringArray("_SlotName", "_AlternateSlotName", "_AlternatePassword", "_GameImages", "_SetPackPath", "_PackPath", "_StartCommandsEdit", "_StartCommandsAdd", "_DeleteSlotCheck", "_DeleteSlotButton", "_Label", "_Confirm", "_Decline")]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
-size = Vector2i(510, 500)
+size = Vector2i(510, 643)
 theme = ExtResource("1_88qu3")
+script = ExtResource("2_brm7k")
+_SlotName = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/LineEdit")
+_AlternateSlotName = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/LineEdit3")
+_AlternatePassword = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/LineEdit4")
+_GameImages = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3/OptionButton")
+_SetPackPath = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/Button2")
+_PackPath = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/Label3")
+_StartCommandsEdit = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/LineEdit")
+_StartCommandsAdd = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Button")
+_DeleteSlotCheck = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/CheckBox")
+_DeleteSlotButton = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/Button3")
+_Label = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/RichTextLabel")
+_Confirm = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button")
+_Decline = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button3")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -54,15 +68,22 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Configure for [...]"
+fit_content = true
+
 [node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 placeholder_text = "Slot Name"
+max_length = 16
 
 [node name="LineEdit3" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 placeholder_text = "Alternate Slot Name for this Multiworld"
+max_length = 16
 editable = false
 
 [node name="LineEdit4" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
@@ -88,62 +109,11 @@ text = "Game: "
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_88qu3")
+expand_icon = true
 selected = 0
 item_count = 1
-popup/item_0/text = "Unkown"
+popup/item_0/text = "Unknown"
 popup/item_0/id = 0
-
-[node name="LineEdit2" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_88qu3")
-placeholder_text = "Game Name"
-
-[node name="Label" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(10, 10)
-layout_mode = 2
-theme = ExtResource("1_88qu3")
-text = "Game image must be named same as ^
-
-Sites to download game images from"
-autowrap_mode = 3
-
-[node name="Label4" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(10, 10)
-layout_mode = 2
-theme = ExtResource("1_88qu3")
-text = "Game image must be named same as ^
-
-Sites to download game images from"
-autowrap_mode = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("1_88qu3")
-text = "SteamGridDB.com"
-script = ExtResource("2_8s2fx")
-_Link = "https://www.steamgriddb.com/"
-
-[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("1_88qu3")
-text = "IGDB.com"
-script = ExtResource("2_8s2fx")
-_Link = "https://www.igdb.com/"
-
-[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-theme = ExtResource("1_88qu3")
-text = "Open Game Portrait Directory"
 
 [node name="HSeparator3" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -185,6 +155,13 @@ layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Add"
 
+[node name="HSeparator5" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Delete Slot?"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
@@ -209,9 +186,14 @@ size_flags_horizontal = 3
 modulate = Color(1, 0.784314, 0.847059, 1)
 layout_mode = 2
 theme = ExtResource("1_88qu3")
-text = "Delete/Cancel"
+text = "Cancel"
 
 [node name="VSeparator3" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Delete Slot"

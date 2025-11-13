@@ -39,4 +39,10 @@ public partial class ConfirmationWindow : Window
         OnAction = null;
         Hide();
     }
+
+    public void SetConfirmDeclineText(string confirm, string decline)
+    {
+        _Confirm.Text = confirm;
+        _Decline.Text = decline;
+    }
 }

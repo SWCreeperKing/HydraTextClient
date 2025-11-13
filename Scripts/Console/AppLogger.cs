@@ -29,6 +29,7 @@ public partial class AppLogger(LoggerLabel label) : Logger
         if (message.Length == 0) return;
         var timeStamp = DateTime.Now.ToString("[HH:mm:ss]");
         var split = message.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        if (split.Length == 0) return;
         var text = $"[color=darkgray]{timeStamp}[/color] [color={(error ? "red" : "white")}]{split[0]}";
 
         if (split.Length > 1)

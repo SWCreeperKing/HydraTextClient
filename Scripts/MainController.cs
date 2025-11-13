@@ -24,7 +24,6 @@ using Environment = System.Environment;
 using HintTable = ArchipelagoMultiTextClient.Scripts.HintTab.HintTable;
 using ItemFilterer = ArchipelagoMultiTextClient.Scripts.SettingsTab.ItemFilterer;
 using MultiworldName = ArchipelagoMultiTextClient.Scripts.LoginTab.MultiworldName;
-using SlotClient = ArchipelagoMultiTextClient.Scripts.LoginTab.SlotClient;
 
 namespace ArchipelagoMultiTextClient.Scripts;
 
@@ -46,8 +45,9 @@ public partial class MainController : Control
     public static double ConnectionCooldown;
     public static Dictionary<ApClient, HashSet<Hint>> HintsMap = [];
     public static string LastLocationChecked = null;
-    public static ConcurrentBag<SlotClient> ClientsToConnect = [];
-    public static ConcurrentBag<SlotClient> ClientsToDisconnect = [];
+    public static ConcurrentBag<ApClient> ClientsToConnect = [];
+    public static ConcurrentBag<ApClient> ClientsToDisconnect = [];
+    public static Dictionary<string, ImageTexture> GamePortraits = [];
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
     private static readonly Dictionary<string, TwoWayLookup<long, string>> ItemIdToName = [];
@@ -56,7 +56,7 @@ public partial class MainController : Control
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
     private static StyleBoxFlat Background = new();
-    
+
     public static Dictionary<HintStatus, string> HintStatusColor = new()
     {
         [Found] = "hint_found",
@@ -94,13 +94,14 @@ public partial class MainController : Control
     [Export] public string Version;
     [Export] private Theme _UITheme;
     [Export] private LoggerLabel _AppLogger;
-    [Export] private HintManager _HintManager;
+    [Export] public HintManager HintManager;
     [Export] private TabContainer _TabContainer;
     [Export] private TextClient _TextClient;
     [Export] private global::LoginTab _LoginTab;
     [Export] private TabContainer[] _BackgroundOverrides = [];
+    [Export] public Texture2D UnknownGamePortrait;
 
-    public Dictionary<string,SlotClient>.ValueCollection Clients => _LoginTab.Clients;
+    // public Dictionary<string, SlotClient>.ValueCollection Clients => _LoginTab.Clients;
     public bool HasSlotName(string name) => _LoginTab.HasSlotName(name);
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -129,11 +130,9 @@ public partial class MainController : Control
             GetWindow().Position = Data.WindowPosition!.Value;
         }
 
-        if (!Directory.Exists($"{SaveDir}/Game Portraits"))
-        {
-            Directory.CreateDirectory($"{SaveDir}/Game Portraits");
-        }
+        LoadGamePortraits();
     }
+
 
     public override void _Ready()
     {
@@ -166,14 +165,16 @@ public partial class MainController : Control
         {
             ConnectClient(client);
         }
+
         ClientsToConnect.Clear();
-        
+
         foreach (var client in ClientsToDisconnect)
         {
             DisconnectClient(client);
         }
+
         ClientsToDisconnect.Clear();
-        
+
         var updateRequest = ActiveClients.Any(client => client.HintsAwaitingUpdate);
         if ((updateRequest || _UpdateHints || TextClient.HintRequest) && MultiworldName.CurrentWorld is not null)
         {
@@ -258,6 +259,7 @@ public partial class MainController : Control
         {
             Clear();
             SetupPlayerList(client);
+            _LoginTab.MatchWorldSlots(client.PlayerNames);
         }
 
         if (PlayerGames.Length == 0)
@@ -270,15 +272,17 @@ public partial class MainController : Control
             Players = client.PlayerNames;
         }
 
-        client.CheckedLocationsUpdated += locations
-            => _HintManager.CallDeferred("LocationCheck", locations.ToArray(), client.PlayerSlot);
-
         PlayerSlots[client.PlayerSlot] = client.PlayerName;
         ActiveClients.Add(client);
         HintsMap.Add(client, null);
-        _HintManager.RegisterPlayer(client);
+        HintManager.RegisterPlayer(client);
         ClientConnectEvent?.Invoke(client);
         _LoginTab.ChangeMultiworldState(MultiworldState.Load);
+
+        MultiworldName.CurrentWorld.LocationCheckCountCaches[client.PlayerName] =
+            new LocationCheckCountCache(client.LocationsCheckedCount, client.LocationCount);
+
+        _LoginTab.UpdateCounts();
 
         RefreshUIColors();
     }
@@ -304,6 +308,8 @@ public partial class MainController : Control
         {
             _LoginTab.ChangeMultiworldState(MultiworldState.None);
             Clear();
+            _LoginTab.ResetCounts();
+            _LoginTab.MatchWorldSlots();
         }
         else if (ChosenTextClient is null)
         {
@@ -311,7 +317,7 @@ public partial class MainController : Control
             ChosenTextClient!.Tags.SetTags(ArchipelagoTag.TextOnly, ArchipelagoTag.DeathLink, ArchipelagoTag.TrapLink);
         }
 
-        _HintManager.UnregisterPlayer(client);
+        HintManager.UnregisterPlayer(client);
         HintsMap.Remove(client);
         InventoryManager.RemoveInventory(client.PlayerName);
         RefreshUIColors();
@@ -335,8 +341,7 @@ public partial class MainController : Control
 
         client.SetupPlayerList();
         Datas = client.PlayerStates
-                      .Select((state, i)
-                           => new PlayerData(i, client.PlayerGames[i], state))
+                      .Select((state, i) => new PlayerData(i, client.PlayerGames[i], state))
                       .ToArray();
     }
 
@@ -494,6 +499,31 @@ public partial class MainController : Control
     }
 
     public static void SetAlwaysOnTop(bool b) => Data.AlwaysOnTop = Main.GetWindow().AlwaysOnTop = b;
+
+    public static void LoadGamePortraits()
+    {
+        if (!Directory.Exists($"{SaveDir}/Game Portraits"))
+        {
+            Directory.CreateDirectory($"{SaveDir}/Game Portraits");
+        }
+        else
+        {
+            foreach (var image in Directory.GetFiles($"{SaveDir}/Game Portraits"))
+            {
+                try
+                {
+                    var gameName = string.Join(".", image.Replace("\\", "/").Split("/")[^1].Split('.')[..^1]);
+                    if (GamePortraits.ContainsKey(gameName)) continue;
+                    GamePortraits[gameName] = ImageTexture.CreateFromImage(Image.LoadFromFile(image));
+                    GD.Print($"Loaded image [{image.Replace(SaveDir, ".")}] for game [{gameName}]");
+                }
+                catch (Exception e)
+                {
+                    GD.PrintErr(e);
+                }
+            }
+        }
+    }
 
     public override void _Notification(int what)
     {

@@ -18,6 +18,7 @@ public partial class Settings : Control
     [Export] private CheckBox _ShowNewItems;
     [Export] private Extra.ConfirmationWindow _ItemFilter;
     [Export] private SpinBox _GlobalUiSize;
+    [Export] private Button _OpenPortraitDirectory;
     private List<ColorPickerButton> _Buttons = [];
 
     public override void _Ready()
@@ -74,6 +75,8 @@ public partial class Settings : Control
         _GlobalUiSize.Value = Data.GlobalFontSize;
         _GlobalUiSize.ValueChanged += d => SetThemeFontSize((int)d);
         SetThemeFontSize(Data.GlobalFontSize);
+        
+        _OpenPortraitDirectory.Pressed += () => OS.ShellOpen($"{SaveDir}/Game Portraits");
     }
 
     public void RefreshPickers()

@@ -1,6 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=30 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
+[ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="3_5jffn"]
 [ext_resource type="Script" uid="uid://56w3rjv3qris" path="res://Scripts/PrefabScripts/UiSaver.cs" id="4_0sclb"]
 [ext_resource type="PackedScene" uid="uid://b1xdqj0npcrqr" path="res://Scenes/MainUi/LoginTab.tscn" id="4_c4ay3"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="4_erwvk"]
@@ -22,6 +23,7 @@
 [ext_resource type="Script" uid="uid://pa631jj77egh" path="res://Scripts/UtilitiesTab/LocationEdit.cs" id="18_c4ay3"]
 [ext_resource type="Script" uid="uid://b77ex1bruqikn" path="res://Scripts/UtilitiesTab/LocationTree.cs" id="20_5jffn"]
 [ext_resource type="PackedScene" uid="uid://bqueb3rb7cuna" path="res://Scenes/MainUi/Credits.tscn" id="22_c4ay3"]
+[ext_resource type="PackedScene" uid="uid://d2dyb34qpgw0h" path="res://Scenes/Windows/ConfigureGameWindow.tscn" id="25_aht7i"]
 [ext_resource type="PackedScene" uid="uid://bsow4duwjud02" path="res://Scenes/Windows/ConfirmationWindow.tscn" id="26_4n42c"]
 [ext_resource type="Script" uid="uid://doipjirqpi3cy" path="res://Scripts/Console/LoggerLabel.cs" id="26_kpo4j"]
 [ext_resource type="PackedScene" uid="uid://b38sox3j6yruf" path="res://Scenes/Windows/ItemWindow.tscn" id="29_c5snn"]
@@ -41,7 +43,7 @@ keyword_colors = {
 "openfolder": Color(0, 0.6117647, 0, 1)
 }
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "_HintManager", "_TabContainer", "_TextClient", "_LoginTab", "_BackgroundOverrides")]
+[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "HintManager", "_TabContainer", "_TextClient", "_LoginTab", "_BackgroundOverrides")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,11 +54,12 @@ script = ExtResource("1_rgh2o")
 Version = "v0.6-pre"
 _UITheme = ExtResource("4_erwvk")
 _AppLogger = NodePath("TabContainer/Consoles/Godot/ScrollContainer/PanelContainer/RichTextLabel")
-_HintManager = NodePath("TabContainer/Utilities/Items and Locations")
+HintManager = NodePath("TabContainer/Utilities/Items and Locations")
 _TabContainer = NodePath("TabContainer")
 _TextClient = NodePath("TabContainer/Text Client/ScrollContainer/TextClientContainer")
 _LoginTab = NodePath("TabContainer/Login")
 _BackgroundOverrides = [NodePath("TabContainer"), NodePath("TabContainer/Hints"), NodePath("TabContainer/Utilities"), NodePath("TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist")]
+UnknownGamePortrait = ExtResource("3_5jffn")
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 1
@@ -68,10 +71,11 @@ grow_vertical = 2
 theme = ExtResource("4_erwvk")
 current_tab = 0
 
-[node name="Login" parent="TabContainer" node_paths=PackedStringArray("_MainController", "_DiscordTimer") instance=ExtResource("4_c4ay3")]
+[node name="Login" parent="TabContainer" node_paths=PackedStringArray("_MainController", "_DiscordTimer", "_ConfigWindow") instance=ExtResource("4_c4ay3")]
 layout_mode = 2
 _MainController = NodePath("../..")
 _DiscordTimer = NodePath("../../Timer")
+_ConfigWindow = NodePath("../../GameConfigure")
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer"]
 visible = false
@@ -882,7 +886,7 @@ layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 5
 
-[node name="Main" type="MarginContainer" parent="TabContainer/Settings" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize")]
+[node name="Main" type="MarginContainer" parent="TabContainer/Settings" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize", "_OpenPortraitDirectory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -899,6 +903,7 @@ _AlwaysOnTop = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/Ui
 _ShowNewItems = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/CheckBox2")
 _ItemFilter = NodePath("../../../ConfirmWindow")
 _GlobalUiSize = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4/SpinBox")
+_OpenPortraitDirectory = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/Button3")
 metadata/_tab_index = 0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Main"]
@@ -1083,6 +1088,38 @@ theme = ExtResource("4_erwvk")
 rounded = true
 alignment = 1
 
+[node name="Label4" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "
+Sites to download game images from"
+autowrap_mode = 3
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_erwvk")
+text = "SteamGridDB.com"
+script = ExtResource("18_aht7i")
+_Link = "https://www.steamgriddb.com/"
+
+[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_erwvk")
+text = "IGDB.com"
+script = ExtResource("18_aht7i")
+_Link = "https://www.igdb.com/"
+
+[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+layout_mode = 2
+theme = ExtResource("4_erwvk")
+text = "Open Game Portrait Directory"
+
 [node name="Item Filter" type="MarginContainer" parent="TabContainer/Settings"]
 visible = false
 layout_mode = 2
@@ -1167,6 +1204,17 @@ item_1/text = "No Priority"
 item_1/id = 1
 item_2/text = "Avoid"
 item_2/id = 2
+
+[node name="GameConfigure" parent="." instance=ExtResource("25_aht7i")]
+transparent_bg = true
+initial_position = 2
+visible = false
+wrap_controls = true
+transient = true
+exclusive = true
+transparent = true
+minimize_disabled = true
+maximize_disabled = true
 
 [node name="UiSaver" type="Control" parent="." node_paths=PackedStringArray("Controls")]
 anchors_preset = 0

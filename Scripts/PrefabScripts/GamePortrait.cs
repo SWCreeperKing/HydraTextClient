@@ -1,6 +1,9 @@
 using Godot;
 using System;
+using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
+using CreepyUtil.Archipelago.ApClient;
+using static ArchipelagoMultiTextClient.Scripts.MainController;
 
 public partial class GamePortrait : Control
 {
@@ -23,17 +26,38 @@ public partial class GamePortrait : Control
 
     public event Action? OnTileLeftClicked;
     public event Action? OnTileRightClicked;
-    
-    public SlotClient Client;
+
+    private GameClient _Client = new();
     public ConnectionStatus Status => _Status;
 
     public string SlotName
     {
         get => _SlotName.Text;
-        set => Client.PlayerName = _SlotName.Text = value;
+        set => _SlotName.Text = value;
     }
 
-    public override void _Ready() => SetErrorText("");
+    public override void _Ready()
+    {
+        SetErrorText("");
+        UpdateCheckCount(0, 0);
+
+        _Client.CheckedLocationsUpdated += _ =>
+        {
+            var cache = MultiworldName.CurrentWorld.LocationCheckCountCaches[_Client.PlayerName] =
+                new LocationCheckCountCache(_Client.LocationsCheckedCount, _Client.LocationCount);
+            UpdateCheckCount(cache.AmountChecked, cache.CheckCount);
+        };
+
+        _Client.ConnectionStatusChanged += status => { CallDeferred("SetStatus", (int)status); };
+
+        OnTileLeftClicked += () =>
+        {
+            if (Status is ConnectionStatus.Connecting) return;
+            if (Status is ConnectionStatus.NotConnected or ConnectionStatus.Error)
+                _Client.TryConnection(Main.Port, SlotName, Main.Address, Main.Password);
+            if (Status is ConnectionStatus.Connected) _Client.TryDisconnection();
+        };
+    }
 
     public override void _Process(double delta)
     {
@@ -45,13 +69,13 @@ public partial class GamePortrait : Control
 
         if (_Image.GetGlobalRect().HasPoint(GetGlobalMousePosition()))
         {
-            _Timer += delta * 2.3;
+            _Timer += delta * 3;
         }
         else _Timer -= delta * 1.3f;
 
         _Timer = Math.Clamp(_Timer, 0, 1);
         _MainTint.Color = _IdleTint.Lerp(_HoverTint, (float)_Timer);
-        Client.Update(delta);
+        _Client.Update(delta);
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -75,6 +99,7 @@ public partial class GamePortrait : Control
     }
 
     public void SetStatus(int status) => SetStatus((ConnectionStatus)status);
+
     public void SetStatus(ConnectionStatus status)
     {
         _ConnectionTimer = 0;
@@ -88,7 +113,7 @@ public partial class GamePortrait : Control
         {
             case ConnectionStatus.Error:
                 _ConnectionTint.Color = _ErrorTint;
-                SetErrorText(Client.Error is null ? "" : $"ERROR:\n{string.Join("\n", Client.Error)}");
+                SetErrorText(_Client.Error is null ? "" : $"ERROR:\n{string.Join("\n", _Client.Error)}");
                 break;
             case ConnectionStatus.Connected:
                 _ConnectionTint.Color = _ConnectedTint;
@@ -98,7 +123,7 @@ public partial class GamePortrait : Control
                 break;
         }
     }
-    
+
     public void SetErrorText(string text)
     {
         _ErrorText.Visible = text != "";
@@ -110,6 +135,31 @@ public partial class GamePortrait : Control
         var correction = 1.6f / scale;
         var sin = Mathf.Sin((x - correction) * scale);
         return Math.Min(sin + 1, 1);
+    }
+
+    public void UpdateFromGameData(GameData data)
+    {
+        if (SlotName != data.SlotName)
+        {
+            SlotName = data.SlotName;
+        }
+
+        if (data.GameName is null)
+        {
+            _Image.Texture = Main.UnknownGamePortrait;
+        }
+        else if (GamePortraits.TryGetValue(data.GameName, out var portrait))
+        {
+            _Image.Texture = portrait;
+        }
+    }
+
+    public void UpdateCheckCount(int amount, int max)
+    {
+        var parent = (Control)_CheckCount.GetParent();
+        parent.CallDeferred("set_visible", max != 0);
+        if (max == 0) return;
+        _CheckCount.CallDeferred("set_text", $"{amount:###,##0}/{max:###,##0}");
     }
 }
 

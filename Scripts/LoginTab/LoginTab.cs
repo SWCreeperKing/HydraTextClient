@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchipelagoMultiTextClient.Scripts;
+using ArchipelagoMultiTextClient.Scripts.Extra;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using CreepyUtil.DiscordRpc;
 using static ArchipelagoMultiTextClient.Scripts.MainController;
@@ -22,8 +23,9 @@ public partial class LoginTab : ScrollContainer
     [Export] private Button _SaveButton;
     [Export] private MultiworldName _NameManager;
     [Export] private SlotView _SlotView;
+    [Export] private GameConfigWindow _ConfigWindow;
 
-    public Dictionary<string,SlotClient>.ValueCollection Clients => _SlotView.Clients; 
+    // public Dictionary<string,SlotClient>.ValueCollection Clients => _SlotView.Clients; 
     
     public override void _EnterTree() { _VersionLabel.Text += _MainController.Version; }
 
@@ -31,17 +33,19 @@ public partial class LoginTab : ScrollContainer
     {
         _DiscordTimer.Start();
         _NameManager.ChangeState(MultiworldState.None);
-        // _SlotAddButton.Pressed += () => TryAddSlot(Slot); todo: override original
+        _SlotAddButton.Pressed += () => _ConfigWindow.ShowConfig(this);
         _AddressField.TextChanged += s => Data.Address = s;
         _PasswordField.TextChanged += s => Data.Password = s;
         _AddressField.Text = Data.Address;
         _PasswordField.Text = Data.Password;
         _PortField.Text = $"{Data.Port}";
         _SaveButton.Text = "Safty Save";
+        _SaveButton.Pressed += Save;
+        _DiscordReconnect.Pressed += TryReconnectDiscord;
 
-        foreach (var player in Data.SlotNames)
+        foreach (var (name, data) in Data.GameData)
         {
-            AddSlot(player);
+            AddSlot(data);
         }
     }
 
@@ -57,28 +61,32 @@ public partial class LoginTab : ScrollContainer
             ConnectionCooldown -= delta;
         }
 
-        var anyRunning = _SlotView.Clients.Any(client => client.IsRunning is not null && client.IsRunning!.Value);
-        ToggleLockInput(!anyRunning);
+        ToggleLockInput(!_SlotView.AnyRunning());
     }
 
     public bool HasSlotName(string slotName) => _SlotView.HasSlotName(slotName);
     
-    public void TryAddSlot(string slot)
+    public void TryAddSlot(GameData data)
     {
-        if (slot.Trim() == "" || HasSlotName(slot.Trim())) return;
-        AddSlot(slot.Trim());
-        Data.SlotNames.Add(slot.Trim());
+        var slotName = data.SlotName = data.SlotName.Trim();
+        if (slotName == "" || HasSlotName(slotName)) return;
+        AddSlot(data);
+        // Data.SlotNames.Add(slot.Trim()); // todo: add slot
     }
     
-    public void AddSlot(string playerName)
+    public void AddSlot(GameData data)
     {
-        _SlotView.AddClient(playerName);
+        var portrait = _SlotView.AddClient(data);
+        portrait.OnTileRightClicked += () =>
+        {
+            _ConfigWindow.ShowConfig(this, portrait);
+        };
     }
 
     public void RemoveSlot(string playerName)
     {
         _SlotView.RemoveClient(playerName);
-        Data.SlotNames.Remove(playerName);
+        // Data.SlotNames.Remove(playerName); todo: remove slot
     }
 
     public void ToggleLockInput(bool toggle)
@@ -89,4 +97,8 @@ public partial class LoginTab : ScrollContainer
     }
 
     public void ChangeMultiworldState(MultiworldState state) => _NameManager.ChangeState(state);
+    public void MatchWorldSlots(params string[] slots) => _SlotView.MatchWorldSlots(slots);
+
+    public void ResetCounts() => _SlotView.ResetCounts();
+    public void UpdateCounts() => _SlotView.UpdateCounts();
 }

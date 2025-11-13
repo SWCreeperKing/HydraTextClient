@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 
 public partial class SlotView : HFlowContainer
@@ -9,10 +10,11 @@ public partial class SlotView : HFlowContainer
     [Export] private PackedScene _GamePortraitScene;
     [Export] private SpinBox _ScaleBox;
     private Dictionary<string, GamePortrait> _Portraits = [];
-    private Dictionary<string, SlotClient> _Clients = [];
+    // private Dictionary<string, SlotClient> _Clients = [];
     private List<string> NamesOrder = [];
+    private string[] _MultiworldSlots;
 
-    public Dictionary<string, SlotClient>.ValueCollection Clients => _Clients.Values;
+    // public Dictionary<string, SlotClient>.ValueCollection Clients => _Clients.Values;
 
     public override void _EnterTree()
     {
@@ -35,28 +37,17 @@ public partial class SlotView : HFlowContainer
 
     public bool HasSlotName(string name) => _Portraits.Keys.Any(client => client == name);
 
-    public void AddClient(string playerName)
+    public GamePortrait AddClient(GameData data)
     {
         var portrait = _GamePortraitScene.Instantiate<GamePortrait>();
-        portrait.Client = new SlotClient();
-        portrait.SlotName = playerName;
+        portrait.UpdateFromGameData(data);
         portrait.SetImageScale((float)_ScaleBox.Value);
 
-        portrait.Client.ConnectionStatusChanged += status => portrait.CallDeferred("SetStatus", (int)status);
-
-        portrait.OnTileLeftClicked += () =>
-        {
-            if (portrait.Status is ConnectionStatus.Connecting) return;
-            if (portrait.Status is ConnectionStatus.NotConnected or ConnectionStatus.Error)
-                portrait.Client.TryConnection();
-            if (portrait.Status is ConnectionStatus.Connected) portrait.Client.TryDisconnection();
-        };
-
-        NamesOrder.Add(playerName);
+        NamesOrder.Add(data.SlotName);
         AddChild(portrait);
-        _Portraits[playerName] = portrait;
-        _Clients[playerName] = portrait.Client;
+        _Portraits[data.SlotName] = portrait;
         ReorderChildren();
+        return portrait;
     }
 
     public void RemoveClient(string playerName)
@@ -65,18 +56,50 @@ public partial class SlotView : HFlowContainer
         NamesOrder.Remove(playerName);
         RemoveChild(portrait);
         _Portraits.Remove(playerName);
-        _Clients.Remove(playerName);
         ReorderChildren();
     }
 
     public void ReorderChildren()
     {
         if (NamesOrder.Count == 1) return;
-        NamesOrder = NamesOrder.Order().ToList();
+        NamesOrder = NamesOrder.OrderByDescending(s =>
+                                {
+                                    if (_MultiworldSlots is null || _MultiworldSlots.Length == 0) return false;
+                                    return _MultiworldSlots.Contains(s);
+                                })
+                               .ThenBy(s => s)
+                               .ToList();
 
         for (var i = 0; i < NamesOrder.Count; i++)
         {
             MoveChild(_Portraits[NamesOrder[i]], i);
         }
     }
+
+    public void MatchWorldSlots(params string[] slots)
+    {
+        _MultiworldSlots = slots;
+        ReorderChildren();
+    }
+
+    public void ResetCounts()
+    {
+        foreach (var portrait in _Portraits.Values)
+        {
+            portrait.UpdateCheckCount(0, 0);
+        }
+    }
+
+    public void UpdateCounts()
+    {
+        if (MultiworldName.CurrentWorld is null) return;
+        foreach (var (slot, cache) in MultiworldName.CurrentWorld.LocationCheckCountCaches)
+        {
+            if (!_Portraits.TryGetValue(slot, out var value)) return;
+            value.UpdateCheckCount(cache.AmountChecked, cache.CheckCount);
+        }
+    }
+
+    public bool AnyRunning()
+        => _Portraits.Any(kv => kv.Value.Status is ConnectionStatus.Connecting or ConnectionStatus.Connected);
 }

@@ -11,7 +11,7 @@ namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 public partial class InventoryManager : Control
 {
     public static ItemWindow ItemWindow;
-    
+
     [Export] private ItemWindow _ItemWindow;
     public static bool RefreshUI = false;
     private static Dictionary<string, Inventory> Inventories = [];
@@ -19,10 +19,7 @@ public partial class InventoryManager : Control
     private static ConcurrentQueue<string> RemovingInventories = [];
     private static ConcurrentQueue<(string, ItemInfo[], bool)> AwaitingItems = [];
 
-    public override void _Ready()
-    {
-        ItemWindow = _ItemWindow;
-    }
+    public override void _Ready() { ItemWindow = _ItemWindow; }
 
     public override void _Process(double delta)
     {
@@ -30,20 +27,21 @@ public partial class InventoryManager : Control
         {
             AwaitingInventories.TryDequeue(out var playerName);
             if (Inventories.ContainsKey(playerName!)) return;
-            
+
             Inventory inventory = new();
             inventory._Columns = ["Count", "Items"];
             inventory.Theme = MainController.GlobalTheme;
-            
+
             Button button = new();
             button.Text = "View History";
             button.Theme = MainController.GlobalTheme;
-            button.Pressed += () => ItemWindow.SetAndShowItemHistory($"Item history for [{playerName}]", inventory.Items.ToArray());
+            button.Pressed += ()
+                => ItemWindow.SetAndShowItemHistory($"Item history for [{playerName}]", inventory.Items.ToArray());
 
             Label label = new();
             label.Theme = MainController.GlobalTheme;
             inventory.CheatedLabel = label;
-            
+
             VBoxContainer vBox = new();
             vBox.AddChild(button);
             vBox.AddChild(label);
@@ -75,12 +73,14 @@ public partial class InventoryManager : Control
                 {
                     AwaitingInventories.Enqueue(playerName);
                 }
+
                 return;
             }
 
             AwaitingItems.TryDequeue(out _);
             if (MultiworldName.CurrentWorld is not null)
             {
+                MultiworldName.CurrentWorld.PreviousInventoryCount.TryAdd(playerName, 0);
                 if (firstSend)
                 {
                     var remainder = items.Skip(MultiworldName.CurrentWorld.GetLastItemCount(playerName)).ToArray();

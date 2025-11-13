@@ -106,7 +106,7 @@ public partial class HintTable : TextTable
 
         _HintChangePopup.IndexPressed += l =>
         {
-            var client = Main.Clients.First(client
+            var client = ActiveClients.First(client
                 => client.PlayerName == PlayerSlots[int.Parse(_CurrentItemSelected[0])]);
             client.UpdateHint(int.Parse(_CurrentItemSelected[1]), long.Parse(_CurrentItemSelected[4]), l switch
             {

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Archipelago.MultiClient.Net.Enums;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
+using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using Godot;
 using static ArchipelagoMultiTextClient.Scripts.DataConstant;
 
@@ -51,7 +52,7 @@ public class UserData
     public string Address = "archipelago.gg";
     public string Password;
     public int Port = 12345;
-    public List<string> SlotNames = [];
+    public Dictionary<string, GameData> GameData = [];
     public Dictionary<string, ItemFilter> ItemFilters = [];
     public Dictionary<string, int> FontSizes = [];
     public List<SortObject> HintSortOrder = [];
@@ -93,6 +94,16 @@ public class UserData
         }
     }
 
+    public List<GameData> GameDatas
+    {
+        set => GameData = value.ToDictionary(l => l.SlotName, l => l);
+    }
+    
+    public List<string> SlotNames // backwards compatability
+    {
+        set => GameData = value.ToDictionary(s => s, s => new GameData(s));
+    }
+    
     public Dictionary<string, ColorSetting> ColorSettings // backwards compatability
     {
         set => _UiColorSettings = value;

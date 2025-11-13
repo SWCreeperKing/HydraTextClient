@@ -332,7 +332,7 @@ public partial class TextClient : VBoxContainer
             isHintLocation = split[1].StartsWith("!hint_location ", CurrentCultureIgnoreCase);
         }
 
-        if (message.Sender == MessageSender.Hint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
+        if (message.Sender == Hint && message.MessageParts[^1].HintStatus is HintStatus.Found &&
             !Data.ShowFoundHints && !wasHintLocation) return false;
         if (message.Sender != ItemLog) return true;
 

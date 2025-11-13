@@ -15,6 +15,7 @@ public class HydraMultiworld(string hash)
     [JsonIgnore] public Dictionary<string, HintData> HintDatas = [];
     [JsonIgnore] public IEnumerable<Hint>? RawList = null;
     public Dictionary<string, int> PreviousInventoryCount = [];
+    public Dictionary<string, LocationCheckCountCache> LocationCheckCountCaches = [];
 
     public delegate void HintChangedHandler(HintData old, HintData @new);
 
@@ -56,8 +57,11 @@ public class HydraMultiworld(string hash)
         OnHintChanged?.Invoke(hintData, HintDatas[id]);
     }
 
-    public int GetLastItemCount(string playerName)
-        => !PreviousInventoryCount.TryGetValue(playerName, out var count)
-            ? PreviousInventoryCount[playerName] = 0
-            : count;
+    public int GetLastItemCount(string playerName) => PreviousInventoryCount.GetValueOrDefault(playerName, 0);
+}
+
+public struct LocationCheckCountCache(int amount, int max)
+{
+    public int AmountChecked = amount;
+    public int CheckCount = max;
 }

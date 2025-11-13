@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,18 +19,17 @@ using static CreepyUtil.Archipelago.ArchipelagoTag;
 
 namespace ArchipelagoMultiTextClient.Scripts.LoginTab;
 
-public class SlotClient : ApClient
+public class GameClient : ApClient
 {
     // todo: set multiworld.gg's max to 15
     public bool? IsRunning = false;
-    public new string PlayerName;
     public string[] Error;
 
     private double NullTimer;
 
     public event Action<ConnectionStatus>? ConnectionStatusChanged;
 
-    public SlotClient()
+    public GameClient()
     {
         ConnectionStatusChanged += status =>
         {
@@ -44,106 +44,7 @@ public class SlotClient : ApClient
 
         OnConnectionEvent += _ => ConnectionStatusChanged?.Invoke(ConnectionStatus.Connected);
         OnConnectionLost += () => ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected);
-    }
 
-    public void Update(double delta)
-    {
-        if (IsRunning is null) NullTimer += delta;
-        else NullTimer = 0;
-
-        if (NullTimer >= 30 && !IsConnected)
-        {
-            NullTimer = 0;
-            ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected);
-        }
-
-        if (IsRunning is null or false) return;
-        UpdateConnection();
-
-        if (!IsConnected!) return;
-        var items = GetOutstandingItems();
-        InventoryManager.AddItems(PlayerName, items, false);
-    }
-
-    public void TryConnection()
-    {
-        if (!Main.IsLocalHosted())
-        {
-            if (ActiveClients.Count >= 7)
-            {
-                ConnectionFailed(["Can only have 7 slots connected"], false);
-                return;
-            }
-
-            if (ConnectionCooldown > 0)
-            {
-                ConnectionFailed(["Please wait after connecting/changing slots to do so again"], false);
-                return;
-            }
-
-            ConnectionCooldown = 4;
-        }
-
-        Error = null;
-        ConnectionStatusChanged?.Invoke(ConnectionStatus.Connecting);
-        LoginInfo login = new(Main.Port, PlayerName, Main.Address, Main.Password);
-
-        ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly, DeathLink, TrapLink] : [TextOnly, NoText];
-
-        Task.Run(() =>
-        {
-            try
-            {
-                string[] error;
-                lock (this)
-                {
-                    error = TryConnect(login, "", ItemsHandlingFlags.AllItems, tags: tags);
-                }
-
-                if (error is not null && error.Length > 0)
-                {
-                    GD.PrintErr($"Connection [For;{login.Slot}] Failed:\n{string.Join("\n", error)}");
-                    ConnectionFailed(error);
-                }
-                else
-                {
-                    GD.Print($"Connection [For;{login.Slot}] Succeeded");
-                    HasConnected();
-                }
-            }
-            catch (Exception e)
-            {
-                ConnectionFailed([e.Message, e.StackTrace]);
-            }
-        });
-    }
-
-    public void TryDisconnection()
-    {
-        Task.Run(() =>
-        {
-            TryDisconnect();
-            HasDisconnected();
-            GD.Print($"Connection [For;{PlayerName}] Ended");
-        });
-    }
-
-    public void ConnectionFailed() => ConnectionFailed(["No Error Given"], true);
-    public void ConnectionFailed(string[] error) => ConnectionFailed(error, true);
-
-    public void ConnectionFailed(string[] error, bool disconnect)
-    {
-        Error = error;
-        ConnectionStatusChanged?.Invoke(ConnectionStatus.Error);
-        if (!disconnect) return;
-        ConnectionCooldown = 0;
-        TryDisconnection();
-    }
-
-    public static readonly Regex RemoveNickName = new(@".+ \((.+)\)");
-
-    public void HasConnected()
-    {
         OnConnectionErrorReceived += (err, _) =>
         {
             switch (err)
@@ -283,7 +184,108 @@ public class SlotClient : ApClient
         };
 
         OnConnectionLost += () => ConnectionFailed(["Lost Connection to Server"]);
+        
+        CheckedLocationsUpdated += locations
+            => Main.HintManager.CallDeferred("LocationCheck", locations.ToArray(), PlayerName);
+    }
 
+    public void Update(double delta)
+    {
+        if (IsRunning is null) NullTimer += delta;
+        else NullTimer = 0;
+
+        if (NullTimer >= 30 && !IsConnected)
+        {
+            NullTimer = 0;
+            ConnectionStatusChanged?.Invoke(ConnectionStatus.NotConnected);
+        }
+
+        if (IsRunning is null or false) return;
+        UpdateConnection();
+
+        if (!IsConnected!) return;
+        var items = GetOutstandingItems();
+        InventoryManager.AddItems(PlayerName, items, false);
+    }
+
+    public void TryConnection(int port, string playerName, string address, string password)
+    {
+        if (!Main.IsLocalHosted())
+        {
+            if (ActiveClients.Count >= 7)
+            {
+                ConnectionFailed(["Can only have 7 slots connected"], false);
+                return;
+            }
+
+            if (ConnectionCooldown > 0)
+            {
+                ConnectionFailed(["Please wait after connecting/changing slots to do so again"], false);
+                return;
+            }
+
+            ConnectionCooldown = 4;
+        }
+
+        Error = null;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Connecting);
+        LoginInfo login = new(port, playerName, address, password);
+
+        ArchipelagoTag[] tags = ChosenTextClient is null ? [TextOnly, DeathLink, TrapLink] : [TextOnly, NoText];
+
+        Task.Run(() =>
+        {
+            try
+            {
+                string[] error;
+                lock (this)
+                {
+                    error = TryConnect(login, "", ItemsHandlingFlags.AllItems, tags: tags);
+                }
+
+                if (error is not null && error.Length > 0)
+                {
+                    GD.PrintErr($"Connection [For;{login.Slot}] Failed:\n{string.Join("\n", error)}");
+                    ConnectionFailed(error);
+                }
+                else
+                {
+                    GD.Print($"Connection [For;{login.Slot}] Succeeded");
+                    HasConnected();
+                }
+            }
+            catch (Exception e)
+            {
+                ConnectionFailed([e.Message, e.StackTrace]);
+            }
+        });
+    }
+
+    public void TryDisconnection()
+    {
+        Task.Run(() =>
+        {
+            TryDisconnect();
+            HasDisconnected();
+            GD.Print($"Connection [For;{PlayerName}] Ended");
+        });
+    }
+
+    public void ConnectionFailed(string[] error) => ConnectionFailed(error, true);
+
+    public void ConnectionFailed(string[] error, bool disconnect)
+    {
+        Error = error;
+        ConnectionStatusChanged?.Invoke(ConnectionStatus.Error);
+        if (!disconnect) return;
+        ConnectionCooldown = 0;
+        TryDisconnection();
+    }
+
+    public static readonly Regex RemoveNickName = new(@".+ \((.+)\)");
+
+    public void HasConnected()
+    {
         InventoryManager.AddInventory(PlayerName);
         InventoryManager.AddItems(PlayerName, GetOutstandingItems(), true);
 

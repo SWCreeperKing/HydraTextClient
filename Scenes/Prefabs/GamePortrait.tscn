@@ -82,6 +82,7 @@ mouse_filter = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="GamePortrait/MarginContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -93,20 +94,9 @@ layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_yu4cj")
 theme_override_font_sizes/font_size = 30
-text = "#,###/#,###"
+text = "##,###/##,###"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="PanelContainer2" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-mouse_filter = 1
-
-[node name="Button" type="Button" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer2"]
-custom_minimum_size = Vector2(50, 50)
-layout_mode = 2
-theme = ExtResource("1_yu4cj")
-theme_override_font_sizes/font_size = 30
-text = "⚙️"
 
 [node name="Connection Tint" type="ColorRect" parent="GamePortrait"]
 layout_mode = 1

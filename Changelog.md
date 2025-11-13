@@ -1,5 +1,5 @@
 # v0.7 todo:
-- discord bot?
+- discord bot using info from connected slots?
 
 # v0.6 todo:
 - a way to remove items from hint organizer
@@ -32,7 +32,7 @@ done:
 - Fixed hint table not showing nickname for finding player
 - Added a toggle for showing timestamps in the text client
 - Made join/leave/tags changed messages more resistant to nicknames
-- Moved the change priority popup from a window to a popup menu
+- Moved the change hint priority popup from a window to a popup menu
 
 ---
 # v0.5.3
