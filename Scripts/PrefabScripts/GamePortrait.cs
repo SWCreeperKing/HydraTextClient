@@ -117,6 +117,7 @@ public partial class GamePortrait : Control
                 break;
             case ConnectionStatus.Connected:
                 _ConnectionTint.Color = _ConnectedTint;
+                SetErrorText("");
                 break;
             default:
                 _ConnectionTint.Color = Colors.Transparent;

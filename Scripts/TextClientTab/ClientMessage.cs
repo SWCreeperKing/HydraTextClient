@@ -29,7 +29,7 @@ public readonly struct ClientMessage(
     public readonly MessageSender Sender = sender;
     public readonly JsonMessagePart[] MessageParts = messageParts;
     public readonly ChatPrintJsonPacket ChatPacket = chatPrintJsonPacket;
-    public readonly string CopyText = copyText;
+    public readonly string CopyText = copyText?.Replace("\"", "'");
     public readonly string TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
 
     public readonly bool IsHintRequest =

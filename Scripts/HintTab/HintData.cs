@@ -18,7 +18,7 @@ public readonly struct HintData(Hint hint)
     public readonly string Location = LocationIdToLocationName(hint.LocationId, hint.FindingPlayer);
     public readonly long LocationId = hint.LocationId;
     public readonly string Entrance = hint.Entrance.Trim() == "" ? "Vanilla" : hint.Entrance;
-    public readonly string GetCopy = hint.GetCopy();
+    public readonly string GetCopy = hint.GetCopy()?.Replace("\"", "'");
     public readonly string Id = $"{hint.ReceivingPlayer},,{hint.FindingPlayer},,{hint.ItemId},,{hint.LocationId}";
     public readonly Hint RawHint = hint;
 

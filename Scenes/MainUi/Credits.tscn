@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bqueb3rb7cuna"]
+[gd_scene load_steps=4 format=3 uid="uid://bqueb3rb7cuna"]
 
 [ext_resource type="PackedScene" uid="uid://dgqhkof07vm4x" path="res://Scenes/Prefabs/LinkButton.tscn" id="1_8ckuf"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="2_s1qlg"]
+[ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="3_s1qlg"]
 
 [node name="Credits" type="MarginContainer"]
 offset_right = 1200.0
@@ -27,6 +28,16 @@ layout_mode = 2
 layout_mode = 2
 text = "Archipelago"
 _Link = "https://archipelago.gg/"
+
+[node name="HSeparator6" type="HSeparator" parent="ScrollContainer/Credits"]
+layout_mode = 2
+
+[node name="Button9" type="Button" parent="ScrollContainer/Credits"]
+layout_mode = 2
+theme = ExtResource("2_s1qlg")
+text = "Source Code/Repo Link"
+script = ExtResource("3_s1qlg")
+_Link = "https://github.com/SWCreeperKing/HydraTextClient"
 
 [node name="HSeparator" type="HSeparator" parent="ScrollContainer/Credits"]
 layout_mode = 2

@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using Godot;
-using GodotPlugins.Game;
 
 namespace ArchipelagoMultiTextClient.Scripts.Extra;
 
@@ -39,9 +38,10 @@ public partial class GameConfigWindow : ConfirmationWindow
         _GameImages.AddItem("Unknown");
 
         var games = MainController.GamePortraits.Keys.OrderBy(s => s).ToArray();
-        // foreach (var (game, _) in MainController.GamePortraits.OrderBy(kv => kv.Key))
+        // foreach (var (game, icon) in MainController.GamePortraits.OrderBy(kv => kv.Key))
         foreach (var game in games)
         {
+            // _GameImages.AddIconItem(icon, game);
             _GameImages.AddItem(game);
         }
 

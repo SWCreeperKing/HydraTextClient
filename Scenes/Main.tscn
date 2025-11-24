@@ -43,7 +43,7 @@ keyword_colors = {
 "openfolder": Color(0, 0.6117647, 0, 1)
 }
 
-[node name="Control" type="Control" node_paths=PackedStringArray("_AppLogger", "HintManager", "_TabContainer", "_TextClient", "_LoginTab", "_BackgroundOverrides")]
+[node name="Control" type="Control" unique_id=156302103 node_paths=PackedStringArray("_AppLogger", "HintManager", "_TabContainer", "_TextClient", "_LoginTab", "_BackgroundOverrides")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -61,7 +61,7 @@ _LoginTab = NodePath("TabContainer/Login")
 _BackgroundOverrides = [NodePath("TabContainer"), NodePath("TabContainer/Hints"), NodePath("TabContainer/Utilities"), NodePath("TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist")]
 UnknownGamePortrait = ExtResource("3_5jffn")
 
-[node name="TabContainer" type="TabContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1936845375]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,16 +69,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 0
+current_tab = 1
 
-[node name="Login" parent="TabContainer" node_paths=PackedStringArray("_MainController", "_DiscordTimer", "_ConfigWindow") instance=ExtResource("4_c4ay3")]
+[node name="Login" parent="TabContainer" unique_id=735249810 node_paths=PackedStringArray("_MainController", "_DiscordTimer", "_ConfigWindow") instance=ExtResource("4_c4ay3")]
+visible = false
 layout_mode = 2
 _MainController = NodePath("../..")
 _DiscordTimer = NodePath("../../Timer")
 _ConfigWindow = NodePath("../../GameConfigure")
 
-[node name="Text Client" type="MarginContainer" parent="TabContainer"]
-visible = false
+[node name="Text Client" type="MarginContainer" parent="TabContainer" unique_id=1051401004]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -88,10 +88,10 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Text Client" unique_id=1414738861]
 layout_mode = 2
 
-[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowTimestamp", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation", "_History")]
+[node name="TextClientContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer" unique_id=790961963 node_paths=PackedStringArray("_Main", "_SelectedClient", "_WordWrap", "_Content", "_ItemLogStyle", "_AliasDisplay", "_Messages", "_SendMessage", "_SendMessageButton", "_ScrollToBottom", "_ScrollContainer", "_ShowTimestamp", "_ShowProgressive", "_ShowUseful", "_ShowNormal", "_ShowTraps", "_ShowOnlyYou", "_ClearTextOnDisconnect", "_LineSeparation", "_History")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -118,42 +118,42 @@ _ClearTextOnDisconnect = NodePath("SettingsContainer/MarginContainer/VBoxContain
 _LineSeparation = NodePath("SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3/SpinBox")
 _History = NodePath("Label")
 
-[node name="SettingsContainer" type="FoldableContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
+[node name="SettingsContainer" type="FoldableContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer" unique_id=1403541457]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 title = "Settings"
 title_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer" unique_id=1610702714]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer" unique_id=521464608]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer" unique_id=1991893610]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Please only switch clients when required"
 
-[node name="FlowContainer2" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer"]
+[node name="FlowContainer2" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer" unique_id=619126500]
 layout_mode = 2
 theme_override_constants/h_separation = 15
 theme_override_constants/v_separation = 7
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=73963533]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer6"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer6" unique_id=177844754]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Alies Display:"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer6"]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer6" unique_id=291529603]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 selected = 0
@@ -167,27 +167,27 @@ popup/item_2/id = 2
 popup/item_3/text = "Name (Alias)"
 popup/item_3/id = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=247158323]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer" unique_id=1707449565]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Client:"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer"]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer" unique_id=755441392]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=595215313]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer4"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer4" unique_id=1420997978]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Content:"
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer4"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer4" unique_id=405085520]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 selected = 2
@@ -199,15 +199,15 @@ popup/item_1/id = 1
 popup/item_2/text = "Both"
 popup/item_2/id = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=574252615]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer2"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer2" unique_id=1605065427]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Word Wrap:"
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer2"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer2" unique_id=844003355]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 selected = 0
@@ -221,27 +221,27 @@ popup/item_2/id = 2
 popup/item_3/text = "Word (Smart)"
 popup/item_3/id = 3
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=1479818989]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3" unique_id=1838051632]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Line Separation:"
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer3" unique_id=585188212]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=964236968]
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer5"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer5" unique_id=1271942887]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Item log copy button style"
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer5"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2/HBoxContainer5" unique_id=1143636868]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 selected = 1
@@ -253,79 +253,79 @@ popup/item_1/id = 1
 popup/item_2/text = "Text"
 popup/item_2/id = 2
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=1032608847]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Show Found hints in the Text Client"
 
-[node name="CheckBox6" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="CheckBox6" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=949344832]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Clear Text when all slots disconnect"
 
-[node name="CheckBox8" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="CheckBox8" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=605823134]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Related to you only"
 
-[node name="CheckBox7" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2"]
+[node name="CheckBox7" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer2" unique_id=514118917]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Timestamps"
 
-[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer"]
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer" unique_id=1395017363]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
+[node name="Label2" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer" unique_id=1464182751]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Item Log Filters: "
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer" unique_id=221252538]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Progressive"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer" unique_id=1643988134]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Useful"
 
-[node name="CheckBox3" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer" unique_id=410205403]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Normal"
 
-[node name="CheckBox4" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer"]
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/SettingsContainer/MarginContainer/VBoxContainer/FlowContainer" unique_id=242927124]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Traps"
 
-[node name="MessagesScroll" type="ScrollContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
+[node name="MessagesScroll" type="ScrollContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer" unique_id=1174691206]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MessagesBg" type="PanelContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll"]
+[node name="MessagesBg" type="PanelContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll" unique_id=1696715750]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("4_erwvk")
 
-[node name="MessagesMargin" type="MarginContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll/MessagesBg"]
+[node name="MessagesMargin" type="MarginContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll/MessagesBg" unique_id=299080047]
 layout_mode = 2
 theme_override_constants/margin_left = 3
 theme_override_constants/margin_top = 3
 theme_override_constants/margin_right = 3
 theme_override_constants/margin_bottom = 3
 
-[node name="Messages" type="RichTextLabel" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll/MessagesBg/MessagesMargin"]
+[node name="Messages" type="RichTextLabel" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/MessagesScroll/MessagesBg/MessagesMargin" unique_id=28583022]
 layout_mode = 2
 focus_mode = 2
 theme = ExtResource("4_erwvk")
@@ -336,35 +336,35 @@ selection_enabled = true
 drag_and_drop_selection_enabled = false
 script = ExtResource("6_h1m7h")
 
-[node name="Send" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
+[node name="Send" type="HBoxContainer" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer" unique_id=1721704354]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Button" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
+[node name="Button" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send" unique_id=1678978475]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Send"
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send" unique_id=1869100538]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 placeholder_text = "Send Message"
 keep_editing_on_text_submit = true
 
-[node name="Button2" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send"]
+[node name="Button2" type="Button" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer/Send" unique_id=285601999]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Scroll To Bottom"
 
-[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer"]
+[node name="Label" type="Label" parent="TabContainer/Text Client/ScrollContainer/TextClientContainer" unique_id=2100807568]
 visible = false
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/font_size = 12
 text = "Message History:"
 
-[node name="Hints" type="TabContainer" parent="TabContainer"]
+[node name="Hints" type="TabContainer" parent="TabContainer" unique_id=324648291]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -373,7 +373,7 @@ theme = ExtResource("4_erwvk")
 current_tab = 0
 metadata/_tab_index = 2
 
-[node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints"]
+[node name="Hints Table" type="MarginContainer" parent="TabContainer/Hints" unique_id=1603133861]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/margin_left = 15
@@ -382,49 +382,49 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 metadata/_tab_index = 0
 
-[node name="Hints Table" type="ScrollContainer" parent="TabContainer/Hints/Hints Table"]
+[node name="Hints Table" type="ScrollContainer" parent="TabContainer/Hints/Hints Table" unique_id=1636894763]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints Table/Hints Table"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hints Table/Hints Table" unique_id=2064204190]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 15
 
-[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer"]
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" unique_id=48969546]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer" unique_id=529085274]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Show Found"
 
-[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
+[node name="CheckBox5" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer" unique_id=376523761]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Priority"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer" unique_id=279536000]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Unspecified"
 
-[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
+[node name="CheckBox3" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer" unique_id=227281238]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show No Priority"
 
-[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer"]
+[node name="CheckBox4" type="CheckBox" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer/FlowContainer" unique_id=1948473544]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 button_pressed = true
 text = "Show Avoid"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangePopup")]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Hints/Hints Table/Hints Table/VBoxContainer" unique_id=1324733060 node_paths=PackedStringArray("_ShowFound", "_ShowPriority", "_ShowUnspecified", "_ShowNoPriority", "_ShowAvoid", "_HintChangePopup")]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_font_sizes/normal_font_size = 20
@@ -444,7 +444,7 @@ _ShowAvoid = NodePath("../FlowContainer/CheckBox4")
 _HintChangePopup = NodePath("../../../../../../PopupMenu")
 _Columns = Array[String](["", "Receiving Player", "Item", "Finding Player", "Priority", "Location", "Entrance"])
 
-[node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" node_paths=PackedStringArray("_InventoryContainer", "_Folder")]
+[node name="Hint Organizer" type="HSplitContainer" parent="TabContainer/Hints" unique_id=1660321787 node_paths=PackedStringArray("_InventoryContainer", "_Folder")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -457,10 +457,10 @@ _Folder = NodePath("ScrollContainer2/Hints Organizer/FoldableContainer")
 TEMPFOLDER = ExtResource("14_c4ay3")
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer" unique_id=1098203741]
 layout_mode = 2
 
-[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer"]
+[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer" unique_id=1146127762]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -469,27 +469,27 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer" unique_id=1530714141]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/VBoxContainer" unique_id=1617874764]
 custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Only Prioritized hints will show here"
 autowrap_mode = 2
 
-[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/VBoxContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer/Hints Organizer/VBoxContainer" unique_id=1809043870]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/h_separation = 7
 theme_override_constants/v_separation = 7
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Hints/Hint Organizer" unique_id=1228722268]
 layout_mode = 2
 
-[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2"]
+[node name="Hints Organizer" type="MarginContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2" unique_id=1131166357]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -498,19 +498,19 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="FoldableContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer" instance=ExtResource("14_c4ay3")]
+[node name="FoldableContainer" parent="TabContainer/Hints/Hint Organizer/ScrollContainer2/Hints Organizer" unique_id=1513637736 instance=ExtResource("14_c4ay3")]
 layout_mode = 2
 focus_mode = 0
 mouse_filter = 1
 title = "No Multiworld Selected"
 
-[node name="Utilities" type="TabContainer" parent="TabContainer"]
+[node name="Utilities" type="TabContainer" parent="TabContainer" unique_id=902097469]
 visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 3
 
-[node name="Inventory" type="MarginContainer" parent="TabContainer/Utilities"]
+[node name="Inventory" type="MarginContainer" parent="TabContainer/Utilities" unique_id=43734973]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/margin_left = 7
@@ -519,15 +519,15 @@ theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Inventory"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Inventory" unique_id=1244574706]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Inventory/ScrollContainer" node_paths=PackedStringArray("_ItemWindow")]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Inventory/ScrollContainer" unique_id=1721365883 node_paths=PackedStringArray("_ItemWindow")]
 layout_mode = 2
 script = ExtResource("15_kpo4j")
 _ItemWindow = NodePath("../../../../../ItemsPopup")
 
-[node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
+[node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" unique_id=54979480 node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -540,7 +540,7 @@ _PlayerBox = ExtResource("7_grg3l")
 _SendHintConfirmation = NodePath("../../../ConfirmWindow")
 metadata/_tab_index = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations" unique_id=350008399]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 7
@@ -548,21 +548,21 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer" unique_id=1383923725]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer/ScrollContainer" unique_id=1213777839]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/MarginContainer/ScrollContainer/VBoxContainer" unique_id=584576443]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Click an item to hint it"
 
-[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations"]
+[node name="MarginContainer2" type="MarginContainer" parent="TabContainer/Utilities/Items and Locations" unique_id=2071088893]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 7
@@ -570,22 +570,22 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer2"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer2" unique_id=1954511858]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer2/ScrollContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Utilities/Items and Locations/MarginContainer2/ScrollContainer2" unique_id=212615634]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/MarginContainer2/ScrollContainer2/VBoxContainer2"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Items and Locations/MarginContainer2/ScrollContainer2/VBoxContainer2" unique_id=644804412]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Click an location to hint_location it"
 horizontal_alignment = 2
 
-[node name="Location Checklist" type="MarginContainer" parent="TabContainer/Utilities"]
+[node name="Location Checklist" type="MarginContainer" parent="TabContainer/Utilities" unique_id=447928747]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 7
@@ -594,10 +594,10 @@ theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 metadata/_tab_index = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Location Checklist"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Utilities/Location Checklist" unique_id=125469824]
 layout_mode = 2
 
-[node name="Location Checklist" type="TabContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer" node_paths=PackedStringArray("_Label", "_Edit", "_Games", "_Button", "_Right", "_Presets", "_NewPreset", "_OpenPreset", "_EditPreset", "_PresetName", "_CreatePreset", "_BackFromCreatePreset", "_BackFromOpenPreset", "_CreateError", "_Tree")]
+[node name="Location Checklist" type="TabContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer" unique_id=1632575155 node_paths=PackedStringArray("_Label", "_Edit", "_Games", "_Button", "_Right", "_Presets", "_NewPreset", "_OpenPreset", "_EditPreset", "_PresetName", "_CreatePreset", "_BackFromCreatePreset", "_BackFromOpenPreset", "_CreateError", "_Tree")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -620,131 +620,131 @@ _BackFromOpenPreset = NodePath("Open Checklist/HBoxContainer/Button3")
 _CreateError = NodePath("New Checklist/VBoxContainer/Label")
 _Tree = NodePath("Open Checklist/Tree")
 
-[node name="Checklist Menu" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist"]
+[node name="Checklist Menu" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist" unique_id=308980245]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 15
 metadata/_tab_index = 0
 
-[node name="left" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu"]
+[node name="left" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu" unique_id=1044577784]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left" unique_id=1224706844]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Game Selection"
 
-[node name="OptionButton" type="OptionButton" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left"]
+[node name="OptionButton" type="OptionButton" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left" unique_id=521363344]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 
-[node name="Button" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left"]
+[node name="Button" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/left" unique_id=240565124]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Select Game"
 
-[node name="right" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu"]
+[node name="right" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu" unique_id=1237504641]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="Label2" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right"]
+[node name="Label2" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right" unique_id=1386077373]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Preset Selection"
 horizontal_alignment = 2
 
-[node name="OptionButton2" type="OptionButton" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right"]
+[node name="OptionButton2" type="OptionButton" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right" unique_id=1747972176]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right" unique_id=543231781]
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=458645715]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=258098521]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "New Preset"
 
-[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=680929398]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button4" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="Button4" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=406971098]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Open Preset"
 
-[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=492407167]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=1872462245]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Edit Preset"
 
-[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Checklist Menu/right/HBoxContainer" unique_id=1352536553]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Edit Checklist" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist"]
+[node name="Edit Checklist" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist" unique_id=1369885548]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist" unique_id=1612571561]
 layout_mode = 2
 alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=735596783]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="Button" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=1059440627]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Save"
 
-[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=537993237]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=361620450]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Save & Go back"
 
-[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=928751266]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=683504918]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Open Documentation"
 script = ExtResource("18_aht7i")
 _Link = "https://github.com/SWCreeperKing/HydraTextClient/blob/master/ChecklistDocs.md"
 
-[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist/HBoxContainer" unique_id=400813604]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CodeEdit" type="CodeEdit" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist"]
+[node name="CodeEdit" type="CodeEdit" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Edit Checklist" unique_id=1341860105]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -760,105 +760,105 @@ gutters_draw_fold_gutter = true
 code_completion_enabled = true
 script = ExtResource("18_c4ay3")
 
-[node name="New Checklist" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist"]
+[node name="New Checklist" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist" unique_id=1169699953]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist"]
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist" unique_id=167548588]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist" unique_id=1727102456]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="LineEdit" type="LineEdit" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer" unique_id=1564838279]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 placeholder_text = "Preset Name"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer" unique_id=583073369]
 layout_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer" unique_id=1376823577]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer" unique_id=1504137250]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Create Preset"
 
-[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer" unique_id=1608650866]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer"]
+[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer" unique_id=970926686]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Go Back"
 
-[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer/HBoxContainer" unique_id=1665046618]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist/VBoxContainer" unique_id=934924976]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_colors/font_color = Color(0.98984355, 5.4869056e-06, 9.62615e-07, 1)
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/New Checklist" unique_id=926921742]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Open Checklist" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist"]
+[node name="Open Checklist" type="VBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist" unique_id=342168577]
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist" unique_id=1379983707]
 layout_mode = 2
 
-[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer" unique_id=1038445851]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer" unique_id=958392277]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Current Client"
 
-[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer"]
+[node name="VSeparator4" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer" unique_id=249684142]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer"]
+[node name="Button3" type="Button" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer" unique_id=115820403]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Go Back"
 
-[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist/HBoxContainer" unique_id=399050922]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Tree" type="Tree" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist" node_paths=PackedStringArray("CurrentClient")]
+[node name="Tree" type="Tree" parent="TabContainer/Utilities/Location Checklist/ScrollContainer/Location Checklist/Open Checklist" unique_id=1426023623 node_paths=PackedStringArray("CurrentClient")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("20_5jffn")
 CurrentClient = NodePath("../HBoxContainer/Label")
 
-[node name="Players" type="MarginContainer" parent="TabContainer"]
+[node name="Players" type="MarginContainer" parent="TabContainer" unique_id=1040084924]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 15
@@ -867,11 +867,11 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 metadata/_tab_index = 4
 
-[node name="Players" type="ScrollContainer" parent="TabContainer/Players"]
+[node name="Players" type="ScrollContainer" parent="TabContainer/Players" unique_id=1777133154]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Players/Players"]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Players/Players" unique_id=1661208811]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 bbcode_enabled = true
@@ -880,13 +880,13 @@ autowrap_mode = 0
 script = ExtResource("7_50glp")
 _Columns = Array[String](["Slot", "Player Name", "Game", "Status"])
 
-[node name="Settings" type="TabContainer" parent="TabContainer"]
+[node name="Settings" type="TabContainer" parent="TabContainer" unique_id=444556118]
 visible = false
 layout_mode = 2
 current_tab = 0
 metadata/_tab_index = 5
 
-[node name="Main" type="MarginContainer" parent="TabContainer/Settings" node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize", "_OpenPortraitDirectory")]
+[node name="Main" type="MarginContainer" parent="TabContainer/Settings" unique_id=1061824400 node_paths=PackedStringArray("_ColorContainer", "_ExportColors", "_ImportColors", "_ShowFoundHints", "_AlwaysOnTop", "_ShowNewItems", "_ItemFilter", "_GlobalUiSize", "_OpenPortraitDirectory")]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -906,91 +906,91 @@ _GlobalUiSize = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/U
 _OpenPortraitDirectory = NodePath("ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/Button3")
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Main"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Main" unique_id=1758404409]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer" unique_id=725865343]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer" unique_id=695719078]
 layout_mode = 2
 theme_override_constants/separation = 50
 
-[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4" unique_id=1303801313]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Export Colors to Clipboard"
 
-[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4" unique_id=531417260]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Open Save Dir"
 
-[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4"]
+[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/HBoxContainer4" unique_id=1230050090]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
 text = "Import Colors from Clipboard"
 
-[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer" unique_id=81667586]
 layout_mode = 2
 theme_override_constants/separation = 35
 
-[node name="SettingSplit" type="HSplitContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer"]
+[node name="SettingSplit" type="HSplitContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer" unique_id=1688801253]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_r150o")
 metadata/_tab_index = 0
 
-[node name="Settings" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"]
+[node name="Settings" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit" unique_id=296382906]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 6
-
-[node name="Settings2" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="UiSettingContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2"]
+[node name="ColorContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings" unique_id=1501514431]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="CheckBox" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="Settings2" type="ScrollContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit" unique_id=996807792]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="UiSettingContainer" type="VBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2" unique_id=550532619]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="CheckBox" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1605533989]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Always on top"
 
-[node name="CheckBox2" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="CheckBox2" type="CheckBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=2100896658]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Show New Items on Connect"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1280722625]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer" unique_id=33840556]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Text Client Font Size:  "
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer" unique_id=1875712693]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer" unique_id=1114396577]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -999,21 +999,21 @@ script = ExtResource("12_h1m7h")
 Id = "text_client"
 DefaultSize = 20
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=249183776]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2" unique_id=945267968]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Hints Table Font Size:  "
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2" unique_id=1282509140]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer2" unique_id=1504156640]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1022,21 +1022,21 @@ script = ExtResource("12_h1m7h")
 Id = "hint_table"
 DefaultSize = 20
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1511476116]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3" unique_id=939842773]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Players Table Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3" unique_id=1223440323]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer3" unique_id=754315202]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1045,21 +1045,21 @@ script = ExtResource("12_h1m7h")
 Id = "player_table"
 DefaultSize = 24
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1248203924]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5" unique_id=1984837275]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Item Filter Table Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5" unique_id=774859758]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer5" unique_id=1866534440]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
@@ -1068,27 +1068,27 @@ script = ExtResource("12_h1m7h")
 Id = "item_filter_table"
 DefaultSize = 16
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=37775945]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4" unique_id=1977844486]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = " Global UI Font Size:"
 horizontal_alignment = 2
 
-[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="VSeparator" type="VSeparator" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4" unique_id=472062818]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4"]
+[node name="SpinBox" type="SpinBox" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer4" unique_id=1200718661]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 rounded = true
 alignment = 1
 
-[node name="Label4" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="Label4" type="Label" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1198834957]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 theme = ExtResource("4_erwvk")
@@ -1096,10 +1096,10 @@ text = "
 Sites to download game images from"
 autowrap_mode = 3
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1521221615]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6"]
+[node name="Button" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6" unique_id=1043781533]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -1107,7 +1107,7 @@ text = "SteamGridDB.com"
 script = ExtResource("18_aht7i")
 _Link = "https://www.steamgriddb.com/"
 
-[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6"]
+[node name="Button2" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer/HBoxContainer6" unique_id=1410022320]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("4_erwvk")
@@ -1115,12 +1115,12 @@ text = "IGDB.com"
 script = ExtResource("18_aht7i")
 _Link = "https://www.igdb.com/"
 
-[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer"]
+[node name="Button3" type="Button" parent="TabContainer/Settings/Main/ScrollContainer/VBoxContainer/SettingSplit/Settings2/UiSettingContainer" unique_id=1326941931]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 text = "Open Game Portrait Directory"
 
-[node name="Item Filter" type="MarginContainer" parent="TabContainer/Settings"]
+[node name="Item Filter" type="MarginContainer" parent="TabContainer/Settings" unique_id=585648572]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1131,10 +1131,10 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Item Filter"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Settings/Item Filter" unique_id=1928714097]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Settings/Item Filter/ScrollContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Settings/Item Filter/ScrollContainer" unique_id=1588966257]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1145,14 +1145,14 @@ autowrap_mode = 0
 script = ExtResource("14_346fj")
 _Columns = Array[String](["Item", "Game", "Item Log", "Hint Table", "Mark as Special", "        "])
 
-[node name="Consoles" type="TabContainer" parent="TabContainer"]
+[node name="Consoles" type="TabContainer" parent="TabContainer" unique_id=900710752]
 visible = false
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 current_tab = 0
 metadata/_tab_index = 6
 
-[node name="Godot" type="MarginContainer" parent="TabContainer/Consoles"]
+[node name="Godot" type="MarginContainer" parent="TabContainer/Consoles" unique_id=1071261383]
 layout_mode = 2
 theme_override_constants/margin_left = 7
 theme_override_constants/margin_top = 7
@@ -1160,16 +1160,16 @@ theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Consoles/Godot"]
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Consoles/Godot" unique_id=1375756098]
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 
-[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Consoles/Godot/ScrollContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/Consoles/Godot/ScrollContainer" unique_id=1290541870]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Consoles/Godot/ScrollContainer/PanelContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/Consoles/Godot/ScrollContainer/PanelContainer" unique_id=2076794515]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1179,20 +1179,20 @@ fit_content = true
 autowrap_mode = 0
 script = ExtResource("26_kpo4j")
 
-[node name="Credits" parent="TabContainer" instance=ExtResource("22_c4ay3")]
+[node name="Credits" parent="TabContainer" unique_id=1397453554 instance=ExtResource("22_c4ay3")]
 visible = false
 layout_mode = 2
 
-[node name="ConfirmWindow" parent="." instance=ExtResource("26_4n42c")]
+[node name="ConfirmWindow" parent="." unique_id=504536646 instance=ExtResource("26_4n42c")]
 visible = false
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1024136228]
 wait_time = 30.0
 
-[node name="ItemsPopup" parent="." instance=ExtResource("29_c5snn")]
+[node name="ItemsPopup" parent="." unique_id=759452370 instance=ExtResource("29_c5snn")]
 visible = false
 
-[node name="PopupMenu" type="PopupMenu" parent="."]
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=590281926]
 oversampling_override = 1.0
 size = Vector2i(149, 100)
 theme = ExtResource("4_erwvk")
@@ -1205,7 +1205,7 @@ item_1/id = 1
 item_2/text = "Avoid"
 item_2/id = 2
 
-[node name="GameConfigure" parent="." instance=ExtResource("25_aht7i")]
+[node name="GameConfigure" parent="." unique_id=1708098920 instance=ExtResource("25_aht7i")]
 transparent_bg = true
 initial_position = 2
 visible = false
@@ -1216,7 +1216,7 @@ transparent = true
 minimize_disabled = true
 maximize_disabled = true
 
-[node name="UiSaver" type="Control" parent="." node_paths=PackedStringArray("Controls")]
+[node name="UiSaver" type="Control" parent="." unique_id=1756872762 node_paths=PackedStringArray("Controls")]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0

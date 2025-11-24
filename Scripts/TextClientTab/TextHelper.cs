@@ -6,8 +6,8 @@ namespace ArchipelagoMultiTextClient.Scripts.TextClientTab;
 public static class TextHelper
 {
     public static string Clean(this string text) => text.Replace("[", "[lb]");
-    public static string CleanRb(this string text) => text.Replace("]", "[rb]");
-    public static string ReplaceB(this string text) => text.Replace("[", "<").Replace("]", ">");
+    // public static string CleanRb(this string text) => text.Replace("]", "[rb]");
+    // public static string ReplaceB(this string text) => text.Replace("[", "<").Replace("]", ">");
 
     public static string GetCopy(this Hint hint)
     {

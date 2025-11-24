@@ -9,17 +9,18 @@
     - list of saved multiworlds
     - enable normal input if on temporary
     - select slots for multiworld
-  - slot connection (stolen from Serpent.AI)
+  - [done] slot connection (stolen from Serpent.AI)
     - grid of games sorted a-z
     - name of slot on top
     - cached checks done/total and gear for settings on the bottom
 - split settings into tabs
-- autosave
+- autosave? (unlikely)
   - only save if needed
   - default: 5min
 - auto updater? (unlikely)
 
 done:
+- Fixed '"' breaking hint table
 - Attached a custom logger to Godot (print out in Consoles -> Godot)
 - Fixed a bug with games that have a `:` in them causing file problems
 - Seeing who sent you how many items will also show locations (it will say various locations if there are over 10 to reduce lag)
