@@ -3,7 +3,7 @@
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_88qu3"]
 [ext_resource type="Script" uid="uid://cpdn4pq2f7pcn" path="res://Scripts/Extra/GameConfigWindow.cs" id="2_brm7k"]
 
-[node name="GameConfigure" type="Window" node_paths=PackedStringArray("_SlotName", "_AlternateSlotName", "_AlternatePassword", "_GameImages", "_SetPackPath", "_PackPath", "_StartCommandsEdit", "_StartCommandsAdd", "_DeleteSlotCheck", "_DeleteSlotButton", "_Label", "_Confirm", "_Decline")]
+[node name="GameConfigure" type="Window" unique_id=2006972726 node_paths=PackedStringArray("_SlotName", "_AlternateSlotName", "_AlternatePassword", "_GameImages", "_SetPackPath", "_PackPath", "_StartCommandsEdit", "_StartCommandsAdd", "_DeleteSlotCheck", "_DeleteSlotButton", "_Label", "_Confirm", "_Decline")]
 oversampling_override = 1.0
 position = Vector2i(0, 36)
 size = Vector2i(510, 643)
@@ -23,7 +23,7 @@ _Label = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/Scrol
 _Confirm = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button")
 _Decline = NodePath("ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer/Button3")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=534390729]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -34,7 +34,7 @@ size_flags_vertical = 3
 theme = ExtResource("1_88qu3")
 color = Color(0.109804, 0.121569, 0.129412, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="ColorRect"]
+[node name="MarginContainer" type="MarginContainer" parent="ColorRect" unique_id=867514717]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,64 +48,66 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer" unique_id=286637985]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer" unique_id=608235194]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 15
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1641899344]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer" unique_id=945749194]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1604253893]
 layout_mode = 2
 text = "Configure for [...]"
 fit_content = true
 
-[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=635251860]
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 placeholder_text = "Slot Name"
 max_length = 16
 
-[node name="LineEdit3" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="LineEdit3" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1950167883]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 placeholder_text = "Alternate Slot Name for this Multiworld"
 max_length = 16
 editable = false
 
-[node name="LineEdit4" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="LineEdit4" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=992872138]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 placeholder_text = "Alternate Password for this Multiworld"
 editable = false
 
-[node name="HSeparator2" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=878090356]
 layout_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1645195961]
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 
-[node name="Label" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=1564171085]
 custom_minimum_size = Vector2(10, 10)
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Game: "
 
-[node name="OptionButton" type="OptionButton" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3"]
+[node name="OptionButton" type="OptionButton" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer3" unique_id=198261303]
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("1_88qu3")
@@ -115,23 +117,28 @@ item_count = 1
 popup/item_0/text = "Unknown"
 popup/item_0/id = 0
 
-[node name="HSeparator3" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=896649248]
+visible = false
 layout_mode = 2
 
-[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=2122491519]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Set Poptracker Pack Path"
 
-[node name="Label3" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label3" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1711492014]
+visible = false
 modulate = Color(0.48, 0.48, 0.48, 1)
 layout_mode = 2
 text = "Path: /../../../.."
 
-[node name="HSeparator4" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1231087746]
+visible = false
 layout_mode = 2
 
-[node name="Label2" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="Label2" type="Label" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=310715816]
+visible = false
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "On connection Commands
@@ -142,58 +149,60 @@ replaces:
 \"[password]\" with the password
 "
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=874472865]
+visible = false
 layout_mode = 2
 
-[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="LineEdit" type="LineEdit" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=98453815]
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Console Command"
 
-[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2"]
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=390223236]
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Add"
 
-[node name="HSeparator5" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="HSeparator5" type="HSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=743893635]
+visible = false
 layout_mode = 2
 
-[node name="CheckBox" type="CheckBox" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer"]
+[node name="CheckBox" type="CheckBox" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=128338678]
 layout_mode = 2
 text = "Delete Slot?"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1320913244]
 layout_mode = 2
 alignment = 1
 
-[node name="VSeparator2" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1862384592]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1974446095]
 modulate = Color(0.815686, 1, 0.768627, 1)
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Save/Add"
 
-[node name="VSeparator" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=581666211]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=1101642645]
 modulate = Color(1, 0.784314, 0.847059, 1)
 layout_mode = 2
 theme = ExtResource("1_88qu3")
 text = "Cancel"
 
-[node name="VSeparator3" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+[node name="VSeparator3" type="VSeparator" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer/HBoxContainer" unique_id=2123764846]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="ColorRect/MarginContainer/ScrollContainer/VBoxContainer" unique_id=1411731867]
 modulate = Color(1, 0, 0, 1)
 layout_mode = 2
 text = "Delete Slot"

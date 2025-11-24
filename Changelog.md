@@ -4,15 +4,10 @@
 # v0.6 todo:
 - a way to remove items from hint organizer
 - poptracker pack support
-- redo login UI
-  - multiworld connection
-    - list of saved multiworlds
-    - enable normal input if on temporary
-    - select slots for multiworld
-  - [done] slot connection (stolen from Serpent.AI)
-    - grid of games sorted a-z
-    - name of slot on top
-    - cached checks done/total and gear for settings on the bottom
+- multiworld connection
+  - list of saved multiworlds
+  - enable normal input if on temporary
+  - select slots for multiworld
 - split settings into tabs
 - autosave? (unlikely)
   - only save if needed
@@ -20,6 +15,11 @@
 - auto updater? (unlikely)
 
 done:
+- slot connection (stolen from Serpent.AI)
+    - grid of games sorted a-z
+    - name of slot on top
+    - not all info 
+    - cached checks done/total and gear for settings on the bottom (not perfect)
 - Fixed '"' breaking hint table
 - Attached a custom logger to Godot (print out in Consoles -> Godot)
 - Fixed a bug with games that have a `:` in them causing file problems
