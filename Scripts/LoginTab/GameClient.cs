@@ -31,6 +31,8 @@ public class GameClient : ApClient
 
     public GameClient()
     {
+        ServerTimeout = new TimeSpan(0, 1, 0);
+        
         ConnectionStatusChanged += status =>
         {
             IsRunning = status switch
@@ -185,8 +187,7 @@ public class GameClient : ApClient
 
         OnConnectionLost += () => ConnectionFailed(["Lost Connection to Server"]);
         
-        CheckedLocationsUpdated += locations
-            => Main.HintManager.CallDeferred("LocationCheck", locations.ToArray(), PlayerName);
+        CheckedLocationsUpdated += locations => Main.HintManager.LocationCheck(locations.ToArray(), PlayerSlot);
     }
 
     public void Update(double delta)

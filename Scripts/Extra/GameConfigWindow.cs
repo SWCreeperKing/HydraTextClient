@@ -38,12 +38,13 @@ public partial class GameConfigWindow : ConfirmationWindow
         _GameImages.AddItem("Unknown");
 
         var games = MainController.GamePortraits.Keys.OrderBy(s => s).ToArray();
-        // foreach (var (game, icon) in MainController.GamePortraits.OrderBy(kv => kv.Key))
-        foreach (var game in games)
+        foreach (var (game, icon) in MainController.GamePortraits.OrderBy(kv => kv.Key))
+        // foreach (var game in games)
         {
-            // _GameImages.AddIconItem(icon, game);
-            _GameImages.AddItem(game);
+            _GameImages.AddIconItem(icon, game);
+            // _GameImages.AddItem(game);
         }
+        _GameImages.GetPopup().AddThemeConstantOverride("icon_max_width", MainController.Data.GlobalFontSize);
 
         if (portrait is not null && MainController.Data.GameData.TryGetValue(portrait.SlotName, out var locData))
         {

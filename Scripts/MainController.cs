@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 using ArchipelagoMultiTextClient.Scripts.Console;
@@ -48,10 +47,9 @@ public partial class MainController : Control
     public static ConcurrentBag<ApClient> ClientsToConnect = [];
     public static ConcurrentBag<ApClient> ClientsToDisconnect = [];
     public static Dictionary<string, ImageTexture> GamePortraits = [];
+    private static readonly Dictionary<string, Image> ItemImages = [];
     private static readonly Dictionary<ItemFlags, string> ItemColorHexCache = [];
     private static readonly Dictionary<ItemFlags, string> ItemBgColorHexCache = [];
-    private static readonly Dictionary<string, TwoWayLookup<long, string>> ItemIdToName = [];
-    private static readonly Dictionary<string, TwoWayLookup<long, string>> LocationIdToName = [];
     private static bool _UpdateHints;
     private static HintDataComparer _HintDataComparer = new();
     private static HintComparer _HintComparer = new();
@@ -101,7 +99,6 @@ public partial class MainController : Control
     [Export] private TabContainer[] _BackgroundOverrides = [];
     [Export] public Texture2D UnknownGamePortrait;
 
-    // public Dictionary<string, SlotClient>.ValueCollection Clients => _LoginTab.Clients;
     public bool HasSlotName(string name) => _LoginTab.HasSlotName(name);
     public string Address => Data.Address;
     public string Password => Data.Password;
@@ -116,15 +113,17 @@ public partial class MainController : Control
         GetViewport().TransparentBg = true;
         GlobalTheme = _UITheme;
         Data = new UserData();
+
         if (!Directory.Exists(SaveDir))
         {
             Directory.CreateDirectory(SaveDir);
         }
         else if (File.Exists($"{SaveDir}/data.json"))
         {
-            Data = JsonConvert.DeserializeObject<UserData>(File.ReadAllText($"{SaveDir}/data.json")
-                                                               .Replace("\r", "")
-                                                               .Replace("\n", ""));
+            Data = JsonConvert.DeserializeObject<UserData>(File
+                                                          .ReadAllText($"{SaveDir}/data.json")
+                                                          .Replace("\r", "")
+                                                          .Replace("\n", ""));
             GetWindow().Size = Data.WindowSize;
             if (Data.WindowPosition is null) return;
             GetWindow().Position = Data.WindowPosition!.Value;
@@ -132,7 +131,6 @@ public partial class MainController : Control
 
         LoadGamePortraits();
     }
-
 
     public override void _Ready()
     {
@@ -214,35 +212,11 @@ public partial class MainController : Control
         }
     }
 
-    public static string ItemIdToItemName(long id, int playerSlot)
-    {
-        var game = PlayerGames[playerSlot];
-        if (!ItemIdToName.TryGetValue(game, out var itemNameDict))
-        {
-            GetLookups(game, out _, out itemNameDict);
-        }
-
-        return itemNameDict[id];
-    }
+    public static string ItemIdToItemName(long id, int playerSlot) => ActiveClients[0].ItemIdToItemName(id, playerSlot);
 
     public static string LocationIdToLocationName(long id, int playerSlot)
-    {
-        var game = PlayerGames[playerSlot];
-        if (!LocationIdToName.TryGetValue(game, out var locNameDict))
-        {
-            GetLookups(game, out locNameDict, out _);
-        }
+        => ActiveClients[0].LocationIdToLocationName(id, playerSlot);
 
-        return locNameDict[id];
-    }
-
-    public static void GetLookups(string game, out TwoWayLookup<long, string> locations,
-        out TwoWayLookup<long, string> items)
-    {
-        ActiveClients[0].GetLookups(game, out locations, out items);
-        LocationIdToName[game] = locations;
-        ItemIdToName[game] = items;
-    }
 
     public void ConnectClient(ApClient client)
     {
@@ -399,12 +373,34 @@ public partial class MainController : Control
     public static string FormatItemColor(string itemName, string gameName, long itemId, ItemFlags flags,
         bool withMetaString)
     {
+        // var itemImage = GetItemImage(gameName, itemName);
+        // GD.Print($"item image: [{itemImage}]");
         var metaString = Settings.GetMetaString(itemName, gameName, itemId, flags);
         var color = GetItemHexColor(flags, metaString);
         var bgColor = GetItemHexBgColor(flags, metaString);
+        // return withMetaString
+        //     ? $"[bgcolor={bgColor}][color={color}][url=\"{metaString}\"]{itemImage}{itemName.Clean()}[/url][/color][/bgcolor]"
+        //     : $"[bgcolor={bgColor}][color={color}]{itemImage}{itemName.Clean()}[/color][/bgcolor]";
         return withMetaString
             ? $"[bgcolor={bgColor}][color={color}][url=\"{metaString}\"]{itemName.Clean()}[/url][/color][/bgcolor]"
             : $"[bgcolor={bgColor}][color={color}]{itemName.Clean()}[/color][/bgcolor]";
+    }
+
+    public static string GetItemImage(string gameName, string itemName)
+    {
+        return "";
+        // if (!SpriteManager.TryGetCustomAsset(new AssetLocation(gameName, itemName), gameName,
+        //         false, true, out var sprite)) return "";
+        // var fontSize = Data.FontSizes["text_client"];
+        // if (!ItemImages.TryGetValue(sprite.FilePath, out var image))
+        // {
+        //     image = new Image();
+        //     image.Load(sprite.FilePath);
+        //     image.ResourcePath = sprite.FilePath;
+        //     ItemImages[sprite.FilePath] = image;
+        // }
+        //
+        // return $"[img={fontSize}x{fontSize}]{image.ResourcePath}[/img]\" ";
     }
 
     private static string GetItemColorString(ItemFlags flags)

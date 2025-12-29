@@ -9,8 +9,6 @@ namespace ArchipelagoMultiTextClient.Scripts.UtilitiesTab;
 
 public partial class HintManager : SplitContainer
 {
-    public static bool RefreshUI;
-    
     [Export] private VBoxContainer _HintSender;
     [Export] private VBoxContainer _HintLocationSender;
     [Export] private PackedScene _PlayerBox;
@@ -19,16 +17,14 @@ public partial class HintManager : SplitContainer
     private Dictionary<ApClient, PlayerBox> _HintLocationSenderBoxes = [];
     private Dictionary<int, Dictionary<string, Button>> _LocationButtons = [];
 
-    public delegate void LocationChangeHandler(int slot, string[] locations);
-
-    public static event LocationChangeHandler? LocationChangeEvent;
+    public static event Action<int, string[]>? LocationChangeEvent;
 
     public void RegisterPlayer(ApClient client)
     {
         var items = client.Items.Select(kv => kv.Key);
         var locations = client.Locations
-                                  .Where(kv => client.MissingLocations.Contains(kv.Key));
-        
+                              .Where(kv => client.MissingLocations.Contains(kv.Key));
+
         SetupBoxes(items, client, _HintSenderBoxes, false, _HintSender);
         SetupBoxes(locations.Select(kv => kv.Key), client, _HintLocationSenderBoxes, true, _HintLocationSender);
     }
@@ -54,7 +50,7 @@ public partial class HintManager : SplitContainer
             else hintButton.Pressed += () => HintItem(item, client);
 
             hintButton.Text = item;
-            
+
             playerBox.AddNode(hintButton, true);
             buttons.Add(hintButton);
         }
@@ -66,28 +62,47 @@ public partial class HintManager : SplitContainer
         searchBar.TextChanged += text =>
         {
             var split = text.Split(" ");
-            Queue<Button> toRemove = [];
-            foreach (var button in buttons)
-            {
-                try
-                {
-                    button.Visible =
-                        split.All(word => button.Text.Contains(word, StringComparison.CurrentCultureIgnoreCase));
-                }
-                catch
-                {
-                    toRemove.Enqueue(button);
-                }
-            }
-
-            if (toRemove.Count == 0) return;
-            foreach (var button in toRemove) buttons.Remove(button);
+            FilterButtons(buttons, s => split.All(word => s.Contains(word, StringComparison.CurrentCultureIgnoreCase)));
         };
 
+        HBoxContainer filterContainer = new();
+        Label text = new() { Theme = MainController.GlobalTheme, Text = "Show items that you don't have any of: " };
+        CheckBox showIfNotAny = new() { Theme = MainController.GlobalTheme };
+        showIfNotAny.Pressed += () =>
+        {
+            if (!showIfNotAny.ButtonPressed)
+            {
+                FilterButtons(buttons, _ => true);
+                return;
+            }
+
+            var inventory = InventoryManager.Inventories[client.PlayerName];
+            FilterButtons(buttons, s => inventory.Items.All(info => info.ItemName != s));
+        };
+
+        filterContainer.AddChild(text);
+        filterContainer.AddChild(showIfNotAny);
+
         playerBox.AddNode(searchBar, false);
+        playerBox.AddNode(filterContainer, false);
 
         parent.AddChild(playerBox);
         dict.Add(client, playerBox);
+    }
+
+    public void FilterButtons(List<Button> buttons, Func<string, bool> filter)
+    {
+        foreach (var button in buttons)
+        {
+            try
+            {
+                button.Visible = filter(button.Text);
+            }
+            catch (Exception e)
+            {
+                GD.PrintErr(e);
+            }
+        }
     }
 
     public void UnregisterPlayer(ApClient client)
@@ -126,13 +141,20 @@ public partial class HintManager : SplitContainer
     public void LocationCheck(long[] newLocations, int playerSlot)
     {
         var found = newLocations.Select(l => MainController.LocationIdToLocationName(l, playerSlot)).ToArray();
-        foreach (var (key, button) in _LocationButtons[playerSlot].Where(kv => found.Contains(kv.Key)))
+        foreach (var item in found)
         {
-            _LocationButtons[playerSlot].Remove(key);
-
-            button.GetParent().RemoveChild(button);
-            button.QueueFree();
+            CallDeferred("RemoveButton", item, playerSlot);
         }
+
         LocationChangeEvent?.Invoke(playerSlot, found);
+    }
+
+    public void RemoveButton(string buttonName, int slot)
+    {
+        if (!_LocationButtons[slot].TryGetValue(buttonName, out var button)) return;
+
+        _LocationButtons[slot].Remove(buttonName);
+        button.GetParent().RemoveChild(button);
+        button.QueueFree();
     }
 }

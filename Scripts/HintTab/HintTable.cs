@@ -139,7 +139,8 @@ public partial class HintTable : TextTable
                            })
                           .Where(hint => !Data.ItemFilters.TryGetValue(hint.ItemUid, out var filter) ||
                                          filter.ShowInHintsTable)
-                          .OrderBy(hint => hint.LocationId);
+                          .OrderBy(hint => hint.FindingPlayerSlot)
+                          .ThenBy(hint => hint.ReceivingPlayerSlot);
 
         if (SortOrder.Count > 0)
         {

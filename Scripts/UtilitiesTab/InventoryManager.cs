@@ -14,7 +14,7 @@ public partial class InventoryManager : Control
 
     [Export] private ItemWindow _ItemWindow;
     public static bool RefreshUI = false;
-    private static Dictionary<string, Inventory> Inventories = [];
+    public static Dictionary<string, Inventory> Inventories = [];
     private static ConcurrentQueue<string> AwaitingInventories = [];
     private static ConcurrentQueue<string> RemovingInventories = [];
     private static ConcurrentQueue<(string, ItemInfo[], bool)> AwaitingItems = [];
@@ -117,4 +117,5 @@ public partial class InventoryManager : Control
     public static void AddInventory(string player) => AwaitingInventories.Enqueue(player);
 
     public static void RemoveInventory(string player) => RemovingInventories.Enqueue(player);
+    
 }

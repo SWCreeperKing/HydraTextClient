@@ -337,7 +337,7 @@ public partial class TextClient : VBoxContainer
         if (message.Sender != ItemLog) return true;
 
         if (Data.ItemLogOptions[4] &&
-            !message.MessageParts.Any(part => ActiveClients.Any(client => client.PlayerSlot == part.Player)))
+            !message.MessageParts.Any(part => part.Player is not null && IsPlayerSlotALoginSlot(part.Player!.Value)))
             return false;
 
         var itemMessagePart = message.MessageParts[2];

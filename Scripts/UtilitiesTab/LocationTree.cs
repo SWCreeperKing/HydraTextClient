@@ -20,7 +20,6 @@ public partial class LocationTree : Tree
         TextClient.SelectedClientChangedEvent += _ => LocationCheck();
     }
 
-
     public void LoadList(string file)
     {
         Locations.Clear();

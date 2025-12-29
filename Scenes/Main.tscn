@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://b3165pga1elda"]
+[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="3_5jffn"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://c1cij5n7j52qj" path="res://Scripts/UtilitiesTab/LocationChecklist.cs" id="17_3tgeq"]
 [ext_resource type="Script" uid="uid://bj3qm77o1tqg6" path="res://Scripts/PrefabScripts/LinkButton.cs" id="18_aht7i"]
 [ext_resource type="Script" uid="uid://pa631jj77egh" path="res://Scripts/UtilitiesTab/LocationEdit.cs" id="18_c4ay3"]
+[ext_resource type="PackedScene" uid="uid://byuy3uxo70174" path="res://Scenes/MainUi/SpoilerReader.tscn" id="18_kpo4j"]
 [ext_resource type="Script" uid="uid://b77ex1bruqikn" path="res://Scripts/UtilitiesTab/LocationTree.cs" id="20_5jffn"]
 [ext_resource type="PackedScene" uid="uid://bqueb3rb7cuna" path="res://Scenes/MainUi/Credits.tscn" id="22_c4ay3"]
 [ext_resource type="PackedScene" uid="uid://d2dyb34qpgw0h" path="res://Scenes/Windows/ConfigureGameWindow.tscn" id="25_aht7i"]
@@ -69,7 +70,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 1
+current_tab = 3
 
 [node name="Login" parent="TabContainer" unique_id=735249810 node_paths=PackedStringArray("_MainController", "_DiscordTimer", "_ConfigWindow") instance=ExtResource("4_c4ay3")]
 visible = false
@@ -79,6 +80,7 @@ _DiscordTimer = NodePath("../../Timer")
 _ConfigWindow = NodePath("../../GameConfigure")
 
 [node name="Text Client" type="MarginContainer" parent="TabContainer" unique_id=1051401004]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -505,12 +507,12 @@ mouse_filter = 1
 title = "No Multiworld Selected"
 
 [node name="Utilities" type="TabContainer" parent="TabContainer" unique_id=902097469]
-visible = false
 layout_mode = 2
-current_tab = 0
+current_tab = 1
 metadata/_tab_index = 3
 
 [node name="Inventory" type="MarginContainer" parent="TabContainer/Utilities" unique_id=43734973]
+visible = false
 layout_mode = 2
 theme = ExtResource("4_erwvk")
 theme_override_constants/margin_left = 7
@@ -528,7 +530,6 @@ script = ExtResource("15_kpo4j")
 _ItemWindow = NodePath("../../../../../ItemsPopup")
 
 [node name="Items and Locations" type="HSplitContainer" parent="TabContainer/Utilities" unique_id=54979480 node_paths=PackedStringArray("_HintSender", "_HintLocationSender", "_SendHintConfirmation")]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -857,6 +858,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("20_5jffn")
 CurrentClient = NodePath("../HBoxContainer/Label")
+
+[node name="Spoiler Reader" parent="TabContainer/Utilities" unique_id=99828786 instance=ExtResource("18_kpo4j")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
 
 [node name="Players" type="MarginContainer" parent="TabContainer" unique_id=1040084924]
 visible = false

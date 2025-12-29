@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using ArchipelagoMultiTextClient.Scripts.HintTab;
 using ArchipelagoMultiTextClient.Scripts.LoginTab;
 using CreepyUtil.Archipelago.ApClient;
@@ -49,7 +50,9 @@ public partial class GamePortrait : Control
         };
 
         _Client.ConnectionStatusChanged += status => { CallDeferred("SetStatus", (int)status); };
-
+        
+        _Client.OnDebugInfoMessage += s => GD.Print($"[{SlotName}]: [{s}]");
+        
         OnTileLeftClicked += () =>
         {
             if (Status is ConnectionStatus.Connecting) return;
@@ -82,13 +85,14 @@ public partial class GamePortrait : Control
     {
         if (@event is not InputEventMouseButton button) return;
         if (!button.Pressed) return;
-        if (button.ButtonIndex is MouseButton.Left)
+        switch (button.ButtonIndex)
         {
-            OnTileLeftClicked?.Invoke();
-        }
-        else if (button.ButtonIndex is MouseButton.Right)
-        {
-            OnTileRightClicked?.Invoke();
+            case MouseButton.Left:
+                OnTileLeftClicked?.Invoke();
+                break;
+            case MouseButton.Right:
+                OnTileRightClicked?.Invoke();
+                break;
         }
     }
 

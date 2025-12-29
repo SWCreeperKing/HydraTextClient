@@ -26,7 +26,7 @@ public partial class LoginTab : ScrollContainer
     [Export] private GameConfigWindow _ConfigWindow;
 
     // public Dictionary<string,SlotClient>.ValueCollection Clients => _SlotView.Clients; 
-    
+
     public override void _EnterTree() { _VersionLabel.Text += _MainController.Version; }
 
     public override void _Ready()
@@ -39,7 +39,9 @@ public partial class LoginTab : ScrollContainer
         _AddressField.Text = Data.Address;
         _PasswordField.Text = Data.Password;
         _PortField.Text = $"{Data.Port}";
-        _SaveButton.Text = "Safty Save";
+
+        if (Random.Shared.Next(100) == 89) _SaveButton.Text = "Safty Save";
+
         _SaveButton.Pressed += Save;
         _DiscordReconnect.Pressed += TryReconnectDiscord;
 
@@ -65,7 +67,7 @@ public partial class LoginTab : ScrollContainer
     }
 
     public bool HasSlotName(string slotName) => _SlotView.HasSlotName(slotName);
-    
+
     public void TryAddSlot(GameData data)
     {
         var slotName = data.SlotName = data.SlotName.Trim();
@@ -73,14 +75,11 @@ public partial class LoginTab : ScrollContainer
         AddSlot(data);
         // Data.SlotNames.Add(slot.Trim()); // todo: add slot
     }
-    
+
     public void AddSlot(GameData data)
     {
         var portrait = _SlotView.AddClient(data);
-        portrait.OnTileRightClicked += () =>
-        {
-            _ConfigWindow.ShowConfig(this, portrait);
-        };
+        portrait.OnTileRightClicked += () => { _ConfigWindow.ShowConfig(this, portrait); };
     }
 
     public void RemoveSlot(string playerName)
