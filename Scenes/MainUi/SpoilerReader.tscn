@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://byuy3uxo70174"]
+
+[ext_resource type="Script" uid="uid://k1g1bpc5pijk" path="res://Scripts/UtilitiesTab/SpoilerReader.cs" id="1_aga8i"]
+[ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_clt80"]
+[ext_resource type="Script" uid="uid://dre5l3a08n048" path="res://Scripts/Extra/RichTextTable.cs" id="3_2eodu"]
+
+[node name="MarginContainer" type="MarginContainer" unique_id=99828786]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_clt80")
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 7
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1965045965 node_paths=PackedStringArray("RoomLink", "Browse", "Dialog", "Connect", "Error", "LoadContainer", "Display")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_aga8i")
+RoomLink = NodePath("HBoxContainer/VBoxContainer/LineEdit4")
+Browse = NodePath("HBoxContainer/VBoxContainer/Button")
+Dialog = NodePath("HBoxContainer/FileDialog")
+Connect = NodePath("HBoxContainer/VBoxContainer/Button2")
+Error = NodePath("HBoxContainer/VBoxContainer/Label3")
+LoadContainer = NodePath("HBoxContainer")
+Display = NodePath("RichTextLabel")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer" unique_id=2078662754]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_clt80")
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/HBoxContainer" unique_id=760969115]
+layout_mode = 2
+theme = ExtResource("1_clt80")
+alignment = 1
+
+[node name="Label2" type="Label" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=946693178]
+custom_minimum_size = Vector2(0.055, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+text = "This tool is meant for hosts to use.
+Spoiler log must be of level 2 or 3."
+autowrap_mode = 3
+
+[node name="HSeparator4" type="HSeparator" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=370311405]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_constants/separation = 72
+
+[node name="LineEdit4" type="LineEdit" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=696299767]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_font_sizes/font_size = 24
+placeholder_text = "Web Tracker Link"
+
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1431658488]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=663353218]
+layout_mode = 2
+theme = ExtResource("1_clt80")
+text = "Open Spoiler.txt / Output.zip"
+
+[node name="Label" type="Label" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1410297134]
+layout_mode = 2
+mouse_filter = 1
+theme = ExtResource("1_clt80")
+text = "can also Drag & Drop the .txt or .zip"
+
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1206364114]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_constants/separation = 72
+
+[node name="Button2" type="Button" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=110243906]
+layout_mode = 2
+theme = ExtResource("1_clt80")
+text = "Run Spoiler Sphere Reader"
+
+[node name="HSeparator5" type="HSeparator" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=1080823277]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_constants/separation = 16
+
+[node name="Label3" type="Label" parent="ScrollContainer/HBoxContainer/VBoxContainer" unique_id=835060066]
+custom_minimum_size = Vector2(0.04, 0)
+layout_mode = 2
+theme = ExtResource("1_clt80")
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+autowrap_mode = 3
+
+[node name="FileDialog" type="FileDialog" parent="ScrollContainer/HBoxContainer" unique_id=1681743606]
+oversampling_override = 1.0
+title = "Open a File"
+theme = ExtResource("1_clt80")
+file_mode = 0
+display_mode = 1
+access = 2
+filters = PackedStringArray("AP_*.zip", "AP_*_Spoiler.txt")
+use_native_dialog = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer" unique_id=1771237488]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_clt80")
+bbcode_enabled = true
+script = ExtResource("3_2eodu")
+_Columns = Array[String](["Player", "Location Sphere", "Location"])

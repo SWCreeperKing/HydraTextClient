@@ -117,7 +117,7 @@ public class GameClient : ApClient
             }
         };
 
-        OnDeathLinkPacketReceived += (source, cause) =>
+        OnDeathLinkPacketReceived += (g, source, cause) =>
         {
             var player = RemoveNickName.IsMatch(source)
                 ? RemoveNickName.Match(source).Groups[1].Value

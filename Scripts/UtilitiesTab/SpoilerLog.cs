@@ -81,7 +81,7 @@ public class Sphere(int num)
         SpoilerItems.Add(new SpoilerItem(loc, finder, item, receiver));
     }
 
-    public string[] PlayerLocations(string playerName) => SpoilerItems.Where(item => item.Finder == playerName).Select(item => item.Location).ToArray();
+    public string[] PlayerLocations(string playerName, Dictionary<string, string[]> playerItems) => SpoilerItems.Where(item => item.Finder == playerName && playerItems[item.Receiver].Contains(item.Item)).Select(item => item.Location).ToArray();
 }
 
 public readonly struct SpoilerItem(string loc, string finder, string item, string receiver)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://b3165pga1elda"]
+[gd_scene format=3 uid="uid://b3165pga1elda"]
 
 [ext_resource type="Script" uid="uid://bw1rrs2uku6bd" path="res://Scripts/MainController.cs" id="1_rgh2o"]
 [ext_resource type="Texture2D" uid="uid://fopjjxgkvyiv" path="res://Assets/Images/UI/UnknownGame.png" id="3_5jffn"]
@@ -70,10 +70,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4_erwvk")
-current_tab = 3
+current_tab = 0
 
 [node name="Login" parent="TabContainer" unique_id=735249810 node_paths=PackedStringArray("_MainController", "_DiscordTimer", "_ConfigWindow") instance=ExtResource("4_c4ay3")]
-visible = false
 layout_mode = 2
 _MainController = NodePath("../..")
 _DiscordTimer = NodePath("../../Timer")
@@ -451,6 +450,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+split_offsets = PackedInt32Array(380)
 split_offset = 380
 script = ExtResource("11_hwpts")
 _InventoryContainer = NodePath("ScrollContainer/Hints Organizer/VBoxContainer/HFlowContainer")
@@ -507,6 +507,7 @@ mouse_filter = 1
 title = "No Multiworld Selected"
 
 [node name="Utilities" type="TabContainer" parent="TabContainer" unique_id=902097469]
+visible = false
 layout_mode = 2
 current_tab = 1
 metadata/_tab_index = 3

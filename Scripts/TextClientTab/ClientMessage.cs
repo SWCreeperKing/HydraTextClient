@@ -17,14 +17,16 @@ public enum MessageSender
     TrapLink,
     Joined,
     Left,
-    TagsChanged
+    TagsChanged,
 }
 
-public readonly struct ClientMessage(
+public readonly struct ClientMessage
+(
     JsonMessagePart[] messageParts,
     MessageSender sender = MessageSender.None,
     ChatPrintJsonPacket chatPrintJsonPacket = null,
-    string copyText = null)
+    string copyText = null
+)
 {
     public readonly MessageSender Sender = sender;
     public readonly JsonMessagePart[] MessageParts = messageParts;
@@ -43,7 +45,7 @@ public readonly struct ClientMessage(
         StringBuilder messageBuilder = new();
         if (MainController.Data.ShowTimestamp)
         {
-            messageBuilder.Append($"[color=darkgray]{TimeStamp}[/color] ");
+            messageBuilder.Append("[color=darkgray]").Append(TimeStamp).Append("[/color] ");
         }
 
         if (ChatPacket is not null)
@@ -51,7 +53,8 @@ public readonly struct ClientMessage(
             color = MainController.PlayerColor(ChatPacket.Slot);
             TextClient.CopyList.Add($"{MainController.GetAlias(ChatPacket.Slot)}: {ChatPacket.Message}");
             messageBuilder.Append(
-                $"[color={color}][url=\"{copyId}\"]{MainController.GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}");
+                $"[color={color}][url=\"{copyId}\"]{MainController.GetAlias(ChatPacket.Slot, true)}[/url][/color]: {ChatPacket.Message.Clean()}"
+            );
             return messageBuilder.ToString();
         }
 
@@ -59,27 +62,33 @@ public readonly struct ClientMessage(
         {
             case MessageSender.Server:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: ");
+                    $"[color={MainController.Data["player_server"].Hex}][url=\"{copyId}\"]Server[/url][/color]: "
+                );
                 break;
             case MessageSender.DeathLink:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["item_trap"].Hex}]💀[/color]  ");
+                    $"[color={MainController.Data["item_trap"].Hex}]💀[/color]  "
+                );
                 break;
             case MessageSender.TrapLink:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["item_trap"].Hex}]🪤[/color]  ");
+                    $"[color={MainController.Data["item_trap"].Hex}]🪤[/color]  "
+                );
                 break;
             case MessageSender.Joined:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["item_progressive"].Hex}] →[/color] ");
+                    $"[color={MainController.Data["item_progressive"].Hex}] →[/color] "
+                );
                 break;
             case MessageSender.Left:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["item_trap"].Hex}]← [/color] ");
+                    $"[color={MainController.Data["item_trap"].Hex}]← [/color] "
+                );
                 break;
             case MessageSender.TagsChanged:
                 messageBuilder.Append(
-                    $"[color={MainController.Data["item_useful"].Hex}]←→[/color] ");
+                    $"[color={MainController.Data["item_useful"].Hex}]←→[/color] "
+                );
                 break;
             case MessageSender.ItemLog:
             {
@@ -92,7 +101,8 @@ public readonly struct ClientMessage(
                 };
 
                 messageBuilder.Append(
-                    $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}[/url][/hint] ");
+                    $"[hint=\"Click to Copy\"][url=\"{copyId}\"]{copyStyle}[/url][/hint] "
+                );
                 TextClient.CopyList.Add(CopyText);
                 break;
             }
@@ -120,9 +130,14 @@ public readonly struct ClientMessage(
                 case JsonMessagePartType.ItemId:
                     var itemId = long.Parse(part.Text);
                     var game = MainController.PlayerGames is null ? "Unknown" :
-                        MainController.PlayerGames.Length <= part.Player!.Value ? "Unknown" : MainController.PlayerGames[part.Player!.Value];
-                    messageBuilder.Append(MainController.FormatItemColor(MainController.ItemIdToItemName(itemId, part.Player!.Value), game, itemId,
-                        part.Flags!.Value, true));
+                        MainController.PlayerGames.Length <= part.Player!.Value ? "Unknown"
+                        : MainController.PlayerGames[part.Player!.Value];
+                    messageBuilder.Append(
+                        MainController.FormatItemColor(
+                            MainController.ItemIdToItemName(itemId, part.Player!.Value), game, itemId,
+                            part.Flags!.Value, true
+                        )
+                    );
                     break;
                 case JsonMessagePartType.LocationId:
                     var location = MainController.LocationIdToLocationName(long.Parse(part.Text), part.Player!.Value);
@@ -133,7 +148,8 @@ public readonly struct ClientMessage(
                     var entranceName = part.Text.Trim();
                     color = MainController.Data[entranceName == "" ? "entrance_vanilla" : "entrance"];
                     messageBuilder.Append(
-                        $"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]");
+                        $"[color={color}]{(entranceName == "" ? "Vanilla" : entranceName).Clean()}[/color]"
+                    );
                     break;
                 case JsonMessagePartType.HintStatus:
                     var name = MainController.HintStatusText[(HintStatus)part.HintStatus!];
@@ -151,10 +167,9 @@ public readonly struct ClientMessage(
                     }
 
                     messageBuilder.Append(text);
-                    if (Sender is MessageSender.Server or MessageSender.Joined or MessageSender.Left or MessageSender.TagsChanged or MessageSender.DeathLink or MessageSender.TrapLink)
-                    {
-                        TextClient.CopyList.Add(text);
-                    }
+                    if (Sender is MessageSender.Server or MessageSender.Joined or MessageSender.Left
+                        or MessageSender.TagsChanged or MessageSender.DeathLink
+                        or MessageSender.TrapLink) { TextClient.CopyList.Add(text); }
 
                     break;
             }
@@ -165,44 +180,33 @@ public readonly struct ClientMessage(
 
     public static readonly JsonMessagePart[] TextParts =
     [
-        new() { Text = "[Hint]: " }, new() { Text = "'s " }, new() { Text = " is at " }, new() { Text = " in " },
+        new() { Text = "[Hint]: " },
+        new() { Text = "'s " },
+        new() { Text = " is at " },
+        new() { Text = " in " },
         new() { Text = "'s World. " },
     ];
 
     public static implicit operator ClientMessage(Hint hint)
-        => new([
-            TextParts[0],
-            new JsonMessagePart
-            {
-                Type = JsonMessagePartType.PlayerId,
-                Text = $"{hint.ReceivingPlayer}"
-            },
-            TextParts[1],
-            new JsonMessagePart
-            {
-                Type = JsonMessagePartType.ItemId,
-                Text = $"{hint.ItemId}",
-                Flags = hint.ItemFlags,
-                Player = hint.ReceivingPlayer
-            },
-            TextParts[2],
-            new JsonMessagePart
-            {
-                Type = JsonMessagePartType.LocationId,
-                Text = $"{hint.LocationId}",
-                Player = hint.FindingPlayer
-            },
-            TextParts[3],
-            new JsonMessagePart
-            {
-                Type = JsonMessagePartType.PlayerId,
-                Text = $"{hint.FindingPlayer}"
-            },
-            TextParts[4],
-            new JsonMessagePart
-            {
-                Type = JsonMessagePartType.HintStatus,
-                HintStatus = hint.Status
-            }
-        ], MessageSender.Hint, copyText: hint.GetCopy());
+        => new(
+            [
+                TextParts[0],
+                new JsonMessagePart { Type = JsonMessagePartType.PlayerId, Text = $"{hint.ReceivingPlayer}" },
+                TextParts[1],
+                new JsonMessagePart
+                {
+                    Type = JsonMessagePartType.ItemId, Text = $"{hint.ItemId}", Flags = hint.ItemFlags,
+                    Player = hint.ReceivingPlayer
+                },
+                TextParts[2],
+                new JsonMessagePart
+                {
+                    Type = JsonMessagePartType.LocationId, Text = $"{hint.LocationId}", Player = hint.FindingPlayer
+                },
+                TextParts[3],
+                new JsonMessagePart { Type = JsonMessagePartType.PlayerId, Text = $"{hint.FindingPlayer}" },
+                TextParts[4],
+                new JsonMessagePart { Type = JsonMessagePartType.HintStatus, HintStatus = hint.Status }
+            ], MessageSender.Hint, copyText: hint.GetCopy()
+        );
 }

@@ -23,13 +23,13 @@
     - temp fix: restart hydra
     - plausable cause: alot of connect/disconnects without restart / unknown
 - a problem with multiworld not saving item info?? (idk)
--
 
 ---
 
 # v0.6-pre2
 
 - Increased server timeout time from 4s to 60s (hopefully this doesn't cause any issues)
+- Split settings into tabs
 - Items & Locations new toggles: `Show items that you don't have any of`
 - Added Utility for Hosts: Spoiler Reader, giving it a tracker url and a spoiler log of at least lv. 2 will tell you
   what the min sphere everyone is in

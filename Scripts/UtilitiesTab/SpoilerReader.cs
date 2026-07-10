@@ -69,7 +69,8 @@ public partial class SpoilerReader : ScrollContainer
             if (urlSplit[1] != MainController.Main.Address)
             {
                 SetErrorText(
-                    $"Host address ({urlSplit[1]}) and connected address ({MainController.Main.Address}) do not match");
+                    $"Host address ({urlSplit[1]}) and connected address ({MainController.Main.Address}) do not match"
+                );
                 return;
             }
 
@@ -125,24 +126,15 @@ public partial class SpoilerReader : ScrollContainer
                 client.Poll();
                 var chunk = client.ReadResponseBodyChunk();
 
-                if (chunk.Length == 0)
-                {
-                    await Task.Delay(500);
-                }
-                else
-                {
-                    rb.AddRange(chunk);
-                }
+                if (chunk.Length == 0) { await Task.Delay(500); }
+                else { rb.AddRange(chunk); }
             }
 
             CallDeferred("ProcessData", Encoding.ASCII.GetString(rb.ToArray()));
             SetErrorText("");
             client.Close();
         }
-        catch (Exception e)
-        {
-            GD.PrintErr(e);
-        }
+        catch (Exception e) { GD.PrintErr(e); }
     }
 
     public bool TestPrintError(string host, Error error)
@@ -152,7 +144,10 @@ public partial class SpoilerReader : ScrollContainer
         return false;
     }
 
-    public void SetErrorText(string text) { Error.CallDeferred("set_text", text); }
+    public void SetErrorText(string text)
+    {
+        Error.CallDeferred("set_text", text);
+    }
 
     public override void _Process(double delta)
     {
@@ -170,25 +165,40 @@ public partial class SpoilerReader : ScrollContainer
         IEnumerable<dynamic> checksDone = loadedData.player_checks_done;
 
         Dictionary<int, int> playerMinsSpheres = [];
+        Dictionary<int, string[]> unfinishedLocations = [];
+        var playerItems = MainController.ActiveClients[0].PlayerGames.Select(((s, i) => (s, i))).ToDictionary(
+            game =>  MainController.ActiveClients[0].PlayerNames[game.i], game =>
+            {
+                MainController.ActiveClients[0].GetLookups(game.s, out _, out var items);
+                return items.Select(kv => kv.Key).ToArray();
+            }
+        );
         foreach (var player in checksDone)
         {
             int slot = player.player;
             var playerName = SpoilerLog.PlayerNames[slot - 1];
             var locationsDone =
-                ((IEnumerable<object>)player.locations).Select(l
-                                                            => MainController.ActiveClients[0]
-                                                                             .LocationIdToLocationName(long.Parse(l.ToString()!), slot))
-                                                       .ToArray();
-
+                ((IEnumerable<object>)player.locations)
+               .Select(l
+                    => MainController.ActiveClients[0]
+                                     .LocationIdToLocationName(
+                                          long.Parse(l.ToString()!), slot
+                                      )
+                )
+               .ToArray();
+            
             var playerSpecificSpheres =
-                SpoilerLog.SpoilerSpheres.Select(sphere => sphere.PlayerLocations(playerName)).ToArray();
+                SpoilerLog.SpoilerSpheres
+                          .Select(sphere => sphere.PlayerLocations(playerName, playerItems)).ToArray();
             var index = 0;
             var finished = true;
             for (; index < playerSpecificSpheres.Length; index++)
             {
                 var sphere = playerSpecificSpheres[index];
                 if (sphere.Length == 0) continue;
-                if (sphere.All(loc => locationsDone.Contains(loc))) continue;
+                var unFinished = sphere.Where(loc => !locationsDone.Contains(loc)).ToArray();
+                if (unFinished.Length == 0) continue;
+                unfinishedLocations[slot - 1] = unFinished;
                 finished = false;
                 break;
             }
@@ -198,13 +208,22 @@ public partial class SpoilerReader : ScrollContainer
 
         LoadContainer.Visible = false;
         Display.Visible = true;
-        Display.UpdateData(playerMinsSpheres.OrderBy(kv => kv.Key)
-                                            .Select(kv => (string[])
-                                             [
-                                                 MainController.ActiveClients[0].PlayerNames[kv.Key],
-                                                 kv.Value == -1 ? "Done" : $"Sphere [{kv.Value}]"
-                                             ])
-                                            .ToList());
+        Display.UpdateData(
+            playerMinsSpheres
+               .OrderBy(kv => kv.Value == -1 ? int.MaxValue : kv.Value)
+               .ThenBy(kv => kv.Key)
+               .Select(kv => (string[])
+                    [
+                        MainController.ActiveClients[0].PlayerNames[kv.Key],
+                        kv.Value == -1 ? "Done" : $"Sphere [{kv.Value}]",
+                        kv.Value == -1 ? "No Checks in Spheres"
+                            : unfinishedLocations.TryGetValue(kv.Key - 1, out var location)
+                                ? string.Join("\n ", location)
+                                : "N/A",
+                    ]
+                )
+               .ToList()
+        );
     }
 
     public bool ReadFile(string file)

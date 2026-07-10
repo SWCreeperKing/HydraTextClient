@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://bp1og2ro2rini"]
+[gd_scene format=3 uid="uid://bp1og2ro2rini"]
 
 [ext_resource type="Script" uid="uid://hny7vbnqj5j7" path="res://Scripts/PrefabScripts/GamePortrait.cs" id="1_hv7kw"]
 [ext_resource type="Theme" uid="uid://doy8rp1q74ye0" path="res://Resources/MainUITheme.tres" id="1_yu4cj"]
@@ -7,7 +7,7 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hv7kw"]
 bg_color = Color(0.15127608, 0.15127608, 0.15127605, 0.8352941)
 
-[node name="GamePortrait" type="Control" node_paths=PackedStringArray("_Image", "_SlotName", "_CheckCount", "_ErrorText", "_ConnectionTint", "_MainTint")]
+[node name="GamePortrait" type="Control" unique_id=1250994721 node_paths=PackedStringArray("_Image", "_SlotName", "_CheckCount", "_ErrorText", "_ConnectionTint", "_MainTint")]
 custom_minimum_size = Vector2(150, 225)
 layout_mode = 3
 anchors_preset = 0
@@ -23,7 +23,7 @@ _ConnectingTint = Color(0, 0.18039216, 0.078431375, 0.5568628)
 _ConnectedTint = Color(2.3102762e-06, 0.8246617, 0.35663903, 0.29803923)
 _ErrorTint = Color(0.9882353, 0, 0.015686275, 0.25882354)
 
-[node name="GamePortrait" type="TextureRect" parent="."]
+[node name="GamePortrait" type="TextureRect" parent="." unique_id=34103683]
 texture_filter = 1
 custom_minimum_size = Vector2(300, 450)
 layout_mode = 0
@@ -34,7 +34,7 @@ theme = ExtResource("1_yu4cj")
 texture = ExtResource("2_hv7kw")
 expand_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="GamePortrait"]
+[node name="MarginContainer" type="MarginContainer" parent="GamePortrait" unique_id=1716343389]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -47,14 +47,14 @@ theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 7
 theme_override_constants/margin_bottom = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GamePortrait/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="GamePortrait/MarginContainer" unique_id=1194023944]
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer" unique_id=1473528556]
 layout_mode = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer/PanelContainer"]
+[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer/PanelContainer" unique_id=2052836514]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_yu4cj")
@@ -63,7 +63,7 @@ text = "Slot Name"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer" unique_id=883452963]
 layout_mode = 2
 size_flags_vertical = 6
 mouse_filter = 1
@@ -74,22 +74,22 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_hv7kw")
 text = "Error"
 autowrap_mode = 3
 
-[node name="HSeparator" type="HSeparator" parent="GamePortrait/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="GamePortrait/MarginContainer/VBoxContainer" unique_id=187697761]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="GamePortrait/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="GamePortrait/MarginContainer/VBoxContainer" unique_id=916452458]
 layout_mode = 2
 alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer" unique_id=902776651]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer"]
+[node name="Label" type="Label" parent="GamePortrait/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer" unique_id=1948527737]
 layout_mode = 2
 mouse_filter = 1
 theme = ExtResource("1_yu4cj")
@@ -98,7 +98,7 @@ text = "##,###/##,###"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Connection Tint" type="ColorRect" parent="GamePortrait"]
+[node name="Connection Tint" type="ColorRect" parent="GamePortrait" unique_id=1722727096]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -108,7 +108,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Main Tint" type="ColorRect" parent="GamePortrait"]
+[node name="Main Tint" type="ColorRect" parent="GamePortrait" unique_id=1535403552]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
